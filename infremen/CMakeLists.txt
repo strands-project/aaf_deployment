@@ -17,6 +17,14 @@ add_executable(infremen src/infremen.cpp)
 
 add_dependencies(infremen ${catkin_EXPORTED_TARGETS} mongodb_store)
 
+add_library(infremen_frelement src/CFrelement.cpp)
+add_library(infremen_timer src/CTimer.cpp)
+add_library(infremen_frelementset src/CFrelementSet.cpp)
+
+target_link_libraries(infremen_frelement infremen_timer)
+target_link_libraries(infremen_frelementset infremen_frelement)
+
 target_link_libraries (infremen
 		${catkin_LIBRARIES}
+		infremen_frelementset
 )
