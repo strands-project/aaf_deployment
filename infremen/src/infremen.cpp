@@ -3,6 +3,7 @@
 #include <mongodb_store/message_store.h>
 #include <boost/foreach.hpp>
 #include <strands_navigation_msgs/NavStatistics.h>
+#include <strands_navigation_msgs/TopologicalMap.h>
 #include "CFrelementSet.h"
 
 #define MAX_EDGES 10000
@@ -19,7 +20,7 @@ CFrelementSet frelementSet;
 char mapName[1000];
 
 /*loads nodes from the map description*/
-void loadMap(const strands_navigation_msgs::::ConstPtr& msg)
+void loadMap(const strands_navigation_msgs::TopologicalMap::ConstPtr& msg)
 {
 }
 
@@ -36,7 +37,7 @@ int main(int argc,char* argv[])
 	//loadData(argv[1]);
 	//printEdges(argv[2]);
 	//debugPrint(argv[2]);
-	ros::Subscriber sub_octo = n.subscribe("/topological_map", 1000, loadMap);
+	ros::Subscriber sub_octo = n->subscribe("/topological_map", 1000, loadMap);
 
 	while (ros::ok()){
 		ros::spinOnce();
