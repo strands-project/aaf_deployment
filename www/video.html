@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <title></title>
+  </head>
+  <body style="background-image:url(img/strandsbg.png); width: 1024px; height: 768px; background-repeat:no-repeat;">
+  
+  <!-- Go back to the main page -->
+  <a href="entertainment.html"><img style="position: absolute; left: 916px; top: 661px; width: 100px; height: 85px;"
+        title="Auswahl" alt="Auswahl" src="img/button_liste_notext.png"></a>
+  
+  <div id="videoDiv" style="position: absolute; left: 156px; top: 40px; width:711px; height: 400px;">
+  <video id="videoplayer" width="711px" height="400px">
+    <source src="mov/bbb.ogg" type="video/ogg">
+    Your browser does not support HTML5 video.
+  </video>
+  </div>
+  
+  <div id="playDiv">
+    <img style="position: absolute; left: 362px; top: 473px; width: 300px; height: 255px;"
+        title="Musik" alt="Musik" src="img/button_stopp.png" onclick="javascript:playPause()">
+  </div>
+  <div id="pauseDiv">
+    <img style="position: absolute; left: 362px; top: 473px; width: 300px; height: 255px;"
+        title="Musik" alt="Musik" src="img/button_start.png" onclick="javascript:playPause()">
+  </div>
+  
+	<script> 
+	var myVideo = document.getElementById("videoplayer"); 
+	var playDiv = document.getElementById("playDiv"); 
+	var pauseDiv = document.getElementById("pauseDiv"); 
+
+	function playPause() { 
+		if (myVideo.paused) {
+		    myVideo.play(); 
+		    playDiv.style.display = 'block';
+		    pauseDiv.style.display = 'none';
+		} else {
+		    myVideo.pause(); 
+		    playDiv.style.display = 'none';
+		    pauseDiv.style.display = 'block';
+		}
+	}
+	</script> 
+  </body>
+</html>
