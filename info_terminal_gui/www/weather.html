@@ -10,11 +10,59 @@
     <!--<link href="bootstrap/dist/css/bootstrap.css" rel="stylesheet">-->
     <title>WEATHER</title>
     </head>
-    <body>
-    <ul>
-    <li>Quite snowy</li>
-    </ul>
-    <FORM><INPUT Type="button" VALUE="Back" onClick="history.go(-1);return true;" style="height:600px; width:600px"></FORM>
+    <body link="#00000" vlink="#00000" alink="#000000">
+     
+    <script>
+    var myVar=setInterval(function () {myTimer()}, 1000);
+   
+    function myTimer() {
+	    var d = new Date();
+	    var weekday = new Array(7);
+	    weekday[0]=  "Sonntag";
+	    weekday[1] = "Montag";
+	    weekday[2] = "Dienstag";
+	    weekday[3] = "Mittwoch";
+	    weekday[4] = "Donnerstag";
+	    weekday[5] = "Freitag";
+	    weekday[6] = "Samstag";
+	    var n = weekday[d.getDay()]; 
+	    document.getElementById("time").innerHTML = d.toLocaleTimeString();
+	    document.getElementById("date").innerHTML = n;
+    }
+    </script>
+
+    <script>
+    document.ready(function() {simpleWeather()});
+function simpleWeather()
+		{
+		 zipcode: '',
+		 woeid: '2357536',
+		 location: 'Vienna, AT',
+		 unit: 'f',
+		 success: function(weather) {
+			 html = '<h2>'+weather.temp+'&deg;'+weather.units.temp+'</h2>';
+			 html += '<ul><li>'+weather.city+', '+weather.region+'</li>';
+			 html += '<li class="currently">'+weather.currently+'</li>';
+			 html += '<li>'+weather.tempAlt+'&deg;C</li></ul>';
+
+			 $("#weather").html(html);
+		 },
+error: function(error) {
+	       $("#weather").html('<p>'+error+'</p>');
+       }
+}
+    </script>
+
+    <a href="index.html" class="aw-widget-legal"></a>
+    <script type="text/javascript" src="http://oap.accuweather.com/launch.js"></script>
+
+
+	    <!--a href="index.html"><img src="sunny.png"></img></a-->
+	    <a href="index.html" style="text-decoration: none; font-family: times, serif; font-size:96pt; font-style:bold color:black" id="time"></a><br/>
+	    <a href="index.html" style="text-decoration: none; font-family: times, serif; font-size:96pt; font-style:bold color:black" id="date"></a><br/>
+	    <div id="awcc1423494646278" class="aw-widget-current"  data-locationkey="31868" data-unit="c" data-language="de" data-useip="false" data-uid="awcc1423494646278"></div>
+	    <!--a href="" class="aw-widget-legal"></a-->
+	    <!--a href="index.html" class="aw-widget-legal"></a-->
     </body>
 </html>
  
