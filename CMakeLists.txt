@@ -12,8 +12,15 @@ find_package(catkin REQUIRED COMPONENTS
   smach_ros
   std_msgs
   strands_webserver
+	genmsg
+	actionlib_msgs
+	actionlib
+
 )
 
+add_action_files(DIRECTORY action FILES Guiding.action)
+
+generate_messages(DEPENDENCIES actionlib_msgs)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
