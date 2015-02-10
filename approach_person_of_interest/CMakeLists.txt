@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   monitored_navigation
   message_generation 
+  std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
