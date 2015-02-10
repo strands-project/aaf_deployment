@@ -1,20 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="stylesheet" type="text/css" href="nhm-style.css">
-    <!--<link href="bootstrap/dist/css/bootstrap.css" rel="stylesheet">-->
-    <title>WEATHER</title>
-    </head>
-    <body>
-    <ul>
-    <li>Quite snowy</li>
-    </ul>
-    <FORM><INPUT Type="button" VALUE="Back" onClick="history.go(-1);return true;" style="height:600px; width:600px"></FORM>
-    </body>
-</html>
- 
+$def with (weather)
+
+
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="row text-center">
+      <a href="/">
+        <img src="static/back-icon.png" class="img-thumbnail img-responsive" style="max-height:300px"><br>
+        <h1>Back to Menu</h1>
+      </a>
+    </div>
+  </div>  
+  <div class="col-md-8">
+    <div class="row text-center">
+      <h1> Current Weather </h1>
+      <hr>
+    </div>
+    <div class="row text-center">
+      $ url = "http://openweathermap.org/img/w/%s.png" % weather['weather'][0]['icon']
+      <img width="500" height="500" src="$url">
+    </div>
+    <div class="row text-center">
+      <h1>$(weather['main']['temp']-273.15) Celcius</h1>
+    </div>
+    <div class="row text-center">
+      <h1>$weather['weather'][0]['description']</h1>
+    </div>
+  </div>
+</div>

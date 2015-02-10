@@ -1,10 +1,25 @@
-<html>
-<head>
-<title>LUNCH MENU</title>
-</head>
-<body>
-<ul>
-<li>stuff to eat</li>
-</ul>
-</body>
-</html>
+$def with (menu)
+
+<div class="row">
+<div class="col-md-4">
+	<div class="row text-center">
+	<a href="/">
+		<img src="static/back-icon.png" class="img-thumbnail img-responsive" style="max-height:300px"><br>
+		<h1>Back to Start</h1>
+	</a>
+	</div>
+</div>  
+<div class="col-md-8">
+	<div class="row text-center">	
+		<h1>Caffateria Menu</h1>
+		<hr>
+	</div>
+	<div class="row text-center">
+		<h3>The menu for today is...</h3><br>
+		$menu
+	</div>
+</div>
+</div>
+
+
+

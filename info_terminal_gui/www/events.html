@@ -1,10 +1,33 @@
-<html>
-<head>
-<title>EVENTS</title>
-</head>
-<body>
-<ul>
-<li>stuff is happening</li>
-</ul>
-</body>
-</html>
+$def with (events)
+
+<div class="row">
+<div class="col-md-4">
+	<div class="row text-center">
+	<a href="/">
+		<img src="static/back-icon.png" class="img-thumbnail img-responsive" 
+			style="max-height:300px"><br>
+		<h1>Back to Start</h1>
+	</a>
+	</div>
+</div>  
+<div class="col-md-8">
+	<div class="row text-center">	
+		<h1>Events Or What Ever</h1>
+		<hr>
+	</div>
+	<div class="row">
+		$for event in events:
+			<div class="row">
+				<div class="col-md-3">
+				An image.
+				</div>
+				<div class="col-md-9">
+					<b>Things are happing here</b> Oh yes oh yes they are :-)
+				</div>
+			</div>
+	</div>
+</div>
+</div>
+
+
+
