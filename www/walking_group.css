@@ -1,0 +1,67 @@
+body {}
+h2 {font-size:200%}
+p {font-size:200%}
+.button-style {
+	-moz-box-shadow:inset 0px 1px 21px -1px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 21px -1px #ffffff;
+	box-shadow:inset 0px 1px 21px -1px #ffffff;
+background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ffffff');
+	-webkit-border-top-left-radius:10px;
+	-moz-border-radius-topleft:10px;
+	border-top-left-radius:10px;
+	-webkit-border-top-right-radius:10px;
+	-moz-border-radius-topright:10px;
+	border-top-right-radius:10px;
+	-webkit-border-bottom-right-radius:10px;
+	-moz-border-radius-bottomright:10px;
+	border-bottom-right-radius:10px;
+	-webkit-border-bottom-left-radius:10px;
+	-moz-border-radius-bottomleft:10px;
+	border-bottom-left-radius:10px;
+	text-indent:0;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Verdana;
+	font-size:21px;
+	font-weight:bold;
+	font-style:normal;
+	height:60px;
+	line-height:40px;
+	width:150px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 1px #1570cd;
+}
+.button-style:hover {
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ffffff');
+	background-color:Transparent;
+}.button-style:active {
+	
+}
+.start-button {
+  background: url('img/button_start.png') left center no-repeat;
+  padding-left: 15px;
+  background-size: 100%;
+}
+.start-button:hover {
+  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #ffffff) );
+  background:-moz-linear-gradient( center top, #ffffff 5%, #ffffff 100% );
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ffffff');
+  background-color:Transparent;
+  background: url('img/button_start.png') left center no-repeat;
+  padding-left: 15px;
+  background-size: 100%;
+}
+.start-button:active {
+  background: url('img/button_start.png') left center no-repeat;
+  padding-left: 15px;
+  border:1px solid #ffffff;
+  background-size: 100%;
+	
+}

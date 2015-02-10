@@ -31,7 +31,7 @@ def main():
     rospy.init_node('walking_group_smach')
 
     # Get parameters
-    #topomap = rospy.get_param("~topological_map", "")
+    display_no = rospy.get_param("~display_no", 0)
     waypointset_name = rospy.get_param("~mongodb_params/waypointset_name", "")
     waypointset_collection = rospy.get_param("~mongodb_params/waypointset_collection", "aaf_walking_group")
     waypointset_meta = rospy.get_param("~mongodb_params/waypointset_meta", "waypoint_set")
@@ -44,10 +44,8 @@ def main():
     pprint.pprint(waypointset)
 
     # Setting http root
-#    http_root = roslib.packages.get_pkg_dir('aaf_walking_group') + '/www'
-#    strands_webserver.client_utils.set_http_root(
-#        http_root
-#    )
+    http_root = roslib.packages.get_pkg_dir('aaf_walking_group') + '/www'
+    strands_webserver.client_utils.set_http_root(http_root)
 
     # Create a SMACH state machine
     sm = smach.StateMachine(outcomes=['succeeded', 'aborted', 'preempted'])
@@ -63,7 +61,7 @@ def main():
         # Add states to the container
         smach.StateMachine.add(
             'ENTERTAIN',
-            Entertain(),
+            Entertain(display_no),
             transitions={
                 'key_card': 'GUIDE_INTERFACE'
             },
