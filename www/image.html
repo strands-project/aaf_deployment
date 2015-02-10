@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <title></title>
+  </head>
+  <body style="background-image:url(img/strandsbg.png); width: 1024px; height: 768px; background-repeat:no-repeat;">
+  
+   <!-- Go back to the main page -->
+  <a href="entertainment.html"><img style="position: absolute; left: 916px; top: 661px; width: 100px; height: 85px;"
+        title="Auswahl" alt="Auswahl" src="img/button_liste_notext.png"></a>
+  
+  <div id="imgDiv" style="position: absolute; width:854px; left: 85px; top: 90px;">
+  	<img id="imgElem" src="img/book/00000001.jpg" />
+  </div>
+  
+  <div id="prevDiv">
+    <img style="position: absolute; left: 141px; top: 473px; width: 300px; height: 255px;"
+        title="Musik" alt="Musik" src="img/button_zurueck.png" onclick="javascript:prev()">
+  </div>
+  <div id="nextDiv">
+    <img style="position: absolute; left: 582px; top: 473px; width: 300px; height: 255px;"
+        title="Musik" alt="Musik" src="img/button_vor.png" onclick="javascript:next()">
+  </div>
+  
+  	<script>
+	var currentImage = 1;
+	var imgElem = document.getElementById("imgElem"); 
+
+	function pad (str, max) {
+		str = str.toString();
+		return str.length < max ? pad("0" + str, max) : str;
+	}
+	
+	function prev() {
+		currentImage = ((currentImage - 1) <= 0) ? 218 : currentImage - 1;
+		setImage(pad(currentImage, 8));
+	} 
+	function next() {
+		currentImage = Math.max((currentImage + 1) % 218, 1);
+		setImage(pad(currentImage, 8));
+	}
+	
+	function setImage(id) {
+		imgElem.src = 'img/book/' + id + '.jpg';
+	}
+	</script> 
+  </body>
+</html>
