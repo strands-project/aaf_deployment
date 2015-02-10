@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <title></title>
+    
+	<!-- JustGauge speed dial stuff ;) -->
+	<script src="js/raphael.2.1.0.min.js"></script>
+	<script src="js/justgage.1.0.1.min.js"></script>
+
+  </head>
+  <body style="background-image:url(img/strandsbg.png); width: 1024px; height: 768px; background-repeat:no-repeat;">
+  
+	<div id="logoDiv" style="position: absolute; width:616px; height: 300px; left: 204px; top: 64px;">
+  		<img id="imgElem" width="616" height="300" src="img/walkinggroup_hill.png" />
+  		<audio id="soundplayer">
+  			// TODO: Song to play while walking
+  		</audio>
+	</div>
+  
+  	<!-- speed dial -->
+  	<div id="gauge" class="200x160px" style="position: absolute; left:353px; top: 280px;" ></div>
+  
+  	<!-- interaction buttons -->
+	<img style="position: absolute; left: 40px; top: 428px; width: 300px; height: 255px;"
+        title="Liste" alt="Liste" src="img/button_liste.png" onclick="javascript:waypointList()">
+        
+    <img style="position: absolute; left: 380px; top: 428px; width: 300px; height: 255px;"
+        title="Abbruch" alt="Abbruch" src="img/button_abbruch.png" onclick="javascript:abort()">
+        
+	<img style="position: absolute; left: 720px; top: 428px; width: 300px; height: 255px;"
+        title="Weiter" alt="Weiter" src="img/button_weiter.png" onclick="javascript:nextWaypoint()">
+  </body>
+  
+  <script>
+	var soundPlayer = document.getElementById("soundplayer"); 
+	function waypointList() {
+		// TODO
+	} 
+	function abort() {
+		// TODO
+	}
+	function nextWaypoint() {
+		// TODO
+	}
+  </script>
+  
+  	<!-- Speed dial creation -->
+  	<script>
+  		var g = new JustGage({
+    	id: "gauge",
+   		value: 67,
+    	min: 0,
+    	max: 100,
+    	title: " "
+  	});
+	</script>
+</html>
