@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 
 import rospy
+from std_msgs.msg import String
+
 from actionlib import SimpleActionServer, SimpleActionClient
 from approach_person_of_interest.srv import Activate 
 
