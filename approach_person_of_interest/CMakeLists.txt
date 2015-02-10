@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   monitored_navigation
   message_generation 
   std_msgs
+  geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions

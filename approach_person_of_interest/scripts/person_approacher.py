@@ -2,6 +2,7 @@
 
 import rospy
 from std_msgs.msg import String
+from geometry_msgs.msg import PoseStamped
 
 from actionlib import SimpleActionServer, SimpleActionClient
 from approach_person_of_interest.srv import Activate 
@@ -14,15 +15,17 @@ class PersonApproacher(object):
         self.active=False
         self.activate=rospy.Service('info_terminal/activate_approacher',Activate,self.activate_cb)
         self.card_seer=rospy.Subscriber("/socialCardReader/commands", String, self.card_callback)
-        #put stuff
+        self.card_pose_getter=rospy.Subscriber("/socialCardReader/cardposition", PoseStamped, self.card_pose_callback)
 
     def activate_cb(self,req): 
         self.active=req.activate
         return True
 
     def card_callback(self, data):
-        rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+        rospy.loginfo(rospy.get_caller_id() + "I see a  %s", data.data)
     
+    def card_pose_callback(self, data):
+        rospy.loginfo(rospy.get_caller_id() + "The Card pose is %s", data.data)
 
     def main(self):
         # Wait for control-c
