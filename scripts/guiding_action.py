@@ -4,6 +4,7 @@ import actionlib
 import tf
 
 from aaf_walking_group.msg import GuidingAction, GuidingServer
+from aaf_walking_group.msg import EmptyAction, EmptyActionGoal
 import topological_navigation.msg
 from std_msgs.msg import String
 from std_msgs.msg import Bool
@@ -15,8 +16,9 @@ class GuidingServer:
       self.server = actionlib.SimpleActionServer('guiding', GuidingAction, self.execute, False)
       self.server.start()
       self.client = actionlib.SimpleActionClient('topological_navigation', topological_navigation.msg.GotoNodeAction)
-      self.card_subscriber =rospy.Subscriber("card", String, self.callback)
-      self.odom_subscriber =rospy.Subscriber("odom", Odometry, self.callback)
+      self.empty_client = actionlib.SimpleActionClient('wait_for_participant', EmptyAction)
+      self.card_subscriber =rospy.Subscriber("/socialCardReader/QSR_generator", String, self.card_callback)
+      self.odom_subscriber =rospy.Subscriber("odom", Odometry, self.odom_callback)
       self.last_location = Odometry()
       self.pause = 0;
       self.pause_service = rospy.ServiceProxy('/monitored_navigation/pause_nav', Bool)
@@ -30,11 +32,11 @@ class GuidingServer:
       except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
           continue
           
-      self.last_location.pose.pose.x = trands[0]
+      self.last_location.pose.pose.x = trans[0]
       self.last_location.pose.pose.y = trans[1]
       self.client.wait_for_server()
       navgoal = topological_navigation.msg.GotoNodeGoal()
-      navgoal.target = targ
+      navgoal.target = goal.waypoint
       self.client.send_goal(navgoal)
       self.client.wait_for_result()
       ps = self.client.get_result() 
@@ -49,12 +51,13 @@ class GuidingServer:
    def card_callback(self, data):
        if self.pause == 1
            #call action server
-           #...
-           try:
-               self.pause_service(0)
-               self.pause = 0
-           except rospy.ServiceException, e:
-               print "Service call failed: %s" % e
+           if data.data == 'near':
+               self.empty_client.send_goal_and_wait(EmptyActionGoal())
+               try:
+                   self.pause_service(0)
+                   self.pause = 0
+               except rospy.ServiceException, e:
+                   print "Service call failed: %s" % e
        
 
    def odom_callback(self, data):
