@@ -3,6 +3,18 @@
   <head>
     <meta content="text/html; charset=windows-1252" http-equiv="content-type">
     <title></title>
+    <script src="js/jquery.js"></script>
+    <script src="js/display.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
+    <script src="roslibjs/build/roslib.js"></script>
+    <script src="ros2djs/include/EaselJS/easeljs.js"></script>
+    <script src="ros2djs/build/ros2d.js"></script>
+    <script src="ros3djs/include/threejs/three.js"></script>
+    <script src="ros3djs/include/ColladaAnimationCompress/ColladaLoader2.js"></script>
+    <script src="ros3djs/build/ros3d.min.js"></script>
+    <script src="nav2djs/build/nav2d.js"></script>
+    <script src="bootstrap/dist/js/bootstrap.js"></script>
   </head>
   <body style="background-image:url(img/strandsbg.png); width: 1024px; height: 768px; background-repeat:no-repeat;">
   
@@ -27,13 +39,28 @@
   </div>
   
   	<script>
+        var hostname = location.hostname;
+
+        var ros = new ROSLIB.Ros({
+         // this is filled by the ros node when writing this page to the web server, but doesn't currently work
+          // url : '<dynamic>bridge_server</dynamic>'
+          url : 'ws://'+hostname+':9090'
+        });
   		var soundPlayer = document.getElementById("soundplayer");
   		
   		function prev() {
-  			// TODO prev song
+  			// prev song
+            var service_button = new ROSLIB.Service({ros : ros, name : '/aaf_music_player_service', serviceType : 'aaf_music_player/MusicPlayerService'});
+            var request_button = new ROSLIB.ServiceRequest({player_action : 2});        
+            service_button .callService(request_button, function(result) { console.log(result); });
+            console.log('Called');
 		} 
 		function next() {
-			// TODO next song
+			// next song
+            var service_button = new ROSLIB.Service({ros : ros, name : '/aaf_music_player_service', serviceType : 'aaf_music_player/MusicPlayerService'});
+            var request_button = new ROSLIB.ServiceRequest({player_action : 3});        
+            service_button .callService(request_button, function(result) { console.log(result); });
+            console.log('Called');
 		}
 	</script> 
   </body>
