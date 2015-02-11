@@ -10,6 +10,7 @@ import requests
 import datetime
 
 from threading import Lock
+import pygame
 
 WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q=Vienna,Austria"
 
@@ -46,9 +47,16 @@ class MusicTracks(object):
         self.active =  -1
         
     def play(self, track):
+        pygame.init()
+        pygame.mixer.init()
+        pygame.mixer.music.load("music-files/playlist/" + self.available[int(track)][1])
+        pygame.mixer.music.play()
         self.active =  track
         
     def stop(self):
+        pygame.mixer.music.stop()
+        pygame.mixer.music.stop()
+        print "STOP NOW STOP NOW"
         self.active =  -1
         
 tracks =  MusicTracks()
@@ -95,9 +103,15 @@ class PlayMusic(object):
 
 class PlayTrack(object):
     def GET(self, track):
+        track = int(track)
+        print track
         if track == -1:
+            print "STOP STOP STOP"
             tracks.stop()
-        tracks.play(track)
+        else:
+            tracks.play(track)
+            print "I am playing."
+            print tracks.active
         return render.music(tracks.available, tracks.active)
     
     
