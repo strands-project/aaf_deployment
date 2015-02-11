@@ -5,7 +5,7 @@
 #include <strands_navigation_msgs/NavStatistics.h>
 #include <strands_navigation_msgs/TopologicalMap.h>
 #include <strands_navigation_msgs/TopologicalNode.h>
-#include <strands_executive_msgs/Task.h>
+#include <strands_executive_msgs/AddTask.h>
 #include <std_msgs/Empty.h>
 #include "CFrelementSet.h"
 
@@ -19,6 +19,7 @@ using namespace std;
 ros::NodeHandle *n;
 ros::Publisher  taskPub;
 bool debug = false;
+ros::ServiceClient taskAdder;
 
 CFrelementSet frelementSet;
 string nodeName;
@@ -91,7 +92,6 @@ int generateTask()
 		float randomNum = (float)rand()/RAND_MAX*lastWheel;
 		for (int p = 0;p<numNodes && randomNum > wheel[p];p++) node = p;
 	}
-
 }
 
 
@@ -99,16 +99,19 @@ int main(int argc,char* argv[])
 {
 	ros::init(argc, argv, "infremen");
 	n = new ros::NodeHandle();
-	//retrieveData();
-	//loadData(argv[1]);
-	//printEdges(argv[2]);
-	//debugPrint(argv[2]);
 	ros::Subscriber  topoMapSub = n->subscribe("/topological_map", 1000, loadMap);
-	ros::Subscriber  currentNodeSub = n->subscribe("/current_node", 1000, getCurrentNode);
+	//ros::Subscriber  currentNodeSub = n->subscribe("/current_node", 1000, getCurrentNode);
 	ros::Subscriber  interfaceSub = n->subscribe("/info_terminal", 1000, interacted);
 	ros::Subscriber  recalculateSub = n->subscribe("/recalculate", 1000, recalculate);
-	taskPub = n->advertise<strands_executive_msgs::Task>("/taskTopic", 1000, recalculate);
-
+//	taskPub = n->advertise<strands_executive_msgs::Task>("/taskTopic", 1000, recalculate);
+	taskAdder = n->serviceClient<strands_executive_msgs::AddTask>("infremen");
+	strands_executive_msgs::Task task;
+	task.start_node_id = "Waypoint1";
+	task.end_node_id = "Waypoint1";
+	task.start_after = ros::Time::now();
+	task.end_before = ros::Time::now()+ros::Duration(120);
+	task.max_duration = ros::Duration(60); 
+	
 	while (ros::ok()){
 		ros::spinOnce();
 		usleep(30000);
