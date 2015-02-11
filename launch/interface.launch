@@ -1,3 +1,0 @@
-<launch>
-    <node name="interface_server" pkg="aaf_walking_group" type="interface_server.py" output="screen"/>
-</launch>
