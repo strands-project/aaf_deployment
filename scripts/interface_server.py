@@ -94,8 +94,14 @@ class InterfaceServer(object):
 
         content = ''
         for i in range(len(buttons)):
-            content += page_utils.generate_named_button_page(notice, buttons[i],
-                                                             self._action_name)
+            if i == 0:
+                content += page_utils.generate_named_button_page(notice,
+                                                                 buttons[i],
+                                                                 self._action_name)
+            else:
+                content += "<p></p>"
+                content += page_utils.generate_named_button_page('', buttons[i],
+                                                                 self._action_name)
 
         content_with_bg = self.createBGWaypointPage(content)
         client_utils.display_content(self.display_no, content_with_bg)
