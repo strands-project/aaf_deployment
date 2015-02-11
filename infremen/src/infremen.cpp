@@ -105,13 +105,15 @@ int main(int argc,char* argv[])
 	ros::Subscriber  recalculateSub = n->subscribe("/recalculate", 1000, recalculate);
 //	taskPub = n->advertise<strands_executive_msgs::Task>("/taskTopic", 1000, recalculate);
 	taskAdder = n->serviceClient<strands_executive_msgs::AddTask>("infremen");
+	strands_executive_msgs::AddTask taskAdd;
 	strands_executive_msgs::Task task;
 	task.start_node_id = "Waypoint1";
 	task.end_node_id = "Waypoint1";
 	task.start_after = ros::Time::now();
 	task.end_before = ros::Time::now()+ros::Duration(120);
-	task.max_duration = ros::Duration(60); 
-	
+	task.max_duration = ros::Duration(60);
+	taskAdd.request.task = task;
+	taskAdder.call(taskAdd);	
 	while (ros::ok()){
 		ros::spinOnce();
 		usleep(30000);
