@@ -101,19 +101,25 @@ int main(int argc,char* argv[])
 	n = new ros::NodeHandle();
 	ros::Subscriber  topoMapSub = n->subscribe("/topological_map", 1000, loadMap);
 	//ros::Subscriber  currentNodeSub = n->subscribe("/current_node", 1000, getCurrentNode);
-	ros::Subscriber  interfaceSub = n->subscribe("/info_terminal", 1000, interacted);
-	ros::Subscriber  recalculateSub = n->subscribe("/recalculate", 1000, recalculate);
+	//ros::Subscriber  interfaceSub = n->subscribe("/info_terminal", 1000, interacted);
+	//ros::Subscriber  recalculateSub = n->subscribe("/recalculate", 1000, recalculate);
 //	taskPub = n->advertise<strands_executive_msgs::Task>("/taskTopic", 1000, recalculate);
-	taskAdder = n->serviceClient<strands_executive_msgs::AddTask>("infremen");
+	taskAdder = n->serviceClient<strands_executive_msgs::AddTask>("/task_executor/add_task");
 	strands_executive_msgs::AddTask taskAdd;
 	strands_executive_msgs::Task task;
 	task.start_node_id = "Waypoint1";
 	task.end_node_id = "Waypoint1";
-	task.start_after = ros::Time::now();
-	task.end_before = ros::Time::now()+ros::Duration(120);
+	task.action = "Wait";
+	//task.start_after = ros::Time::now();
+	//task.end_before = ros::Time::now()+ros::Duration(120);
 	task.max_duration = ros::Duration(60);
 	taskAdd.request.task = task;
-	taskAdder.call(taskAdd);	
+	printf("task\n");
+	if (taskAdder.call(taskAdd))
+	{
+		ROS_INFO("Sum: %ld", taskAdd.response.task_id);
+	}
+	printf("aa\n");
 	while (ros::ok()){
 		ros::spinOnce();
 		usleep(30000);
