@@ -105,7 +105,7 @@ int generateTask()
 	{
 		ROS_INFO("Sum: %ld", taskAdd.response.task_id);
 	}*/
-	printf("Time slot: %i %i \n",);
+	printf("Time slot: %i-%i %s \n",60*i,60*(i+1)-1);
 }
 
 
