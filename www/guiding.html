@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <link rel="stylesheet" type="text/css" href="walking_group.css">
     <title></title>
     <script src="js/jquery.js"></script>
     <script src="js/display.js"></script>
@@ -30,11 +31,26 @@
 	<img style="position: absolute; left: 40px; top: 428px; width: 300px; height: 255px;"
         title="Liste" alt="Liste" src="img/button_liste.png" onclick="javascript:waypointList()">
         
+      <div id="textRight" style="position: absolute; left: -135px; top: 658px;
+        width: 200px; height: 100px; float: left; text-align: center;">
+        <textarea class="speechout" id="stop">Liste aller Treffpunkte</textarea>
+    </div>       
+       
     <img style="position: absolute; left: 380px; top: 428px; width: 300px; height: 255px;"
         title="Abbruch" alt="Abbruch" src="img/button_abbruch.png" onclick="javascript:abort()">
-        
+
+     <div id="textMiddle" style="position: absolute; left: 210px; top: 658px;
+        width: 200px; height: 100px; float: left; text-align: center;">
+        <textarea class="speechout" id="stop">Abbruch der aktuellen Punkte</textarea>
+    </div>       
+
 	<img style="position: absolute; left: 720px; top: 428px; width: 300px; height: 255px;"
         title="Weiter" alt="Weiter" src="img/button_weiter.png" onclick="javascript:nextWaypoint()">
+
+    <div id="textRight" style="position: absolute; left: 550px; top: 658px;
+        width: 200px; height: 100px; float: left; text-align: center;">
+        <textarea class="speechout" id="saytext">Der nachte Punkt ist </textarea>
+    </div>
   </body>
   
   <script>
@@ -62,6 +78,19 @@
         var request_button = new ROSLIB.ServiceRequest({name:'next'});  
         service_button.callService(request_button, function(result) {console.log('Called service'); }); 
         console.log('Next Called');	
-	}
+    }
+
+    var sayTopic = new ROSLIB.Topic({
+              ros         : ros,
+              name        : '/interface_server/next_waypoint',
+              messageType : 'std_msgs/String'
+    });
+          
+    sayTopic.subscribe(function(message) {
+      // Formats the pose for outputting.
+      var say = message.data;
+    
+      document.getElementById("saytext").value="Der nachte Punkt ist " + say;
+    });
   </script>
 </html>
