@@ -13,18 +13,16 @@ from threading import Lock
 
 WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q=Vienna,Austria"
 
-
-
 ### Templates
-template_dir = roslib.packages.get_pkg_dir('info_terminal_gui') + '/www'
-render = web.template.render(template_dir, base='base', globals={})
-os.chdir(template_dir) # so that the static content can be served from here.
+TEMPLATE_DIR = roslib.packages.get_pkg_dir('info_terminal_gui') + '/www'
+render = web.template.render(TEMPLATE_DIR, base='base', globals={})
+os.chdir(TEMPLATE_DIR) # so that the static content can be served from here.
 
 class TranslatedStrings(object):
     def __init__(self, language):
         # Load translated strings
         self.language =  language
-        with open(template_dir + "/localisation.json") as f:
+        with open(TEMPLATE_DIR + "/localisation.json") as f:
             strings =  json.load(f)
         self.translations = {}
         for s in strings:
@@ -41,12 +39,28 @@ class TranslatedStrings(object):
         
 strings =  TranslatedStrings(rospy.get_param("language", default="EN"))
 
+class MusicTracks(object):
+    def __init__(self):
+        with open(TEMPLATE_DIR+"/music-files/index.json", "r") as f:
+            self.available =  json.load(f)
+        self.active =  -1
+        
+    def play(self, track):
+        self.active =  track
+        
+    def stop(self):
+        self.active =  -1
+        
+tracks =  MusicTracks()
+
 urls = (
     '/', 'MasterPage', 
     '/menu',  'Menu', 
     '/weather', 'Weather',
     '/events', 'Events',
     '/go_away', 'GoAway',
+    '/play_music', 'PlayMusic', 
+    '/play_item/(.*)',  'PlayTrack'
 )
 
 app = web.application(urls, globals())
@@ -57,7 +71,7 @@ class MasterPage(object):
 
 class Menu(object):
     def GET(self):
-        menu =  "Death by Scnitzel"
+        menu =  "Death by Schnitzel"
         return render.menu(menu)
 
 class Weather(object):
@@ -73,7 +87,20 @@ class Events(object):
 class GoAway(object):
     def GET(self):
         return "ok"
+    
+class PlayMusic(object):
+    def GET(self):
+        print tracks.available
+        return render.music(tracks.available, tracks.active)
 
+class PlayTrack(object):
+    def GET(self, track):
+        if track == -1:
+            tracks.stop()
+        tracks.play(track)
+        return render.music(tracks.available, tracks.active)
+    
+    
 if __name__ == "__main__":
     print "Init ROS node."
     rospy.init_node("infoterminal_gui")
