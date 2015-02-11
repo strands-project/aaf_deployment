@@ -1,2 +1,5 @@
-[ ["Music Track #1", "filename"],
-  ["Music Track #2", "filename"]]
+[ ["I Feel Good!", "I_Feel_Good-JamesBrown.mp3"],
+  ["Drei Nachte", "Drei_Nachte-Cuirina.mp3"],
+  ["Sonata", "Sonata_Op_99-MarziaGaggioli.mp3"],
+  ["Mozart Symphony", "Symphony_no_40_violin-Mozart.mp3"],
+  ["Hound Dog", "Hound_Dog-ElvisPresley.mp3"]]
