@@ -28,7 +28,7 @@ class goToPersonAction(object):
   def execute_cb(self, goal):
     # helper variables
     print goal.go_to_person
-    if goal.go_to_person.data:
+    if goal.go_to_person:
 	print 'going to person'
 	mon_nav_goal=MonitoredNavigationGoal(action_server='move_base', target_pose=goal.pose)
         self._mon_nav_client.send_goal(mon_nav_goal)

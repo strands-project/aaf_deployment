@@ -1,10 +1,10 @@
 # Define the goal
 geometry_msgs/PoseStamped pose # Specify the position
-std_msgs/Bool go_to_person 
-std_msgs/Float32 timeout
+bool go_to_person 
+float32 timeout
 ---
 # Define the result
-std_msgs/Bool success
+bool success
 ---
 # Define a feedback message
-std_msgs/String status
+string status
