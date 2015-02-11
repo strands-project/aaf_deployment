@@ -22,7 +22,6 @@ class GuidingServer():
         self.odom_subscriber =rospy.Subscriber("odom", Odometry, self.odom_callback)
         self.last_location = Odometry()
         self.pause = 0;
-        self.pause_service = rospy.ServiceProxy('/monitored_navigation/pause_nav', Bool)
         self.tf.listener = tf.TransformListener()
       
     def execute(self, goal):
@@ -54,7 +53,8 @@ class GuidingServer():
             if data.data == 'near':
                 self.empty_client.send_goal_and_wait(EmptyActionGoal())
             try:
-                self.pause_service(0)
+                pause_service = rospy.ServiceProxy('/monitored_navigation/pause_nav', Bool)
+                pause_service(0)
                 self.pause = 0
             except rospy.ServiceException, e:
                 print "Service call failed: %s" % e
