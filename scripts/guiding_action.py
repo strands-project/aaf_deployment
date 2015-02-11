@@ -4,15 +4,15 @@ import actionlib
 import tf
 import numpy
 
-from aaf_walking_group.msg import GuidingAction, GuidingServer
+from aaf_walking_group.msg import GuidingAction
 from aaf_walking_group.msg import EmptyAction, EmptyActionGoal
 import topological_navigation.msg
 from std_msgs.msg import String
 from std_msgs.msg import Bool
-from nav_msgs.msgs import Odometry
+from nav_msgs.msg import Odometry
 
 
-class GuidingServer:
+class GuidingServer():
     def __init__(self):
         self.server = actionlib.SimpleActionServer('guiding', GuidingAction, self.execute, False)
         self.server.start()
@@ -31,7 +31,7 @@ class GuidingServer:
         try:
             (trans,rot) = tf.listener.lookupTransform('/base_link', '/map', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            continue
+            pass
           
         self.last_location.pose.pose.x = trans[0]
         self.last_location.pose.pose.y = trans[1]
