@@ -22,12 +22,12 @@ class GuidingServer():
         self.odom_subscriber =rospy.Subscriber("odom", Odometry, self.odom_callback)
         self.last_location = Odometry()
         self.pause = 0;
-        self.tf.listener = tf.TransformListener()
       
     def execute(self, goal):
         #call send keypoint (topological navigation)
       
         try:
+            tf.listener = tf.TransformListener()
             (trans,rot) = tf.listener.lookupTransform('/base_link', '/map', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             pass
