@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 import rospy
 import actionlib
-import tf
+#import tf
 import numpy
 
 from aaf_walking_group.msg import GuidingAction
@@ -22,20 +22,23 @@ class GuidingServer():
         self.odom_subscriber =rospy.Subscriber("odom", Odometry, self.odom_callback)
         self.last_location = Odometry()
         self.pause = 0;
+        self.begin = 0;
       
     def execute(self, goal):
         #call send keypoint (topological navigation)
       
-        while not rospy.is_shutdown():
-            try:
-                listener = tf.TransformListener()
-                (trans,rot) = listener.lookupTransform('/base_link', '/map', rospy.Time(0))
-                break
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                continue
+#        while not rospy.is_shutdown():
+#            try:
+#                listener = tf.TransformListener()
+#                (trans,rot) = listener.lookupTransform('/base_link', '/map', rospy.Time(0))
+#                break
+#            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+#                continue
+      
+        self.begin = 1;
           
-        self.last_location.pose.pose.position.x = trans[0]
-        self.last_location.pose.pose.position.y = trans[1]
+        #self.last_location.pose.pose.position.x = trans[0]
+        #self.last_location.pose.pose.position.y = trans[1]
         print "here"
         self.client.wait_for_server()
         print "there"
@@ -65,18 +68,26 @@ class GuidingServer():
        
 
     def odom_callback(self, data):
-        x = data.pose.pose.position.x - self.last_location.pose.pose.position.x
-        y = data.pose.pose.position.y - self.last_location.pose.pose.position.y
-           
-        lenght = numpy.sqrt(x*x + y*y)
-           
-        if lenght >= 2.0:
-            try:
-                pause_service = rospy.ServiceProxy('/monitored_navigation/pause_nav', PauseResumeNav)
-                pause_service(1)
-                self.pause = 1
-            except rospy.ServiceException, e:
-                print "Service call failed: %s" % e
+        if self.begin == 0:
+            x = data.pose.pose.position.x - self.last_location.pose.pose.position.x
+            y = data.pose.pose.position.y - self.last_location.pose.pose.position.y
+               
+            lenght = numpy.sqrt(x*x + y*y)
+               
+            if lenght >= 2.0:
+                try:
+                    pause_service = rospy.ServiceProxy('/monitored_navigation/pause_nav', PauseResumeNav)
+                    pause_service(1)
+                    self.pause = 1
+                    self.begin = 1
+                except rospy.ServiceException, e:
+                    print "Service call failed: %s" % e
+        else:
+            self.last_location.pose.pose.position.x = data.pose.pose.position.x;
+            self.last_location.pose.pose.position.y = data.pose.pose.position.y;
+            self.begin = 0;
+            
+                        
        
        
 if __name__ == '__main__':
