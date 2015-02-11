@@ -1,4 +1,3 @@
 <launch>
-    <node name="webloader" pkg="strands_webserver" type="webloader.py"/>
     <node name="interface_server" pkg="aaf_walking_group" type="interface_server.py" output="screen"/>
 </launch>
