@@ -4,7 +4,7 @@ import rospy
 import smach
 from copy import deepcopy
 import actionlib
-from aaf_walking_group.msg import GuidingAction, GuidingActionGoal
+from aaf_walking_group.msg import GuidingAction, GuidingActionGoal, GuidingGoal
 
 
 class Guiding(smach.State):
@@ -23,7 +23,8 @@ class Guiding(smach.State):
         # Action server that does all the black magic for navigation
         nav_client = actionlib.SimpleActionClient("guiding", GuidingAction)
         nav_client.wait_for_server()
-        goal = GuidingActionGoal()
+        goal = GuidingGoal()
+        print goal
         goal.waypoint = userdata.waypoint
         nav_client.send_goal_and_wait(goal)
 

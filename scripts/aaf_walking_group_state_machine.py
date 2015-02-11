@@ -55,7 +55,7 @@ def main():
 
     # Create a SMACH state machine
     sm = smach.StateMachine(outcomes=['succeeded', 'aborted', 'preempted'])
-    sm.userdata.current_waypoint = "waypoint11"  # TODO: Get start point
+    sm.userdata.current_waypoint = "WayPoint3"  # TODO: Get start point
     sis = smach_ros.IntrospectionServer(
         'walking_group_state_machine',
         sm,

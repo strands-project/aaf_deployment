@@ -1,5 +1,5 @@
 <launch>
-  <node pkg="aaf_walking_group" type="wait_for_participant.py" name="wait_for_participant" />
+  <node pkg="aaf_walking_group" type="wait_for_participant.py" name="wait_for_participant" output="screen"/>
   <node pkg="aaf_walking_group" type="guiding_action.py" name="guiding_server" />
   <node pkg="social_card_reader" type="social_card_reader" name="social_card_reader" />
 </launch>
