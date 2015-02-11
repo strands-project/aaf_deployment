@@ -61,8 +61,8 @@ class GuidingServer():
        
 
     def odom_callback(self, data):
-        x = data.pose.pose.x - self.last_location.pose.pose.x
-        y = data.pose.pose.y - self.last_location.pose.pose.y
+        x = data.pose.pose.position.x - self.last_location.pose.pose.position.x
+        y = data.pose.pose.position.y - self.last_location.pose.pose.position.y
            
         lenght = numpy.sqrt(x*x + y*y)
            
