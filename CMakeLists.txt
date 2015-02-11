@@ -16,6 +16,9 @@ find_package(catkin REQUIRED COMPONENTS
   strands_webserver
   actionlib
   actionlib_msgs
+  genmsg
+  actionlib_msgs
+  actionlib
 )
 
 ## System dependencies are found with CMake's conventions
@@ -70,6 +73,7 @@ catkin_python_setup()
    FILES
    Interface.action
    Empty.action
+   Guiding.action
  )
 
 ## Generate added messages and services with any dependencies listed here
