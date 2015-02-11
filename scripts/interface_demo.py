@@ -22,11 +22,11 @@ class GuideInterfaceTesting(object):
             rospy.loginfo("Sending goal...")
             goal = InterfaceGoal()
             goal.next_point = 'test1'
-            goal.possible_points = ['test2', 'test3']
+            goal.possible_points = ['test2', 'test3', 'test4', 'test5', 'test6']
             self._client.send_goal_and_wait(goal)
             result = self._client.get_result()
 
-            if result != None:
+            if result is not None:
                 result = self._client.get_result()
                 rospy.loginfo("Got the result: %s", result.chosen_point)
             else:

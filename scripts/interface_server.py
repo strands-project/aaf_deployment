@@ -83,12 +83,29 @@ class InterfaceServer(object):
     def listWaypointPage(self, possible_points):
         notice = 'Wahlen Sie Ihren nachsten Punkt.'
         buttons = []
+        three_buttons = []
         for i in range(len(possible_points)):
-            buttons.append((possible_points[i], 'button'))
-        content = page_utils.generate_named_button_page(notice, buttons,
-                                                        self._action_name)
-        print content
-        client_utils.display_content(self.display_no, content)
+            if i % 3 == 0:
+                if three_buttons != []:
+                    buttons.append(three_buttons)
+                three_buttons = []
+            three_buttons.append((possible_points[i], 'button'))
+        buttons.append(three_buttons)
+
+        content = ''
+        for i in range(len(buttons)):
+            content += page_utils.generate_named_button_page(notice, buttons[i],
+                                                             self._action_name)
+
+        content_with_bg = self.createBGWaypointPage(content)
+        client_utils.display_content(self.display_no, content_with_bg)
+
+    def createBGWaypointPage(self, content):
+        bg = '<img style="position: absolute; left: -20px; top: -10px; width: 1024px; height: 768px;" src="img/strandsbg.png">'
+        bg += '<div id="logoDiv" style="position: absolute; width:616px; height: 300px; left: 204px; top: 64px;">'
+        bg += '<img id="imgElem" width="616" height="300" src="img/walkinggroup.png" />'
+        bg += '</div>'
+        return bg + content
 
     def preemptCallback(self):
         rospy.logwarn("Aborting the goal...")
