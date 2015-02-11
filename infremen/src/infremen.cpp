@@ -34,7 +34,7 @@ void loadMap(const strands_navigation_msgs::TopologicalMap::ConstPtr& msg)
 	
   	for (int i=0;i<msg->nodes.size();i++)
 	{
-		printf("%s\n",msg->nodes[i].name.c_str());
+		printf("MAP: %s.\n",msg->nodes[i].name.c_str());
 		frelementSet.add(msg->nodes[i].name.c_str(),times,state,0);
 	}
 }
@@ -43,6 +43,7 @@ void loadMap(const strands_navigation_msgs::TopologicalMap::ConstPtr& msg)
 void getCurrentNode(const strands_navigation_msgs::TopologicalNode::ConstPtr& msg)
 {
 	nodeName = msg->name;
+	printf("Current %s.\n",nodeName.c_str());
 }
 
 void addResult(const char *name,unsigned char state)
