@@ -76,10 +76,14 @@ bool CFrelementSet::print(int verbosityLevel)
 	for (int i = 0;i<numFrelements;i++) frelements[i]->print();
 }
 
-bool CFrelementSet::load(FILE* file)
+bool CFrelementSet::load(const char* name)
 {
 }
 
-bool CFrelementSet::save(FILE* file)
+bool CFrelementSet::save(const char* name)
 {
+	FILE* file = fopen(name,"w+");
+	fwrite(&numFrelements,sizeof(int),1,file);
+	for (int i = 0;i<numFrelements;i++) frelements[i]->save(file);
+	fclose(file);
 }

@@ -53,10 +53,10 @@ class CFrelementSet
 		bool print(int verbosityLevel);
 
 		/*load the model from a file*/
-		bool load(FILE* file);
+		bool load(const char* name);
 
 		/*save the model to a file*/
-		bool save(FILE* file);
+		bool save(const char* name);
 
 		bool find(const char *name);
 		CFrelement* frelements[MAX_LENGTH];

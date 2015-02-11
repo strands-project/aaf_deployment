@@ -7,12 +7,16 @@
 #include <strands_navigation_msgs/TopologicalNode.h>
 #include <strands_executive_msgs/AddTask.h>
 #include <std_msgs/Empty.h>
+#include <std_msgs/String.h>
 #include "CFrelementSet.h"
 #include <time.h> 
 
 #define MAX_EDGES 10000
 
 const mongo::BSONObj EMPTY_BSON_OBJ;
+int waitingInterval = 60;
+int taskLength = 60;
+int numTasks = 1;
 
 using namespace mongodb_store;
 using namespace std;
@@ -29,6 +33,8 @@ unsigned char 	state[100000];
 float wheel[1000];
 int numNodes = 0;
 float lastWheel = 0;
+
+CTimer timer;
 
 void recalculateModels()
 {
@@ -65,26 +71,43 @@ void loadMap(const strands_navigation_msgs::TopologicalMap::ConstPtr& msg)
 /*loads nodes from the map description*/
 void getCurrentNode(const std_msgs::String::ConstPtr& msg)
 {
-	nodeName = msg->name;
-	printf("Current %s.\n",nodeName.c_str());
+	nodeName = msg->data;
+	printf("Current node %s.\n",nodeName.c_str());
+	timer.reset(waitingInterval);
 }
+
+
+
 
 void addResult(const char *name,unsigned char state)
 {
 	uint32_t times[1];
 	unsigned char signal[1];
 	signal[0] = state;
+	printf("%s-%i-%i\n",nodeName.c_str(),times[0],signal[0]);
+	times[0] = (uint32_t)ros::Time::now().toSec();
 	frelementSet.add(nodeName.c_str(),times,signal,1);
 }
 
+/*loads nodes from the map description*/
+void getCommand(const std_msgs::String::ConstPtr& msg)
+{
+	printf("Current command %s.\n",msg->data.c_str());
+	if (msg->data == "INFO_TERMINAL"){
+		timer.reset(waitingInterval);	
+		printf("Info activity at %s.\n",nodeName.c_str());
+		addResult(msg->data.c_str(),1);
+	}
+}
 
 void interacted(const std_msgs::Empty::ConstPtr& msg)
 {
 	addResult(nodeName.c_str(),1);
 }
 
-void timeOut(const std_msgs::Empty::ConstPtr& msg)
+void timeOut()
 {
+	timer.reset(waitingInterval);	
 	addResult(nodeName.c_str(),0);
 }
 
@@ -97,9 +120,9 @@ void recalculate(const std_msgs::Empty::ConstPtr& msg)
 /*generates a task - invoked every minute*/
 int generateTasks()
 {
- time_t t;
- srand((unsigned int)time(&t));
-	for (int i=0;i<2;i++)
+	time_t t;
+	srand((unsigned int)time(&t));
+	for (int i=0;i<numTasks;i++)
 	{
 		int node = 0;
 		if (numNodes > 0){
@@ -110,15 +133,15 @@ int generateTasks()
 		strands_executive_msgs::Task task;
 		task.start_node_id = frelementSet.frelements[node]->id;
 		task.action = "wait_action";
-		task.start_after = ros::Time::now()+ros::Duration(180*i);
-		task.end_before  = ros::Time::now()+ros::Duration(180*(i+1)-1);
-		task.max_duration = ros::Duration(10);
+		task.start_after = ros::Time::now()+ros::Duration(taskLength*i);
+		task.end_before  = ros::Time::now()+ros::Duration(taskLength*(i+1)-1);
+		task.max_duration = ros::Duration(waitingInterval);
 		taskAdd.request.task = task;
-		if (taskAdder.call(taskAdd))
-		{
-			ROS_INFO("Task ID: %ld", taskAdd.response.task_id);
-		}
-		printf("Time slot: %i-%i %i %s \n",180*i,180*(i+1)-1,numNodes,frelementSet.frelements[node]->id);
+		//if (taskAdder.call(taskAdd))
+		//{
+		//	ROS_INFO("Task ID: %ld", taskAdd.response.task_id);
+		//}
+		printf("Time slot: %i-%i %i %s \n",taskLength*i,taskLength*(i+1)-1,numNodes,frelementSet.frelements[node]->id);
 	}
 }
 
@@ -128,21 +151,27 @@ int main(int argc,char* argv[])
 	ros::init(argc, argv, "infremen");
 	n = new ros::NodeHandle();
 	ros::Subscriber  topoMapSub = n->subscribe("/topological_map", 1000, loadMap);
-	ros::Subscriber  currentNodeSub = n->subscribe("/current_node", 1000, getCurrentNode);
+	ros::Subscriber  currentNodeSub = n->subscribe("/closest_node", 1000, getCurrentNode);
+	ros::Subscriber  getCommandSub = n->subscribe("/socialCardReader/commands", 1000, getCommand);
+	timer.start();
+	timer.reset(waitingInterval);
 	//ros::Subscriber  interfaceSub = n->subscribe("/info_terminal", 1000, interacted);
 	//ros::Subscriber  recalculateSub = n->subscribe("/recalculate", 1000, recalculate);
 //	taskPub = n->advertise<strands_executive_msgs::Task>("/taskTopic", 1000, recalculate);
 	taskAdder = n->serviceClient<strands_executive_msgs::AddTask>("/task_executor/add_task");
-	int periodicity = 20*60*7;
+	int periodicity = 20*60*1;
 	int iii = periodicity-5*20;
 	while (ros::ok())
 	{
 		ros::spinOnce();
 		usleep(50000);
 		if (iii++>periodicity){
-			 generateTasks();
-			 iii=0;
+			recalculateModels();
+			generateTasks();
+			iii=0;
 		}
+		if (timer.timeOut())timeOut();
 	}
+	frelementSet.save("latest.fre");
 	return 0;
 }
