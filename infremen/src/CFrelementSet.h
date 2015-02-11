@@ -58,7 +58,6 @@ class CFrelementSet
 		/*save the model to a file*/
 		bool save(FILE* file);
 
-	private:
 		bool find(const char *name);
 		CFrelement* frelements[MAX_LENGTH];
 		CFrelement* active;

@@ -38,6 +38,7 @@ int CFrelement::add(uint32_t times[],unsigned char states[],int length)
 		}
 		firstTime = times[0];
 	}
+	if (length == 0) return 0;
 	int duration = times[length-1]-firstTime;
 	int firstIndex = 0;
 
