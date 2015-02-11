@@ -29,7 +29,7 @@ class GuidingServer:
         #call send keypoint (topological navigation)
       
         try:
-            (trans,rot) = listener.lookupTransform('/base_link', '/map', rospy.Time(0))
+            (trans,rot) = tf.listener.lookupTransform('/base_link', '/map', rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             continue
           
