@@ -20,9 +20,6 @@ find_package(catkin REQUIRED COMPONENTS
 
 )
 
-add_action_files(DIRECTORY action FILES Guiding.action)
-
-generate_messages(DEPENDENCIES actionlib_msgs)
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -74,6 +71,7 @@ catkin_python_setup()
 add_action_files(
   FILES
   Empty.action
+  Guiding.action
 )
 
 ## Generate added messages and services with any dependencies listed here
