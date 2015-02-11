@@ -11,6 +11,8 @@ from mongodb_store.message_store import MessageStoreProxy
 from aaf_walking_group.entertain import Entertain
 from aaf_walking_group.guide_interface import GuideInterface
 from aaf_walking_group.guiding import Guiding
+from aaf_walking_group.msg import GuidingAction, EmptyAction
+import actionlib
 import json
 import pprint
 
@@ -30,6 +32,10 @@ def loadConfig(dataset_name, collection_name="aaf_walking_group", meta_name="way
 def main():
     rospy.init_node('walking_group_smach')
 
+    nav_client = actionlib.SimpleActionClient("guiding", GuidingAction)
+    nav_client.wait_for_server()
+    wait_client = actionlib.SimpleActionClient("wait_for_participant", EmptyAction)
+    wait_client.wait_for_server()
     # Get parameters
     display_no = rospy.get_param("~display_no", 0)
     waypointset_name = rospy.get_param("~mongodb_params/waypointset_name", "")
