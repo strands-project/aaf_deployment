@@ -63,7 +63,7 @@ void loadMap(const strands_navigation_msgs::TopologicalMap::ConstPtr& msg)
 }
 
 /*loads nodes from the map description*/
-void getCurrentNode(const strands_navigation_msgs::TopologicalNode::ConstPtr& msg)
+void getCurrentNode(const std_msgs::String::ConstPtr& msg)
 {
 	nodeName = msg->name;
 	printf("Current %s.\n",nodeName.c_str());
@@ -128,7 +128,7 @@ int main(int argc,char* argv[])
 	ros::init(argc, argv, "infremen");
 	n = new ros::NodeHandle();
 	ros::Subscriber  topoMapSub = n->subscribe("/topological_map", 1000, loadMap);
-	//ros::Subscriber  currentNodeSub = n->subscribe("/current_node", 1000, getCurrentNode);
+	ros::Subscriber  currentNodeSub = n->subscribe("/current_node", 1000, getCurrentNode);
 	//ros::Subscriber  interfaceSub = n->subscribe("/info_terminal", 1000, interacted);
 	//ros::Subscriber  recalculateSub = n->subscribe("/recalculate", 1000, recalculate);
 //	taskPub = n->advertise<strands_executive_msgs::Task>("/taskTopic", 1000, recalculate);
