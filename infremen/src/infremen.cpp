@@ -92,6 +92,20 @@ int generateTask()
 		float randomNum = (float)rand()/RAND_MAX*lastWheel;
 		for (int p = 0;p<numNodes && randomNum > wheel[p];p++) node = p;
 	}
+	strands_executive_msgs::AddTask taskAdd;
+	strands_executive_msgs::Task task;
+	task.start_node_id = "WayPoint1";
+	task.action = "wait_action";
+	int i = 0;
+	task.start_after = ros::Time::now()+ros::Duration(60*i);
+	task.end_before  = ros::Time::now()+ros::Duration(60*(i+1)-1);
+	task.max_duration = ros::Duration(30);
+	taskAdd.request.task = task;
+	/*if (taskAdder.call(taskAdd))
+	{
+		ROS_INFO("Sum: %ld", taskAdd.response.task_id);
+	}*/
+	printf("Time slot: %i %i \n",);
 }
 
 
@@ -105,21 +119,7 @@ int main(int argc,char* argv[])
 	//ros::Subscriber  recalculateSub = n->subscribe("/recalculate", 1000, recalculate);
 //	taskPub = n->advertise<strands_executive_msgs::Task>("/taskTopic", 1000, recalculate);
 	taskAdder = n->serviceClient<strands_executive_msgs::AddTask>("/task_executor/add_task");
-	strands_executive_msgs::AddTask taskAdd;
-	strands_executive_msgs::Task task;
-	task.start_node_id = "Waypoint1";
-	task.end_node_id = "Waypoint1";
-	task.action = "Wait";
-	//task.start_after = ros::Time::now();
-	//task.end_before = ros::Time::now()+ros::Duration(120);
-	task.max_duration = ros::Duration(60);
-	taskAdd.request.task = task;
-	printf("task\n");
-	if (taskAdder.call(taskAdd))
-	{
-		ROS_INFO("Sum: %ld", taskAdd.response.task_id);
-	}
-	printf("aa\n");
+
 	while (ros::ok()){
 		ros::spinOnce();
 		usleep(30000);
