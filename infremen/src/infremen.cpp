@@ -8,6 +8,7 @@
 #include <strands_executive_msgs/AddTask.h>
 #include <std_msgs/Empty.h>
 #include "CFrelementSet.h"
+#include <time.h> 
 
 #define MAX_EDGES 10000
 
@@ -29,6 +30,25 @@ float wheel[1000];
 int numNodes = 0;
 float lastWheel = 0;
 
+void recalculateModels()
+{
+	numNodes = frelementSet.numFrelements;
+	float explorationRatio = 0.5;
+	float entropy[1],probability[1];
+	uint32_t times[1];
+	times[0] = 0;//TODO current time
+	for (int i=0;i<numNodes;i++)
+	{
+		frelementSet.frelements[i]->estimateEntropy(times,entropy,1,1);
+		frelementSet.frelements[i]->estimate(times,probability,1,1);
+		lastWheel += explorationRatio*entropy[0]+(1-explorationRatio)*probability[0];
+		wheel[i] = lastWheel;
+	}
+	printf("Wheel: ");
+	for (int i=0;i<numNodes;i++) printf("%.3f ",wheel[i]);
+	printf("%.3f \n",lastWheel);
+}
+
 /*loads nodes from the map description*/
 void loadMap(const strands_navigation_msgs::TopologicalMap::ConstPtr& msg)
 {
@@ -38,6 +58,8 @@ void loadMap(const strands_navigation_msgs::TopologicalMap::ConstPtr& msg)
 		printf("MAP: %s.\n",msg->nodes[i].name.c_str());
 		frelementSet.add(msg->nodes[i].name.c_str(),times,state,0);
 	}
+	numNodes = frelementSet.numFrelements;
+	recalculateModels();
 }
 
 /*loads nodes from the map description*/
@@ -69,43 +91,35 @@ void timeOut(const std_msgs::Empty::ConstPtr& msg)
 /*recalculates models*/
 void recalculate(const std_msgs::Empty::ConstPtr& msg)
 {
-	numNodes = frelementSet.numFrelements;
-	float explorationRatio = 0.5;
-	float entropy[1],probability[1];
-	uint32_t times[1];
-	times[0] = 0;//TODO current time
-	for (int i=0;i<numNodes;i++)
-	{
-		frelementSet.frelements[i]->estimateEntropy(times,entropy,1,1);
-		frelementSet.frelements[i]->estimate(times,probability,1,1);
-		lastWheel += explorationRatio*entropy[0]+(1-explorationRatio)*probability[0];
-		wheel[i] = lastWheel;
-	}
+	recalculateModels();
 }
 
 /*generates a task - invoked every minute*/
-int generateTask()
+int generateTasks()
 {
-	strands_executive_msgs::Task task;
-	int node = 0;
-	if (numNodes > 0){
-		float randomNum = (float)rand()/RAND_MAX*lastWheel;
-		for (int p = 0;p<numNodes && randomNum > wheel[p];p++) node = p;
-	}
-	strands_executive_msgs::AddTask taskAdd;
-	strands_executive_msgs::Task task;
-	task.start_node_id = "WayPoint1";
-	task.action = "wait_action";
-	int i = 0;
-	task.start_after = ros::Time::now()+ros::Duration(60*i);
-	task.end_before  = ros::Time::now()+ros::Duration(60*(i+1)-1);
-	task.max_duration = ros::Duration(30);
-	taskAdd.request.task = task;
-	/*if (taskAdder.call(taskAdd))
+ time_t t;
+ srand((unsigned int)time(&t));
+	for (int i=0;i<2;i++)
 	{
-		ROS_INFO("Sum: %ld", taskAdd.response.task_id);
-	}*/
-	printf("Time slot: %i-%i %s \n",60*i,60*(i+1)-1);
+		int node = 0;
+		if (numNodes > 0){
+			float randomNum = (float)rand()/RAND_MAX*lastWheel;
+			for (int p = 0;p<numNodes && randomNum > wheel[p];p++) node = p;
+		}
+		strands_executive_msgs::AddTask taskAdd;
+		strands_executive_msgs::Task task;
+		task.start_node_id = frelementSet.frelements[node]->id;
+		task.action = "wait_action";
+		task.start_after = ros::Time::now()+ros::Duration(180*i);
+		task.end_before  = ros::Time::now()+ros::Duration(180*(i+1)-1);
+		task.max_duration = ros::Duration(10);
+		taskAdd.request.task = task;
+		if (taskAdder.call(taskAdd))
+		{
+			ROS_INFO("Task ID: %ld", taskAdd.response.task_id);
+		}
+		printf("Time slot: %i-%i %i %s \n",180*i,180*(i+1)-1,numNodes,frelementSet.frelements[node]->id);
+	}
 }
 
 
@@ -119,10 +133,16 @@ int main(int argc,char* argv[])
 	//ros::Subscriber  recalculateSub = n->subscribe("/recalculate", 1000, recalculate);
 //	taskPub = n->advertise<strands_executive_msgs::Task>("/taskTopic", 1000, recalculate);
 	taskAdder = n->serviceClient<strands_executive_msgs::AddTask>("/task_executor/add_task");
-
-	while (ros::ok()){
+	int periodicity = 20*60*7;
+	int iii = periodicity-5*20;
+	while (ros::ok())
+	{
 		ros::spinOnce();
-		usleep(30000);
+		usleep(50000);
+		if (iii++>periodicity){
+			 generateTasks();
+			 iii=0;
+		}
 	}
 	return 0;
 }
