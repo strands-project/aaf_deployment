@@ -7,4 +7,4 @@ std_msgs/Float32 timeout
 std_msgs/Bool success
 ---
 # Define a feedback message
-std_msgs/Float32 percent_complete
+std_msgs/String status
