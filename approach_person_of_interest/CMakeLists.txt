@@ -6,6 +6,7 @@ project(approach_person_of_interest)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   actionlib
+  actionlib_msgs
   monitored_navigation
   message_generation 
   std_msgs
@@ -61,17 +62,11 @@ catkin_python_setup()
  )
 
 ## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
-#   Action2.action
-# )
+
+add_action_files(DIRECTORY action FILES goToPerson.action)
 
 ## Generate added messages and services with any dependencies listed here
- generate_messages(
-  # DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
- )
+generate_messages(DEPENDENCIES actionlib_msgs geometry_msgs std_msgs)
 
 ###################################
 ## catkin specific configuration ##
