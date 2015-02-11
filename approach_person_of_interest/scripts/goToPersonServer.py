@@ -13,21 +13,31 @@ class goToPersonAction(object):
   _result   = goToPersonResult()
 
   def __init__(self, name):
-#! /usr/bin/env python    
     self._action_name = name
     self._as = actionlib.SimpleActionServer(self._action_name, approach_person_of_interest.msg.goToPersonAction, execute_cb=self.execute_cb, auto_start = False)
     self._as.start()
-    print 'go_to_person action server started.'
+    rospy.loginfo("Action server up: %s"%self._action_name)
     
   def execute_cb(self, goal):
     # helper variables
-    r = rospy.Rate(1)
+    print goal.go_to_person
+    if goal.go_to_person.data:
+	print 'starting_gui'
+    else:
+	print 'not starting gui'
+
+
     success = True
 
     if success:
-      self._result.success = true
+      self._result.success = True
       rospy.loginfo('%s: Succeeded' % self._action_name)
       self._as.set_succeeded(self._result)
+
+  def send_feedback(self, txt):
+	self._feedback.status = txt
+	self._as.publish_feedback(self._feedback)
+	rospy.loginfo(txt)
 
 if __name__ == '__main__':
   rospy.init_node('go_to_person_action')
