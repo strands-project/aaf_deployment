@@ -1,7 +1,7 @@
 slow:
-    1: "waypoint11"
-    2: "waypoint12"
-    3: "waypoint13"
+    1: "WayPoint5"
+    2: "WayPoint4"
+    3: "WayPoint3"
 fast:
     1: "waypoint21"
     2: "waypoint22"
