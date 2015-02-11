@@ -17,7 +17,9 @@ class GuidingServer():
         self.server = actionlib.SimpleActionServer('guiding', GuidingAction, self.execute, False)
         self.server.start()
         self.client = actionlib.SimpleActionClient('topological_navigation', topological_navigation.msg.GotoNodeAction)
+        self.client.wait_for_server()
         self.empty_client = actionlib.SimpleActionClient('wait_for_participant', EmptyAction)
+        self.empty_client.wait_for_server()
         self.card_subscriber =rospy.Subscriber("/socialCardReader/QSR_generator", String, self.card_callback)
         self.odom_subscriber =rospy.Subscriber("odom", Odometry, self.odom_callback)
         self.last_location = Odometry()
@@ -25,23 +27,9 @@ class GuidingServer():
         self.begin = 0;
       
     def execute(self, goal):
-        #call send keypoint (topological navigation)
-      
-#        while not rospy.is_shutdown():
-#            try:
-#                listener = tf.TransformListener()
-#                (trans,rot) = listener.lookupTransform('/base_link', '/map', rospy.Time(0))
-#                break
-#            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-#                continue
       
         self.begin = 1;
-          
-        #self.last_location.pose.pose.position.x = trans[0]
-        #self.last_location.pose.pose.position.y = trans[1]
-        print "here"
-        self.client.wait_for_server()
-        print "there"
+         
         navgoal = topological_navigation.msg.GotoNodeGoal()
         navgoal.target = goal.waypoint
         self.client.send_goal(navgoal)
