@@ -8,7 +8,7 @@ from aaf_walking_group.msg import GuidingAction
 from aaf_walking_group.msg import EmptyAction, EmptyActionGoal
 import topological_navigation.msg
 from std_msgs.msg import String
-from std_msgs.msg import Bool
+from strands_navigation_msgs.srv import PauseResumeNav
 from nav_msgs.msg import Odometry
 
 
@@ -26,15 +26,19 @@ class GuidingServer():
     def execute(self, goal):
         #call send keypoint (topological navigation)
       
-        try:
-            tf.listener = tf.TransformListener()
-            (trans,rot) = tf.listener.lookupTransform('/base_link', '/map', rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            pass
+        while not rospy.is_shutdown():
+            try:
+                listener = tf.TransformListener()
+                (trans,rot) = listener.lookupTransform('/base_link', '/map', rospy.Time(0))
+                break
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                continue
           
-        self.last_location.pose.pose.x = trans[0]
-        self.last_location.pose.pose.y = trans[1]
+        self.last_location.pose.pose.position.x = trans[0]
+        self.last_location.pose.pose.position.y = trans[1]
+        print "here"
         self.client.wait_for_server()
+        print "there"
         navgoal = topological_navigation.msg.GotoNodeGoal()
         navgoal.target = goal.waypoint
         self.client.send_goal(navgoal)
@@ -53,7 +57,7 @@ class GuidingServer():
             if data.data == 'near':
                 self.empty_client.send_goal_and_wait(EmptyActionGoal())
             try:
-                pause_service = rospy.ServiceProxy('/monitored_navigation/pause_nav', Bool)
+                pause_service = rospy.ServiceProxy('/monitored_navigation/pause_nav', PauseResumeNav)
                 pause_service(0)
                 self.pause = 0
             except rospy.ServiceException, e:
@@ -68,7 +72,8 @@ class GuidingServer():
            
         if lenght >= 2.0:
             try:
-                self.pause_service(1)
+                pause_service = rospy.ServiceProxy('/monitored_navigation/pause_nav', PauseResumeNav)
+                pause_service(1)
                 self.pause = 1
             except rospy.ServiceException, e:
                 print "Service call failed: %s" % e
