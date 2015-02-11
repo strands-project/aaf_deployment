@@ -7,6 +7,8 @@ import actionlib
 from std_msgs.msg import String, Float32, Bool
 from geometry_msgs.msg import PoseStamped, PointStamped
 from approach_person_of_interest.msg import *
+from monitored_navigation import *
+from strands_navigation_msgs.msg import MonitoredNavigationAction, MonitoredNavigationActionGoal
 
 class goToPersonAction(object):
   _feedback = goToPersonFeedback()
