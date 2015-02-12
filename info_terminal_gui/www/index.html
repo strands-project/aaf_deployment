@@ -34,15 +34,15 @@ $def with (strings, datetime)
   <div class="col-md-4">
     <div class="row text-center">
       <a href="weather">
-        <img src="static/weather-icon.png" class="img-thumbnail img-responsive" style="max-height:300px"><br>
-        <h1>Today's Weather</h1>
+        <img src="static/weather-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
+        <h1>Weather Information</h1>
       </a>
     </div>
  
   <div class="row">&nbsp;</div>
     <div class="row text-center">
       <a href="menu">
-        <img src="static/food-icon.png" class="img-thumbnail img-responsive" style="max-height:300px"><br>
+        <img src="static/food-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
         <h1>$strings["Cafeteria Menu"]</h1>
       </a>
     </div>
@@ -51,19 +51,19 @@ $def with (strings, datetime)
   <!-- central clock -->
   <div class="col-md-4 text-center vcenter">
     <canvas id="clockid" class="CoolClock:classic:150"></canvas>  
-    <h1><div id="clock"></div></h1>
+    <b><h1><div id="clock"></div></h1></b>
     <script type="text/javascript">startTime();</script>
     <br><br>
-    <h1>$datetime.date.strftime(datetime.date.today(),"%A")</h1>
-    <h1>$datetime.date.strftime(datetime.date.today(),"%d %B")</h1>
-    <h1>$datetime.date.strftime(datetime.date.today(),"%Y")</h1>
+    <h1><b>$datetime.date.strftime(datetime.date.today(),"%A")</b></h1>
+    <h1><b>$datetime.date.strftime(datetime.date.today(),"%d %B")</b></h1>
+    <h1><b>$datetime.date.strftime(datetime.date.today(),"%Y")</b></h1>
   </div>
   
   <!-- right column -->
   <div class="col-md-4">
     <div class="row text-center">
        <a href="events">
-        <img src="static/events-icon.png" class="img-thumbnail img-responsive" style="max-height:300px"><br>
+        <img src="static/events-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
         <h1>Coming Events </h1>
       </a>
     </div>
@@ -77,11 +77,20 @@ $def with (strings, datetime)
     <!--</div>-->
   <!--</div>-->
   
+  <!--<div class="row">&nbsp;</div>-->
+    <!--<div class="row text-center">-->
+       <!--<a href="play_music">-->
+        <!--<img src="static/music-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>-->
+        <!--<h1>Play Some Music</h1>-->
+      <!--</a>-->
+    <!--</div>-->
+  <!--</div>-->
+  
   <div class="row">&nbsp;</div>
     <div class="row text-center">
-       <a href="play_music">
-        <img src="static/music-icon.png" class="img-thumbnail img-responsive" style="max-height:300px"><br>
-        <h1>Play Some Music</h1>
+       <a href="/photo_album/0">
+        <img src="static/photos-icon.jpeg" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
+        <h1>View Photo Album</h1>
       </a>
     </div>
   </div>

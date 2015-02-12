@@ -150,8 +150,9 @@ CoolClock.prototype = {
 		this.ctx.save();
 		this.ctx.font = '15px sans-serif';
 		var tSize = this.ctx.measureText(theText);
-		if (!tSize.height) tSize.height = 15; // no height in firefox.. :(
-		this.ctx.fillText(theText,x - tSize.width/2,y - tSize.height/2);
+		if (!tSize.height) tSize.height = 12; // no height in firefox.. :(
+		this.ctx.fillText(theText,x - tSize.width/2 - 1,y + tSize.height/2);
+		//this.ctx.fillText(theText,x,y);
 		this.ctx.restore();
 	},
 
@@ -223,10 +224,22 @@ CoolClock.prototype = {
 		if (skin.outerBorder)
 			this.fullCircleAt(this.renderRadius,this.renderRadius,skin.outerBorder);
 
+		// Draw the numbers
+		for (var no=1;no<13;no++){
+			var x=this.renderRadius+(this.renderRadius-30)*Math.cos(no/6.0*Math.PI - 0.5*Math.PI);
+			var y=this.renderRadius+(this.renderRadius-30)*Math.sin(no/6.0*Math.PI - 0.5*Math.PI);
+			this.drawTextAt(no.toString(),x,y);
+		}
+		
 		// Draw the tick marks. Every 5th one is a big one
 		for (var i=0;i<60;i++) {
 			(i%5)  && skin.smallIndicator && this.radialLineAtAngle(this.tickAngle(i),skin.smallIndicator);
-			!(i%5) && skin.largeIndicator && this.radialLineAtAngle(this.tickAngle(i),skin.largeIndicator);
+			if (!(i%5) ) {
+				if (skin.largeIndicator) {
+					this.radialLineAtAngle(this.tickAngle(i),skin.largeIndicator);
+					
+				}
+			}
 		}
 
 		// Write the time
