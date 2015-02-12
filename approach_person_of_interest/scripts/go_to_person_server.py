@@ -58,11 +58,10 @@ class goToPersonAction(object):
 	    self._mon_nav_client.send_goal(mon_nav_goal)
 	    self._mon_nav_client.wait_for_result()
 	    self.send_feedback('Reached the right position')
-
-      # Send goal to gaze action server
-      gaze_dir_goal=setPose(action_server='gaze_at_pose', topic_name='/info_terminal/gaze_pose')
-      self.gaze_act_client.send_goal(gaze_dir_goal)
-      self.gaze_pose.publish(goal.pose)
+	    # Send goal to gaze action server
+	    gaze_dir_goal=setPose(action_server='gaze_at_pose', topic_name='/info_terminal/gaze_pose')
+	    self.gaze_act_client.send_goal(gaze_dir_goal)
+	    self.gaze_pose.publish(goal.pose)
       
 
     strands_webserver.client_utils.display_url(0, 'http://localhost:8080')
