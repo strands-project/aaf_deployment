@@ -13,6 +13,7 @@ import strands_webserver.client_utils
 # For changing where to look
 import strands_gazing.msg
 import scitos_ptu.msg
+from strands_gazing.msg import GazeAtPoseAction, GazeAtPoseGoal
 
 class goToPersonAction(object):
   _feedback = goToPersonFeedback()
@@ -41,9 +42,9 @@ class goToPersonAction(object):
     self.pub = rospy.Publisher('/head/commanded_state', JointState, queue_size=2)
 
     # Publishing the gaze pose
-    self.gaze_topic_pub=rospy.Publisher('/info_terminal/gaze_pose',PoseStamped)
+    self.gaze_topic_pub=rospy.Publisher('/info_terminal/gaze_pose',PoseStamped,queue_size=0)
     # Create a gaze action client
-    self.gaze_act_client = actionlib.SimpleActionClient('gaze_at_pose', strands_gazing.msg.GazeAtPoseAction)
+    self.gaze_act_client = actionlib.SimpleActionClient('gaze_at_pose', GazeAtPoseAction)
 
   def execute_cb(self, goal):
     # helper variables
@@ -56,12 +57,18 @@ class goToPersonAction(object):
 	    self.send_feedback('going to person')
 	    mon_nav_goal=MonitoredNavigationGoal(action_server='move_base', target_pose=goal.pose)
 	    self._mon_nav_client.send_goal(mon_nav_goal)
-	    self._mon_nav_client.wait_for_result()
-	    self.send_feedback('Reached the right position')
-	    # Send goal to gaze action server
-	    gaze_dir_goal=setPose(action_server='gaze_at_pose', topic_name='/info_terminal/gaze_pose')
+	    print "CREATING GAZE"
+	    gaze_dir_goal= GazeAtPoseGoal(topic_name='/info_terminal/gaze_pose', runtime_sec=0)
+	    print "SENDING GOAL"
 	    self.gaze_act_client.send_goal(gaze_dir_goal)
-	    self.gaze_pose.publish(goal.pose)
+            print "DONE GAZING"
+            self.gaze_topic_pub.publish(goal.pose)
+	    finished_moving=self._mon_nav_client.wait_for_result(rospy.Duration(1))
+	    while not finished_moving:
+                self.gaze_topic_pub.publish(goal.pose)
+                finished_moving=self._mon_nav_client.wait_for_result(rospy.Duration(1))
+	    self.send_feedback('Reached the right position')
+	    self.gaze_act_client.cancel_all_goals()
       
 
     strands_webserver.client_utils.display_url(0, 'http://localhost:8080')
