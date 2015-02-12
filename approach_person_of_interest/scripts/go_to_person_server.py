@@ -48,6 +48,12 @@ class goToPersonAction(object):
 	    self._mon_nav_client.send_goal(mon_nav_goal)
 
     strands_webserver.client_utils.display_url(0, 'http://localhost:8080')
+    self.currentPan=0
+    self.currentTilt=0
+    self.head_command = JointState() 
+    self.head_command.name=["HeadPan", "HeadTilt"] 
+    self.head_command.position=[self.currentPan, self.currentTilt]
+    self.pub.publish(self.head_command)
 
     success = True
 
