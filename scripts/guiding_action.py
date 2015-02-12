@@ -74,6 +74,7 @@ class GuidingServer():
                         self.begin = 1
                     except rospy.ServiceException, e:
                         print "Service call failed: %s" % e
+                self.counter = 0
         else:
             self.last_location.pose.pose.position.x = data.pose.pose.position.x;
             self.last_location.pose.pose.position.y = data.pose.pose.position.y;
