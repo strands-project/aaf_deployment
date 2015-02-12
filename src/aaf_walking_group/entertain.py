@@ -29,7 +29,7 @@ class Entertain(smach.State):
         return 'key_card'
 
     def callback(self, data):
-        print data
+        print "got card:", data
         if data.data == "PAUSE_WALK":
             self.card = True
             self.sub.unregister()

@@ -27,7 +27,6 @@ class WaitForParticipant(object):
         self.pressed = False
         strands_webserver.client_utils.display_relative_page(self.display_no, "continue_page.html")
         while not self.pressed and not rospy.is_shutdown():
-            print "Wait"
             pass
         print "Leave"
         self._as.set_succeeded()
