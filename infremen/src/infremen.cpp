@@ -8,6 +8,7 @@
 #include <strands_executive_msgs/AddTask.h>
 #include <std_msgs/Empty.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Int32.h>
 #include "CFrelementSet.h"
 #include <time.h> 
 
@@ -35,6 +36,7 @@ int numNodes = 0;
 float lastWheel = 0;
 
 CTimer timer;
+CTimer interactionTimer;
 
 void recalculateModels()
 {
@@ -95,14 +97,27 @@ void getCommand(const std_msgs::String::ConstPtr& msg)
 	printf("Current command %s.\n",msg->data.c_str());
 	if (msg->data == "INFO_TERMINAL"){
 		timer.reset(waitingInterval);	
-		printf("Info activity at %s.\n",nodeName.c_str());
-		addResult(msg->data.c_str(),1);
+		printf("Info request at %s.",nodeName.c_str());
+		if (interactionTimer.timeOut())
+		{
+			printf(" - FreMEnized.");
+			interactionTimer.reset(waitingInterval/2);
+			addResult(msg->data.c_str(),1);
+		}
+		printf("\n");
 	}
 }
 
-void interacted(const std_msgs::Empty::ConstPtr& msg)
+void interacted(const std_msgs::Int32::ConstPtr& msg)
 {
-	addResult(nodeName.c_str(),1);
+	printf("Infoterminal %i clicked at %s.",msg->data,nodeName.c_str());
+	if (interactionTimer.timeOut())
+	{
+		printf(" - FreMEnized.");
+		interactionTimer.reset(waitingInterval/2);
+		addResult(nodeName.c_str(),1);
+	}
+	printf("\n");
 }
 
 void timeOut()
@@ -153,9 +168,11 @@ int main(int argc,char* argv[])
 	ros::Subscriber  topoMapSub = n->subscribe("/topological_map", 1000, loadMap);
 	ros::Subscriber  currentNodeSub = n->subscribe("/closest_node", 1000, getCurrentNode);
 	ros::Subscriber  getCommandSub = n->subscribe("/socialCardReader/commands", 1000, getCommand);
+	ros::Subscriber  interfaceSub = n->subscribe("/info_terminal/active_screen", 1000, interacted);
 	timer.start();
 	timer.reset(waitingInterval);
-	//ros::Subscriber  interfaceSub = n->subscribe("/info_terminal", 1000, interacted);
+	interactionTimer.start();
+	interactionTimer.reset(waitingInterval);
 	//ros::Subscriber  recalculateSub = n->subscribe("/recalculate", 1000, recalculate);
 //	taskPub = n->advertise<strands_executive_msgs::Task>("/taskTopic", 1000, recalculate);
 	taskAdder = n->serviceClient<strands_executive_msgs::AddTask>("/task_executor/add_task");
@@ -175,3 +192,4 @@ int main(int argc,char* argv[])
 	frelementSet.save("latest.fre");
 	return 0;
 }
+

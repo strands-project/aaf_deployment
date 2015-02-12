@@ -162,13 +162,14 @@ int CFrelement::estimate(uint32_t times[],float probs[],int length,int orderi)
 {
 	float estimate = 0;
 	float time;
+	float saturation = 0.05;
 	for (int j = 0;j<length;j++)
 	{
 		time = times[j];
 		estimate = gain;
 		for (int i = 0;i<orderi;i++) estimate+=2*frelements[i].amplitude*cos(time/frelements[i].period*2*M_PI-frelements[i].phase);
-		if (estimate > 1.0) estimate =  1.0;
-		if (estimate < 0.0) estimate =  0.0;
+		if (estimate > 1.0-saturation) estimate =  1.0-saturation;
+		if (estimate < 0.0+saturation) estimate =  0.0+saturation;
 		probs[j]=estimate;
 	}
 	return length;
@@ -178,11 +179,14 @@ int CFrelement::estimateEntropy(uint32_t times[],float entropy[],int length,int 
 {
 	float estimate = 0;
 	float time;
+	float saturation = 0.05;
 	for (int j = 0;j<length;j++)
 	{
 		time = times[j];
 		estimate = gain;
 		for (int i = 0;i<orderi;i++) estimate+=2*frelements[i].amplitude*cos(time/frelements[i].period*2*M_PI-frelements[i].phase);
+		if (estimate > 1.0-saturation) estimate =  1.0-saturation;
+		if (estimate < 0.0+saturation) estimate =  0.0+saturation;
 		if (estimate <= 0 || estimate >= 1) entropy[j] = 0; else  entropy[j] = -(estimate*log2f(estimate)+(1-estimate)*log2f((1-estimate)));
 	}
 	return length;
