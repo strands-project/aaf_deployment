@@ -6,7 +6,11 @@
 #include <strands_navigation_msgs/TopologicalMap.h>
 #include <strands_navigation_msgs/TopologicalNode.h>
 #include <strands_executive_msgs/AddTask.h>
+#include <strands_executive_msgs/SetExecutionStatus.h>
+//#include <strands_executive_msgs/TaskUtils.h>
 #include <std_msgs/Empty.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <std_srvs/Empty.h>
 #include <std_msgs/String.h>
 #include <std_msgs/Int32.h>
 #include "CFrelementSet.h"
@@ -15,8 +19,8 @@
 #define MAX_EDGES 10000
 
 const mongo::BSONObj EMPTY_BSON_OBJ;
-int waitingInterval = 60;
-int taskLength = 180;
+int waitingInterval = 30;
+int taskLength = 60;
 int numTasks = 5;
 
 using namespace mongodb_store;
@@ -26,6 +30,9 @@ ros::NodeHandle *n;
 ros::Publisher  taskPub;
 bool debug = false;
 ros::ServiceClient taskAdder;
+ros::ServiceClient taskClear;
+ros::ServiceClient taskStart;
+std_srvs::Empty dummySrv;
 
 CFrelementSet frelementSet;
 string nodeName;
@@ -68,6 +75,10 @@ void loadMap(const strands_navigation_msgs::TopologicalMap::ConstPtr& msg)
 		frelementSet.add(msg->nodes[i].name.c_str(),times,state,0);
 	}
 	numNodes = frelementSet.numFrelements;
+  	for (int i=0;i<numNodes;i++)
+	{
+		printf("Final: %s.\n",frelementSet.frelements[i]->id);
+	}
 	recalculateModels();
 }
 
@@ -138,17 +149,25 @@ int generateTasks()
 {
 	time_t t;
 	srand((unsigned int)time(&t));
+	strands_executive_msgs::SetExecutionStatus runExec;
+	//if (taskClear.call(dummySrv)) ROS_INFO("Tasks cleared.");
 	for (int i=0;i<numTasks;i++)
 	{
 		int node = 0;
+		float randomNum = 0;
 		if (numNodes > 0){
-			float randomNum = (float)rand()/RAND_MAX*lastWheel;
-			for (int p = 0;p<numNodes && randomNum > wheel[p];p++) node = p;
+			randomNum = (float)rand()/RAND_MAX*lastWheel;
+			int p = 0;
+			while (p <numNodes && randomNum > wheel[p]) p++;
+			node = p;
 		}
+
+		//printf("Throw: %lf %i %s\n",randomNum,node,frelementSet.frelements[node]->id);
+
 		strands_executive_msgs::AddTask taskAdd;
 		strands_executive_msgs::Task task;
 		task.start_node_id = frelementSet.frelements[node]->id;
-		task.action = "wait_action";
+		task.action = "/go_to_person_action";
 		task.start_after = ros::Time::now()+ros::Duration(taskLength*i);
 		task.end_before  = ros::Time::now()+ros::Duration(taskLength*(i+1)-1);
 		task.max_duration = ros::Duration(waitingInterval);
@@ -159,6 +178,8 @@ int generateTasks()
 		}
 		printf("Time slot: %i-%i %i %s \n",taskLength*i,taskLength*(i+1)-1,numNodes,frelementSet.frelements[node]->id);
 	}
+	runExec.request.status = true;
+	if (taskStart.call(runExec)) ROS_INFO("Task execution enabled.");
 }
 
 
@@ -166,6 +187,9 @@ int main(int argc,char* argv[])
 {
 	ros::init(argc, argv, "infremen");
 	n = new ros::NodeHandle();
+        MessageStoreProxy messageStore(*n,"message_store");
+	geometry_msgs::PoseStamped dummyPose;	
+	messageStore.insert(dummyPose);
 	ros::Subscriber  topoMapSub = n->subscribe("/topological_map", 1000, loadMap);
 	ros::Subscriber  currentNodeSub = n->subscribe("/closest_node", 1000, getCurrentNode);
 	ros::Subscriber  getCommandSub = n->subscribe("/socialCardReader/commands", 1000, getCommand);
@@ -177,7 +201,9 @@ int main(int argc,char* argv[])
 	//ros::Subscriber  recalculateSub = n->subscribe("/recalculate", 1000, recalculate);
 //	taskPub = n->advertise<strands_executive_msgs::Task>("/taskTopic", 1000, recalculate);
 	taskAdder = n->serviceClient<strands_executive_msgs::AddTask>("/task_executor/add_task");
-	int periodicity = 20*taskLength*numTasks;
+	//taskClear = n->serviceClient<std_msgs::Empty>("/task_executor/clear_schedule");
+	taskStart = n->serviceClient<strands_executive_msgs::SetExecutionStatus>("/task_executor/set_execution_status");
+	int periodicity = 20*(taskLength*numTasks+5);
 	int iii = periodicity-5*20;
 	while (ros::ok())
 	{

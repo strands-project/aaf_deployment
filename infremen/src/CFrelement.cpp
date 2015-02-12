@@ -162,7 +162,7 @@ int CFrelement::estimate(uint32_t times[],float probs[],int length,int orderi)
 {
 	float estimate = 0;
 	float time;
-	float saturation = 0.05;
+	float saturation = 0.0001;
 	for (int j = 0;j<length;j++)
 	{
 		time = times[j];
@@ -179,7 +179,7 @@ int CFrelement::estimateEntropy(uint32_t times[],float entropy[],int length,int 
 {
 	float estimate = 0;
 	float time;
-	float saturation = 0.05;
+	float saturation = 0.0001;
 	for (int j = 0;j<length;j++)
 	{
 		time = times[j];
