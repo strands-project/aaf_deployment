@@ -1,20 +1,16 @@
 #! /usr/bin/env python
-
-
-
-
-
 import roslib
 import rospy
 import actionlib
-#import approach_person_of_interest
 from geometry_msgs.msg import PoseStamped, PointStamped
 from approach_person_of_interest.msg import *
+from flir_pantilt_d46.msg import *
 from monitored_navigation import *
 from sensor_msgs.msg import JointState
 from std_msgs.msg import String, Float32, Bool, Int32
 from strands_navigation_msgs.msg import MonitoredNavigationAction, MonitoredNavigationGoal
 import strands_webserver.client_utils
+import scitos_ptu.msg
 
 class goToPersonAction(object):
   _feedback = goToPersonFeedback()
@@ -30,7 +26,14 @@ class goToPersonAction(object):
     self._mon_nav_client.wait_for_server();
     print 'Monitored navigation is ready'
     self._timeout = 100
-    rospy.Subscriber("info_terminal/active_screen", Int32, self.callback)
+    rospy.Subscriber("info_terminal/active_screen", Int32, self.button_pressed_callback)
+    print 'Waiting for ptu...'
+    self.ptuclient = actionlib.SimpleActionClient("SetPTUState", flir_pantilt_d46.msg.PtuGotoAction)
+    self.ptuclient.wait_for_server()
+    print 'ptu ready!'
+    self.ptugoal = flir_pantilt_d46.msg.PtuGotoGoal()
+    self.ptugoal.pan_vel = 60
+    self.ptugoal.tilt_vel = 60
     
     # blink eyes when there is an interaction (i.e. GUI button pressed)
     self.pub = rospy.Publisher('/head/commanded_state', JointState, queue_size=2)
@@ -46,8 +49,11 @@ class goToPersonAction(object):
 	    self.send_feedback('going to person')
 	    mon_nav_goal=MonitoredNavigationGoal(action_server='move_base', target_pose=goal.pose)
 	    self._mon_nav_client.send_goal(mon_nav_goal)
+	    self._mon_nav_client.wait_for_result()
+	    self.send_feedback('Reached the right position')
 
     strands_webserver.client_utils.display_url(0, 'http://localhost:8080')
+
     self.currentPan=0
     self.currentTilt=0
     self.head_command = JointState() 
@@ -55,27 +61,71 @@ class goToPersonAction(object):
     self.head_command.position=[self.currentPan, self.currentTilt]
     self.pub.publish(self.head_command)
 
-    success = True
 
-    if success:
-        self._result.success = True
-        rospy.loginfo('%s: Succeeded' % self._action_name)
-        self._as.set_succeeded(self._result)
+    self.send_feedback('Turning the camera to the person...')
+    #turn head cam to person
+    self.ptugoal.pan = 160
+    self.ptugoal.tilt = 20
+    self.ptuclient.send_goal(self.ptugoal)
+    self.ptuclient.wait_for_result()
+    self.send_feedback('camera turned successfully!')
 
-  def callback(self, active_screen):
+    self.exit_as()
+
+
+  def button_pressed_callback(self, active_screen):
+      # reset timeout
       self._time_left = self._timeout
+   
+      #blink eyes
       self.eyelid_command = JointState()
       self.eyelid_command.name=["EyeLids"]
       self.eyelid_command.position=[20]
       self.pub.publish(self.eyelid_command)
-      rospy.sleep(1)
+      rospy.sleep(0.5)
       self.eyelid_command.position=[100]
       self.pub.publish(self.eyelid_command)
+
+#just for testing the ptu
+      self.ptugoal.pan = 160
+      self.ptugoal.tilt = 20
+      self.ptuclient.send_goal(self.ptugoal)
+      self.ptuclient.wait_for_result()
+
+
+      self.send_feedback('Turning the camera to the person...')
+      #turn head cam to person
+      self.ptugoal.pan = 160
+      self.ptugoal.tilt = 20
+      self.ptuclient.send_goal(self.ptugoal)
+      self.ptuclient.wait_for_result()
+      self.send_feedback('camera turned successfully!')
+
+      self.exit_as()
+#      self.currentPan=20
+#      self.currentTilt=0
+#      self.head_command = JointState() 
+#      self.head_command.name=["HeadPan", "HeadTilt"] 
+#      self.head_command.position=[self.currentPan, self.currentTilt]
+#      self.pub.publish(self.head_command)
 
   def send_feedback(self, txt):
 	self._feedback.status = txt
 	self._as.publish_feedback(self._feedback)
 	rospy.loginfo(txt)
+
+  def exit_as(self):
+    self.send_feedback('Turning head camera to default position...')
+    #turn head cam to person
+    self.ptugoal.pan = 0
+    self.ptugoal.tilt = 0
+    self.ptuclient.send_goal(self.ptugoal)
+    self.ptuclient.wait_for_result()
+    self.send_feedback('head camera turned successfully to default position!')
+    self._result.success = True
+    rospy.loginfo('%s: Succeeded' % self._action_name)
+    self._as.set_succeeded(self._result)
+
 
 if __name__ == '__main__':
   rospy.init_node('go_to_person_action')
