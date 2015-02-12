@@ -10,7 +10,6 @@ from sensor_msgs.msg import JointState
 from std_msgs.msg import String, Float32, Bool, Int32
 from strands_navigation_msgs.msg import MonitoredNavigationAction, MonitoredNavigationGoal
 import strands_webserver.client_utils
-<<<<<<< HEAD
 # For changing where to look
 import strands_gazing.msg
 import scitos_ptu.msg
