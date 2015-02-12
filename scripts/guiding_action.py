@@ -44,10 +44,10 @@ class GuidingServer():
         self.client.cancel_all_goals()
       
     def card_callback(self, data):
-        self.odom_subscriber.unregister()
         if self.pause == 1:
             #call action server
             if data.data == 'near':
+       		self.odom_subscriber = None
                 self.empty_client.send_goal_and_wait(EmptyActionGoal())
                 try:
                     pause_service = rospy.ServiceProxy('/monitored_navigation/pause_nav', PauseResumeNav)
@@ -56,7 +56,7 @@ class GuidingServer():
                     print "the guy is near, fear him"
                 except rospy.ServiceException, e:
                     print "Service call failed: %s" % e
-        self.odom_subscriber =rospy.Subscriber("odom", Odometry, self.odom_callback)
+        	self.odom_subscriber =rospy.Subscriber("odom", Odometry, self.odom_callback)
 
 
     def odom_callback(self, data):
@@ -68,7 +68,7 @@ class GuidingServer():
                 lenght = numpy.sqrt(x*x + y*y)
                    
                 if lenght >= 2.0:
-                    self.odom_subscriber.unregister()
+                   # self.odom_subscriber.unregister()
                     print "reached 2.0 meters"
                     try:
                         pause_service = rospy.ServiceProxy('/monitored_navigation/pause_nav', PauseResumeNav)
@@ -78,7 +78,7 @@ class GuidingServer():
                         print "pause"
                     except rospy.ServiceException, e:
                         print "Service call failed: %s" % e
-                    self.odom_subscriber =rospy.Subscriber("odom", Odometry, self.odom_callback)
+                    #self.odom_subscriber =rospy.Subscriber("odom", Odometry, self.odom_callback)
                 self.counter = 0
         else:
             self.last_location.pose.pose.position.x = data.pose.pose.position.x;
