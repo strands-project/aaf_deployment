@@ -4,25 +4,34 @@ import rospy
 import actionlib
 from geometry_msgs.msg import PoseStamped, PointStamped
 from approach_person_of_interest.msg import *
-from flir_pantilt_d46.msg import *
-from monitored_navigation import *
+
+
 from sensor_msgs.msg import JointState
 from std_msgs.msg import String, Float32, Bool, Int32
 from strands_navigation_msgs.msg import MonitoredNavigationAction, MonitoredNavigationGoal
 import strands_webserver.client_utils
-# For changing where to look
+from strands_executive_msgs.srv import IsTaskInterruptible
+
 import strands_gazing.msg
 import scitos_ptu.msg
 from strands_gazing.msg import GazeAtPoseAction, GazeAtPoseGoal
+from monitored_navigation import *
+from flir_pantilt_d46.msg import *
 
-class goToPersonAction(object):
-  _feedback = goToPersonFeedback()
-  _result   = goToPersonResult()
+class GoToPersonAction(object):
+  _feedback = GoToPersonFeedback()
+  _result   = GoToPersonResult()
 
   def __init__(self, name):
     self._action_name = name
     self._as = actionlib.SimpleActionServer(self._action_name, approach_person_of_interest.msg.GoToPersonAction, execute_cb=self.execute_cb, auto_start = False)
     self._as.start()
+    rospy.Service(self._action_name + '_is_interruptible', IsTaskInterruptible, self.is_interruptible)
+    
+    # this will be set to true while actively engaging with someone
+    self._is_in_active_time = False    
+    self._activity_timer = None
+
     rospy.loginfo("Action server up: %s"%self._action_name)
     self._mon_nav_client = actionlib.SimpleActionClient('monitored_navigation', MonitoredNavigationAction)    
     print 'Waiting for monitored navigation to start'
@@ -46,29 +55,57 @@ class goToPersonAction(object):
     # Create a gaze action client
     self.gaze_act_client = actionlib.SimpleActionClient('gaze_at_pose', GazeAtPoseAction)
 
+  def is_interruptible(self, req):
+    return not self._is_in_active_time
+
+  def _reset_activitity_timer(self, event):
+    rospy.loginfo('Activity timer complete')
+    self._activity_timer = None
+    self._is_in_active_time = False
+
+  def _start_activity_timer(self):
+    if self._activity_timer is None:
+      rospy.loginfo('Starting activity timer')
+      self._is_in_active_time = True
+      self._activity_timer = rospy.Timer(rospy.Duration(self._timeout), self._reset_activitity_timer, oneshot=True)
+    else:
+      rospy.loginfo('Activity timer to be extended')
+      # shutdown previous timer and try again
+      self._activity_timer.shutdown()
+      self._activity_timer = None
+      self._start_activity_timer()
+
   def execute_cb(self, goal):
     # helper variables
     print goal.go_to_person
-    self._time_left = goal.timeout
-    self._timeout = goal.timeout
+
+    # goal.timeout is how long to run this behaviour for
+    # self._timeout is how long to extend behaviour for on 
+    self._timeout_after = rospy.get_rostime() + rospy.Duration(goal.timeout)
+
+
 
     if goal.go_to_person:
-	    print 'going to person'
-	    self.send_feedback('going to person')
-	    mon_nav_goal=MonitoredNavigationGoal(action_server='move_base', target_pose=goal.pose)
-	    self._mon_nav_client.send_goal(mon_nav_goal)
-	    print "CREATING GAZE"
-	    gaze_dir_goal= GazeAtPoseGoal(topic_name='/info_terminal/gaze_pose', runtime_sec=0)
-	    print "SENDING GOAL"
-	    self.gaze_act_client.send_goal(gaze_dir_goal)
-            print "DONE GAZING"
+        print 'going to person'
+        # prevent interruption
+        self._is_in_active_time = True
+        self.send_feedback('going to person')
+        mon_nav_goal=MonitoredNavigationGoal(action_server='move_base', target_pose=goal.pose)
+        self._mon_nav_client.send_goal(mon_nav_goal)
+        print "CREATING GAZE"
+        gaze_dir_goal= GazeAtPoseGoal(topic_name='/info_terminal/gaze_pose', runtime_sec=0)
+        print "SENDING GOAL"
+        self.gaze_act_client.send_goal(gaze_dir_goal)
+        print "DONE GAZING"
+        self.gaze_topic_pub.publish(goal.pose)
+        finished_moving=self._mon_nav_client.wait_for_result(rospy.Duration(1))
+        while not finished_moving:
             self.gaze_topic_pub.publish(goal.pose)
-	    finished_moving=self._mon_nav_client.wait_for_result(rospy.Duration(1))
-	    while not finished_moving:
-                self.gaze_topic_pub.publish(goal.pose)
-                finished_moving=self._mon_nav_client.wait_for_result(rospy.Duration(1))
-	    self.send_feedback('Reached the right position')
-	    self.gaze_act_client.cancel_all_goals()
+            finished_moving=self._mon_nav_client.wait_for_result(rospy.Duration(1))
+        self.send_feedback('Reached the right position')
+        self.gaze_act_client.cancel_all_goals()
+        # assume some default activity
+        self._start_activity_timer()
       
 
     strands_webserver.client_utils.display_url(0, 'http://localhost:8080')
@@ -88,12 +125,24 @@ class goToPersonAction(object):
     self.ptuclient.wait_for_result()
     self.send_feedback('camera turned successfully!')
 
+
+    rate = rospy.Rate(1)
+    # preempt will not be requested while activity is happening 
+    while not rospy.is_shutdown() and not self._as.is_preempt_requested() and rospy.get_rostime() < self._timeout_after:
+        # loop for duration 
+        rate.sleep()
+    
     self.exit_as()
 
 
+  
+
   def button_pressed_callback(self, active_screen):
       # reset timeout
-      self._time_left = self._timeout
+
+      rospy.loginfo('button_pressed_callback')
+
+      self._start_activity_timer()
    
       #blink eyes
       self.eyelid_command = JointState()
@@ -120,6 +169,8 @@ class goToPersonAction(object):
       self.send_feedback('camera turned successfully!')
 
       self.exit_as()
+
+
 #      self.currentPan=20
 #      self.currentTilt=0
 #      self.head_command = JointState() 
@@ -128,9 +179,9 @@ class goToPersonAction(object):
 #      self.pub.publish(self.head_command)
 
   def send_feedback(self, txt):
-	self._feedback.status = txt
-	self._as.publish_feedback(self._feedback)
-	rospy.loginfo(txt)
+    self._feedback.status = txt
+    self._as.publish_feedback(self._feedback)
+    rospy.loginfo(txt)
 
   def exit_as(self):
     self.send_feedback('Turning head camera to default position...')
@@ -147,7 +198,7 @@ class goToPersonAction(object):
 
 if __name__ == '__main__':
   rospy.init_node('go_to_person_action')
-  goToPersonAction(rospy.get_name())
+  GoToPersonAction(rospy.get_name())
   rospy.spin()
 
 # Add stuff to move head randomly.
