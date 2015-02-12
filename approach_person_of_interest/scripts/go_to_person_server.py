@@ -53,13 +53,7 @@ class goToPersonAction(object):
       self.eyelid_command.position=[0*50]
       self.pub.publish(self.eyelid_command)
 
-   
-    #while
-#	rospy.sleep(1)
-	
-    success = True
-
-    if success:
+  if success:
       self._result.success = True
       rospy.loginfo('%s: Succeeded' % self._action_name)
       self._as.set_succeeded(self._result)
