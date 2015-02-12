@@ -31,11 +31,11 @@
 			title="Musik" alt="Musik" src="img/button_zurueck.png" onclick="javascript:prev()">
 	</div>
 
-	<div id="playDiv">
+	<div id="pauseDiv">
 		<img style="position: absolute; left: 380px; top: 473px; width: 300px; height: 255px;"
 			title="Musik" alt="Musik" src="img/button_stopp.png" onclick="javascript:playPause()">
 	</div>
-	<div id="pauseDiv">
+	<div id="playDiv">
 		<img style="position: absolute; left: 380px; top: 473px; width: 300px; height: 255px;"
 			title="Musik" alt="Musik" src="img/button_start.png" onclick="javascript:playPause()">
 	</div>
@@ -57,11 +57,14 @@
 		var playDiv = document.getElementById("playDiv"); 
 		var pauseDiv = document.getElementById("pauseDiv");
 		var playing = false;
+        showHideButtons();
 
 		function prev() {
 			var result = aafMusicPlayerService(2);
 
 			playing = true;
+            showHideButtons();
+
 			console.log('prev() called');
 		} 
 
@@ -69,22 +72,32 @@
 			var result = aafMusicPlayerService(3);
 
 			playing = true;
+            showHideButtons();
+            
 			console.log('next() called');
 		}
 
 		function playPause() { 
 			if (playing == true) {
 				var result = aafMusicPlayerService(1);
-	
-				playDiv.style.display = 'block';
-				pauseDiv.style.display = 'none';
+	            playing = false;
 			} else {
 				var result = aafMusicPlayerService(0);
-	
+	            playing = true;
+			}
+            showHideButtons();
+		}
+
+        function showHideButtons() {
+            if (playing == true) {
 				playDiv.style.display = 'none';
 				pauseDiv.style.display = 'block';
+
+			} else {
+				playDiv.style.display = 'block';
+				pauseDiv.style.display = 'none';
 			}
-		}
+        }
 
 		function aafMusicPlayerService(actionId) {
 			var service_result;
