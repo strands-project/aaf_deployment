@@ -1,8 +1,10 @@
 <launch>
+    <arg name="audio_folder" default="$(find aaf_waypoint_sounds)/media"/>
+    <arg name="waypoint_sounds" default='{"WayPoint1": "fringilla-coelebs.mp3", "WayPoint2": "larus-ridibundus.mp3", "WayPoint3": "melanitta-fusca.mp3", "WayPoint4": "turdus-merula.mp3"}'/>
 
     <node pkg="aaf_waypoint_sounds" type="aaf_waypoint_player.py" name="aaf_waypoint_player" output="screen">
-        <param name="root_path" type="string" value="$(find aaf_waypoint_sounds)/media"/>
-        <param name="waypoint_sounds" type="string" value='{"WayPoint1": "fringilla-coelebs.mp3", "WayPoint2": "larus-ridibundus.mp3", "WayPoint3": "larus-ridibundus.mp3", "WayPoint4": "larus-ridibundus.mp3"}'/>
+        <param name="root_path" type="string" value="$(arg audio_folder)"/>
+        <param name="waypoint_sounds" type="string" value="$(arg waypoint_sounds)"/>
     </node>
 
 </launch>
