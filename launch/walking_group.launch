@@ -1,6 +1,16 @@
 <launch>
+  <arg name="waypoint_set" default="aaf_waypoints"/>
+  <arg name="meta_name" default="waypoint_set"/>
+  <arg name="collection_name" default="aaf_walking_group"/>
+
   <node pkg="aaf_walking_group" type="wait_for_participant.py" name="wait_for_participant" output="screen"/>
-  <node pkg="aaf_walking_group" type="guiding_action.py" name="guiding_server" />
-  <node pkg="social_card_reader" type="social_card_reader" name="social_card_reader" />
-  <node pkg="aaf_walking_group" type="interface_server.py" name="interface_server" />
+  <node pkg="aaf_walking_group" type="guiding_action.py" name="guiding_server" output="screen"/>
+  <node pkg="social_card_reader" type="social_card_reader" name="social_card_reader" output="screen"/>
+  <node pkg="aaf_walking_group" type="interface_server.py" name="interface_server" output="screen"/>
+  <node pkg="aaf_walking_group" type="positionOfCard.py" name="QSR_generator" output="screen"/>
+  <node pkg="aaf_walking_group" type="aaf_walking_group_state_machine.py" name="walking_group_smach" output="screen">
+    <param name ="mongodb_params/waypointset_name" type="string" value="$(arg waypoint_set)"/>
+    <param name ="mongodb_params/waypointset_collection" type="string" value="$(arg collection_name)"/>
+    <param name ="mongodb_params/waypointset_meta" type="string" value="$(arg meta_name)"/>
+  </node>
 </launch>

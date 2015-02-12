@@ -41,7 +41,7 @@ class GuideInterface(smach.State):
         # Getting the next waypoint from guide interface
         rospy.loginfo("Opening the guide interface...")
         goal = InterfaceGoal()
-        goal.possible_points = waypoints
+        goal.possible_points = waypoints.values()
         goal.next_point = next_waypoint
         rospy.loginfo("Sending a goal to interface server...")
         self._client.send_goal_and_wait(goal)
