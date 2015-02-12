@@ -70,3 +70,8 @@ if __name__ == '__main__':
   rospy.init_node('go_to_person_action')
   goToPersonAction(rospy.get_name())
   rospy.spin()
+
+# Add stuff to move head randomly.
+# Add stuff to rotate head and blink eyes at target Point
+# Add stuff to check time out twice and then warn and move away
+# Add stuff to rotate head also by 180deg after robot rotate
