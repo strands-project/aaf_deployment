@@ -14,10 +14,11 @@ find_package(catkin REQUIRED COMPONENTS
   smach_ros
   std_msgs
   strands_webserver
-	genmsg
-	actionlib_msgs
-	actionlib
-
+  actionlib
+  actionlib_msgs
+  genmsg
+  actionlib_msgs
+  actionlib
 )
 
 ## System dependencies are found with CMake's conventions
@@ -61,18 +62,19 @@ catkin_python_setup()
 # )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+#  add_service_files(
+#    FILES
+#    ButtonService.srv
+#  )
 
 ## Generate actions in the 'action' folder
-add_action_files(
-  FILES
-  Empty.action
-  Guiding.action
-)
+ add_action_files(
+   DIRECTORY action
+   FILES
+   Interface.action
+   Empty.action
+   Guiding.action
+ )
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
@@ -94,7 +96,8 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES aaf_walking_group
-#  CATKIN_DEPENDS mongodb_store roscpp rospy smach smach_ros std_msgs strands_webserver
+  CATKIN_DEPENDS mongodb_store roscpp rospy smach smach_ros std_msgs
+  strands_webserver actionlib actionlib_msgs
 #  DEPENDS system_lib
 )
 

@@ -4,6 +4,7 @@ __author__ =  'Paul Duckworth <scpd at leeds.ac.uk>'
 __version__=  '0.1'
 
 import rospy
+import sys
 import numpy as np
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
@@ -25,21 +26,17 @@ class generate_QSR:
 
 
     def callback(self, position):
-        position = []
-        position = msg.pose.position
  
         if VERBOSE :
-            rospy.loginfo("Card position (x,y,z): [ %f, %f, %f ]"%(position.x, position.y, position.z))
+            rospy.loginfo("Card position (x,y,z): [ %f, %f, %f ]"%(position.pose.position.x, position.pose.position.y, position.pose.position.z))
 
-        while not rospy.is_shutdown(): 
-	    if position != []:
-		distance = np.sqrt((position.x)**2 + (position.y)**2 + (position.z)**2))
-                result = 'far' if distance > 2 else 'near'
+	if position != []:
+            distance = np.sqrt((position.pose.position.x)**2 + (position.pose.position.y)**2 + (position.pose.position.z)**2)
+            result = 'far' if distance > 2 else 'near'
 
-                if VERBOSE :
-                    rospy.loginfo("the card is %s" %result)
-	r.sleep()
-
+            if VERBOSE :
+              rospy.loginfo("the card is %s" %result)
+        
         # Publish qsr
         self.qsr_pub.publish(result)
         

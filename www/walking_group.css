@@ -65,3 +65,20 @@ background-color: Transparent;
   background-size: 100%;
 	
 }
+.speechout{
+  border-radius: 10px 10px 10px 10px;
+  -moz-border-radius: 10px 10px 10px 10px;
+  -webkit-border-radius: 10px 10px 10px 10px;
+  border: 0px none #000000;
+  font-family:verdana;
+  font-size:110%;
+  text-align: center;
+  overflow: hidden; 
+  resize: none; 
+  position: absolute; 
+  left: 212px; 
+  top: 8px; 
+  width: 208px; 
+  height: 90px; 
+  font-weight: bold;
+}
