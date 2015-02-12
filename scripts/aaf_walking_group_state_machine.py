@@ -22,7 +22,7 @@ def loadConfig(dataset_name, collection_name="aaf_walking_group", meta_name="way
     query_meta = {}
     query_meta[meta_name] = dataset_name
     if len(msg_store.query(std_msgs.msg.String._type, {}, query_meta)) == 0:
-        rospy.logerr("Desired data set '"+dataset_name+"' not in datacentre.")
+        rospy.logerr("Desired data set '"+meta_name+": "+dataset_name+"' not in datacentre.")
         raise Exception("Can't find data in datacentre.")
     else:
         message = msg_store.query(std_msgs.msg.String._type, {}, query_meta)
@@ -55,7 +55,7 @@ def main():
 
     # Create a SMACH state machine
     sm = smach.StateMachine(outcomes=['succeeded', 'aborted', 'preempted'])
-    sm.userdata.current_waypoint = "waypoint11"  # TODO: Get start point
+    sm.userdata.current_waypoint = "WayPoint3"  # TODO: Get start point
     sis = smach_ros.IntrospectionServer(
         'walking_group_state_machine',
         sm,
