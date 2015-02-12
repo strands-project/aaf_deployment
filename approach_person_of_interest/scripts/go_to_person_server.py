@@ -15,6 +15,8 @@ from sensor_msgs.msg import JointState
 from std_msgs.msg import String, Float32, Bool, Int32
 from strands_navigation_msgs.msg import MonitoredNavigationAction, MonitoredNavigationGoal
 import strands_webserver.client_utils
+# For changing where to look
+import strands_gazing.msg
 
 class goToPersonAction(object):
   _feedback = goToPersonFeedback()
@@ -35,6 +37,11 @@ class goToPersonAction(object):
     # blink eyes when there is an interaction (i.e. GUI button pressed)
     self.pub = rospy.Publisher('/head/commanded_state', JointState, queue_size=2)
 
+    # Publishing the gaze pose
+    self.gaze_topic_pub=rospy.Publisher('/info_terminal/gaze_pose',PoseStamped)
+    # Create a gaze action client
+    self.gaze_act_client = actionlib.SimpleActionClient('gaze_at_pose', strands_gazing.msg.GazeAtPoseAction)
+
   def execute_cb(self, goal):
     # helper variables
     print goal.go_to_person
@@ -47,8 +54,14 @@ class goToPersonAction(object):
 	    mon_nav_goal=MonitoredNavigationGoal(action_server='move_base', target_pose=goal.pose)
 	    self._mon_nav_client.send_goal(mon_nav_goal)
 
+      # Send goal to gaze action server
+      gaze_dir_goal=setPose(action_server='gaze_at_pose', topic_name='/info_terminal/gaze_pose')
+      self.gaze_act_client.send_goal(gaze_dir_goal)
+      self.gaze_pose.publish(goal.pose)
+      
+
     strands_webserver.client_utils.display_url(0, 'http://localhost:8080')
-    self.currentPan=0
+    self.currentPan=-180
     self.currentTilt=0
     self.head_command = JointState() 
     self.head_command.name=["HeadPan", "HeadTilt"] 
