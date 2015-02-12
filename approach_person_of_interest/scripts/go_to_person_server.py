@@ -17,7 +17,7 @@ class goToPersonAction(object):
 
   def __init__(self, name):
     self._action_name = name
-    self._as = actionlib.SimpleActionServer(self._action_name, approach_person_of_interest.msg.goToPersonAction, execute_cb=self.execute_cb, auto_start = False)
+    self._as = actionlib.SimpleActionServer(self._action_name, approach_person_of_interest.msg.GoToPersonAction, execute_cb=self.execute_cb, auto_start = False)
     self._as.start()
     rospy.loginfo("Action server up: %s"%self._action_name)
     self._mon_nav_client = actionlib.SimpleActionClient('monitored_navigation', MonitoredNavigationAction)    
