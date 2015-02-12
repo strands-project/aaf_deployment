@@ -11,10 +11,7 @@ $def with (strings, datetime)
     // add a zero in front of numbers<10
     m=checkTime(m);
     s=checkTime(s);
-    if(h<12)
-    document.getElementById('clock').innerHTML=h+":"+m+":"+s + " AM";
-    else
-    document.getElementById('clock').innerHTML=h+":"+m+":"+s + " PM";
+    document.getElementById('clock').innerHTML=h+":"+m+" " + "Uhr";
 
     t=setTimeout('startTime()',500);
     }
@@ -46,7 +43,7 @@ $def with (strings, datetime)
     <div class="row text-center">
       <a href="menu">
         <img src="static/food-icon.png" class="img-thumbnail img-responsive" style="max-height:300px"><br>
-        <h1>$strings["Caffateria Menu"]</h1>
+        <h1>$strings["Cafeteria Menu"]</h1>
       </a>
     </div>
   </div>
