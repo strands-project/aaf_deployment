@@ -6,7 +6,7 @@ $def with (weather)
   <div class="col-md-4">
     <div class="row text-center">
       <a href="/">
-        <img src="static/back-icon.png" class="img-thumbnail img-responsive" style="max-height:300px"><br>
+        <img src="static/back-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
         <h1>Back to Menu</h1>
       </a>
     </div>
@@ -17,14 +17,15 @@ $def with (weather)
       <hr>
     </div>
     <div class="row text-center">
-      $ url = "http://openweathermap.org/img/w/%s.png" % weather['weather'][0]['icon']
-      <img width="500" height="500" src="$url">
+
+      <img width="500" height="500" src="$weather['data']['current_condition'][-1]['weatherIconUrl'][-1]['value']">
     </div>
     <div class="row text-center">
-      <h1>$(weather['main']['temp']-273.15) Celcius</h1>
+
+      <h1>$weather['data']['current_condition'][-1]['temp_C'] Celcius</h1>
     </div>
     <div class="row text-center">
-      <h1>$weather['weather'][0]['description']</h1>
+      <h1>$weather['data']['current_condition'][-1]['weatherDesc'][0]['value']</h1>
     </div>
   </div>
 </div>
