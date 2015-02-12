@@ -16,8 +16,8 @@
 
 const mongo::BSONObj EMPTY_BSON_OBJ;
 int waitingInterval = 60;
-int taskLength = 60;
-int numTasks = 1;
+int taskLength = 180;
+int numTasks = 5;
 
 using namespace mongodb_store;
 using namespace std;
@@ -45,6 +45,7 @@ void recalculateModels()
 	float entropy[1],probability[1];
 	uint32_t times[1];
 	times[0] = 0;//TODO current time
+	lastWheel = 0;
 	for (int i=0;i<numNodes;i++)
 	{
 		frelementSet.frelements[i]->estimateEntropy(times,entropy,1,1);
@@ -152,10 +153,10 @@ int generateTasks()
 		task.end_before  = ros::Time::now()+ros::Duration(taskLength*(i+1)-1);
 		task.max_duration = ros::Duration(waitingInterval);
 		taskAdd.request.task = task;
-		//if (taskAdder.call(taskAdd))
-		//{
-		//	ROS_INFO("Task ID: %ld", taskAdd.response.task_id);
-		//}
+		if (taskAdder.call(taskAdd))
+		{
+			ROS_INFO("Task ID: %ld", taskAdd.response.task_id);
+		}
 		printf("Time slot: %i-%i %i %s \n",taskLength*i,taskLength*(i+1)-1,numNodes,frelementSet.frelements[node]->id);
 	}
 }
@@ -176,7 +177,7 @@ int main(int argc,char* argv[])
 	//ros::Subscriber  recalculateSub = n->subscribe("/recalculate", 1000, recalculate);
 //	taskPub = n->advertise<strands_executive_msgs::Task>("/taskTopic", 1000, recalculate);
 	taskAdder = n->serviceClient<strands_executive_msgs::AddTask>("/task_executor/add_task");
-	int periodicity = 20*60*1;
+	int periodicity = 20*taskLength*numTasks;
 	int iii = periodicity-5*20;
 	while (ros::ok())
 	{
