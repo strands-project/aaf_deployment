@@ -1,13 +1,18 @@
 #! /usr/bin/env python
 
+
+
+
+
 import roslib
 import rospy
 import actionlib
 #import approach_person_of_interest
-from std_msgs.msg import String, Float32, Bool
 from geometry_msgs.msg import PoseStamped, PointStamped
 from approach_person_of_interest.msg import *
 from monitored_navigation import *
+from sensor_msgs.msg import JointState
+from std_msgs.msg import String, Float32, Bool, Int32
 from strands_navigation_msgs.msg import MonitoredNavigationAction, MonitoredNavigationGoal
 import strands_webserver.client_utils
 
@@ -24,16 +29,30 @@ class goToPersonAction(object):
     print 'Waiting for monitored navigation to start'
     self._mon_nav_client.wait_for_server();
     print 'Monitored navigation is ready'
+    self._timeout = 100
+    rospy.Subscriber("info_terminal/active_screen", Int32, self.callback)
+    self.pub = rospy.Publisher('/head/commanded_state', JointState)
 
   def execute_cb(self, goal):
     # helper variables
     print goal.go_to_person
+    self._time_left = goal.timeout
+    self._timeout = goal.timeout
+
     if goal.go_to_person:
 	print 'going to person'
 	mon_nav_goal=MonitoredNavigationGoal(action_server='move_base', target_pose=goal.pose)
         self._mon_nav_client.send_goal(mon_nav_goal)
 
     strands_webserver.client_utils.display_url(0, 'http://localhost:8080')
+
+  def callback(self, active_screen):
+      self._time_left = self._timeout
+      self.eyelid_command = JointState()
+      self.eyelid_command.name=["EyeLids"]
+      self.eyelid_command.position=[0*50]
+      self.pub.publish(self.eyelid_command)
+
    
     #while
 #	rospy.sleep(1)
