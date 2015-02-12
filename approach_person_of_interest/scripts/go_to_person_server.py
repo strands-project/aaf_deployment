@@ -31,7 +31,9 @@ class goToPersonAction(object):
     print 'Monitored navigation is ready'
     self._timeout = 100
     rospy.Subscriber("info_terminal/active_screen", Int32, self.callback)
-    self.pub = rospy.Publisher('/head/commanded_state', JointState)
+    
+    # blink eyes when there is an interaction (i.e. GUI button pressed)
+    self.pub = rospy.Publisher('/head/commanded_state', JointState, queue_size=2)
 
   def execute_cb(self, goal):
     # helper variables
@@ -41,8 +43,9 @@ class goToPersonAction(object):
 
     if goal.go_to_person:
 	    print 'going to person'
+	    self.send_feedback('going to person')
 	    mon_nav_goal=MonitoredNavigationGoal(action_server='move_base', target_pose=goal.pose)
-        self._mon_nav_client.send_goal(mon_nav_goal)
+	    self._mon_nav_client.send_goal(mon_nav_goal)
 
     strands_webserver.client_utils.display_url(0, 'http://localhost:8080')
 
@@ -57,9 +60,11 @@ class goToPersonAction(object):
       self._time_left = self._timeout
       self.eyelid_command = JointState()
       self.eyelid_command.name=["EyeLids"]
-      self.eyelid_command.position=[0*50]
+      self.eyelid_command.position=[20]
       self.pub.publish(self.eyelid_command)
-
+      rospy.sleep(1)
+      self.eyelid_command.position=[100]
+      self.pub.publish(self.eyelid_command)
 
   def send_feedback(self, txt):
 	self._feedback.status = txt
