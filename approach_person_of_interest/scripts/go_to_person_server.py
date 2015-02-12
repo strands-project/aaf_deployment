@@ -40,11 +40,18 @@ class goToPersonAction(object):
     self._timeout = goal.timeout
 
     if goal.go_to_person:
-	print 'going to person'
-	mon_nav_goal=MonitoredNavigationGoal(action_server='move_base', target_pose=goal.pose)
+	    print 'going to person'
+	    mon_nav_goal=MonitoredNavigationGoal(action_server='move_base', target_pose=goal.pose)
         self._mon_nav_client.send_goal(mon_nav_goal)
 
     strands_webserver.client_utils.display_url(0, 'http://localhost:8080')
+
+    success = True
+
+    if success:
+        self._result.success = True
+        rospy.loginfo('%s: Succeeded' % self._action_name)
+        self._as.set_succeeded(self._result)
 
   def callback(self, active_screen):
       self._time_left = self._timeout
@@ -53,10 +60,6 @@ class goToPersonAction(object):
       self.eyelid_command.position=[0*50]
       self.pub.publish(self.eyelid_command)
 
-  if success:
-      self._result.success = True
-      rospy.loginfo('%s: Succeeded' % self._action_name)
-      self._as.set_succeeded(self._result)
 
   def send_feedback(self, txt):
 	self._feedback.status = txt
