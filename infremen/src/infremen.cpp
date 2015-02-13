@@ -1,13 +1,13 @@
 #include <stdlib.h>
 #include "ros/ros.h"
-//#include <mongodb_store/message_store.h>
+#include <mongodb_store/message_store.h>
 #include <boost/foreach.hpp>
 #include <strands_navigation_msgs/NavStatistics.h>
 #include <strands_navigation_msgs/TopologicalMap.h>
 #include <strands_navigation_msgs/TopologicalNode.h>
 #include <strands_executive_msgs/AddTask.h>
 #include <strands_executive_msgs/SetExecutionStatus.h>
-//#include <strands_executive_msgs/TaskUtils.h>
+#include <mongodb_store_msgs/StringPair.h>
 #include <std_msgs/Empty.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <std_srvs/Empty.h>
@@ -18,12 +18,12 @@
 
 #define MAX_EDGES 10000
 
-//const mongo::BSONObj EMPTY_BSON_OBJ;
+const mongo::BSONObj EMPTY_BSON_OBJ;
 int waitingInterval = 60;
 int taskLength = 120;
 int numTasks = 5;
 
-//using namespace mongodb_store;
+using namespace mongodb_store;
 using namespace std;
 
 ros::NodeHandle *n;
@@ -35,6 +35,7 @@ ros::ServiceClient taskStart;
 std_srvs::Empty dummySrv;
 
 CFrelementSet frelementSet;
+string ide;
 string nodeName;
 uint32_t 	times[100000];
 unsigned char 	state[100000];
@@ -167,11 +168,30 @@ int generateTasks()
 		strands_executive_msgs::AddTask taskAdd;
 		strands_executive_msgs::Task task;
 		task.start_node_id = frelementSet.frelements[node]->id;
-		task.action = "wait_action";
+		task.action = "/go_to_person_action";
 		task.start_after = ros::Time::now()+ros::Duration(taskLength*i);
 		task.end_before  = ros::Time::now()+ros::Duration(taskLength*(i+1)-1);
 		task.max_duration = ros::Duration(waitingInterval);
 		taskAdd.request.task = task;
+
+		mongodb_store_msgs::StringPair pair;
+
+		pair.first = "geometry_msgs/PoseStamped";
+		pair.second = ide; 
+		task.arguments.push_back(pair); 
+
+		pair.first = "Task.BOOL_TYPE";
+		pair.second = "True";
+		task.arguments.push_back(pair);
+
+		pair.first = task.BOOL_TYPE;
+		pair.second = "False";
+		task.arguments.push_back(pair);
+
+		pair.first = task.FLOAT_TYPE;
+		pair.second = "60";
+		task.arguments.push_back(pair);
+
 		if (taskAdder.call(taskAdd))
 		{
 			ROS_INFO("Task ID: %ld", taskAdd.response.task_id);
@@ -187,9 +207,10 @@ int main(int argc,char* argv[])
 {
 	ros::init(argc, argv, "infremen");
 	n = new ros::NodeHandle();
-//        MessageStoreProxy messageStore(*n,"message_store");
-//	geometry_msgs::PoseStamped dummyPose;	
-//	messageStore.insert(dummyPose);
+        MessageStoreProxy messageStore(*n,"message_store");
+	geometry_msgs::PoseStamped dummyPose;	
+	ide = messageStore.insert(dummyPose);
+
 	ros::Subscriber  topoMapSub = n->subscribe("/topological_map", 1000, loadMap);
 	ros::Subscriber  currentNodeSub = n->subscribe("/closest_node", 1000, getCurrentNode);
 	ros::Subscriber  getCommandSub = n->subscribe("/socialCardReader/commands", 1000, getCommand);
