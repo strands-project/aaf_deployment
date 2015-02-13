@@ -3,42 +3,12 @@
   <head>
     <meta content="text/html; charset=windows-1252" http-equiv="content-type">
     <link rel="stylesheet" type="text/css" href="walking_group.css">
-    <title></title>
-    <script src="js/jquery.js"></script>
-      <script src="js/display.js"></script>
-      <script type="text/javascript" src="js/jquery-ui.js"></script>
-      <script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
-      <script src="roslibjs/build/roslib.js"></script>
-      <script src="ros2djs/include/EaselJS/easeljs.js"></script>
-      <script src="ros2djs/build/ros2d.js"></script>
-      <script src="ros3djs/include/threejs/three.js"></script>
-      <script src="ros3djs/include/ColladaAnimationCompress/ColladaLoader2.js"></script>
-      <script src="ros3djs/build/ros3d.min.js"></script>
-      <script src="nav2djs/build/nav2d.js"></script>
-      <script src="bootstrap/dist/js/bootstrap.js"></script>
+    <title>Turning Left</title>
   </head>
   <body style="background-image:url(img/strandsbg.png); width: 1024px; height: 768px; background-repeat:no-repeat;">
-
-  <div id="logoDiv" style="position: absolute; width:616px; height: 300px; left: 204px; top: 64px;">
-  		<img id="imgElem" width="616" height="300" src="img/walkinggroup.png" />
-  		<audio id="soundplayer">
-  			// TODO: Song to play while walking
-  		</audio>
-  </div>
-
-  <img style="position: absolute; left: 285px; top: 348px; width: 450px; height:
-  410px;" title="Licht" alt="Licht" src="img/button_left.png">
-
-    <script type="text/javascript">
-                    
-          var hostname = location.hostname;
-
-          var ros = new ROSLIB.Ros({
-             // this is filled by the ros node when writing this page to the web server, but doesn't currently work
-              // url : '<dynamic>bridge_server</dynamic>'
-              url : 'ws://'+hostname+':9090'
-          });
-
-    </script>    
+      <div id="logoDiv" style="position: absolute; width:616px; height: 300px; left: 204px; top: 64px;">
+            <img id="imgElem" width="616" height="300" src="img/walkinggroup.png" />
+      </div>
+      <img style="position: absolute; left: 285px; top: 348px; width: 450px; height: 410px;" title="Links" alt="Links" src="img/button_left.png">
   </body>
 </html>
