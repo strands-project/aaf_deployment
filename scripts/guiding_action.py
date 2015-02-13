@@ -56,6 +56,7 @@ class GuidingServer():
         self.pause = 0
         self.begin = 1
         self.counter = 0
+        self.last_direction = ""
 
         self.client_walking_interface = actionlib.SimpleActionClient(
             'walking_interface_server',
@@ -130,29 +131,33 @@ class GuidingServer():
         self.counter += 1
         
     def path_callback(self, path): 
-        yDiff = path.poses[-1].pose.position.y - path.poses[0].pose.position.y
-        xDiff = path.poses[-1].pose.position.x - path.poses[0].pose.position.x
-        
-        angle = math.degrees(math.atan2(yDiff,xDiff))
-        
-        if angle > -90 and angle < 85:
-            direction = 'right'
-            walking_interface_goal = GuidingGoal()
-            walking_interface_goal.waypoint = direction
-            self.client_walking_interface.send_goal_and_wait(walking_interface_goal)
-            self.client_walking_interface.get_result()
-        elif angle >= 85 and angle <= 95:
-            direction = 'straight'
-            walking_interface_goal = GuidingGoal()
-            walking_interface_goal.waypoint = direction
-            self.client_walking_interface.send_goal_and_wait(walking_interface_goal)
-            self.client_walking_interface.get_result()
-        else:
-            direction = 'left'
-            walking_interface_goal = GuidingGoal()
-            walking_interface_goal.waypoint = direction
-            self.client_walking_interface.send_goal_and_wait(walking_interface_goal)
-            self.client_walking_interface.get_result()
+        if self.server.is_active() and self.pause == 0:
+            yDiff = path.poses[-1].pose.position.y - path.poses[0].pose.position.y
+            xDiff = path.poses[-1].pose.position.x - path.poses[0].pose.position.x
+            
+            angle = math.degrees(math.atan2(yDiff,xDiff))
+            
+            if angle > -90 and angle < 85:
+                if not self.last_direction == "right":
+                    direction = 'right'
+                    walking_interface_goal = GuidingGoal()
+                    walking_interface_goal.waypoint = direction
+                    self.client_walking_interface.send_goal(walking_interface_goal)
+                    self.last_direction = "right"
+            elif angle >= 85 and angle <= 95:
+                if not self.last_direction == "straight":
+                    direction = 'straight'
+                    walking_interface_goal = GuidingGoal()
+                    walking_interface_goal.waypoint = direction
+                    self.client_walking_interface.send_goal(walking_interface_goal)
+                    self.last_direction = "straight"
+            else:
+                if not self.last_direction == "left":
+                    direction = 'left'
+                    walking_interface_goal = GuidingGoal()
+                    walking_interface_goal.waypoint = direction
+                    self.client_walking_interface.send_goal(walking_interface_goal)
+                    self.last_direction = "left"
         
 
 if __name__ == '__main__':
