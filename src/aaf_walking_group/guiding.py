@@ -5,7 +5,7 @@ import smach
 from copy import deepcopy
 import actionlib
 from aaf_walking_group.msg import GuidingAction, GuidingActionGoal, GuidingGoal
-from aaf_music_player.msg import MusicPlayerService, MusicPlayerServiceRequest, MusicPlayerServiceResponse
+from aaf_music_player.srv import MusicPlayerService, MusicPlayerServiceRequest, MusicPlayerServiceResponse
 
 
 class Guiding(smach.State):
