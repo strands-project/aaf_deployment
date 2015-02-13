@@ -114,7 +114,7 @@ class PersonApproacher(object):
                 was_looking=False
             log_msg=InfoTerminalRequest(pose=current_pose, waypoint=closest_waypoint.data, was_looking=was_looking)
             self.event_pub.publish(log_msg)
-            self.msg_store.insert(log_msg)
+            #self.msg_store.insert(log_msg)
             print "LOGGING ADDED"
         except Exception, e:
             rospy.logwarn(e)
