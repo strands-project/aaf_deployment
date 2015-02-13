@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "ros/ros.h"
-#include <mongodb_store/message_store.h>
+//#include <mongodb_store/message_store.h>
 #include <boost/foreach.hpp>
 #include <strands_navigation_msgs/NavStatistics.h>
 #include <strands_navigation_msgs/TopologicalMap.h>
@@ -18,12 +18,12 @@
 
 #define MAX_EDGES 10000
 
-const mongo::BSONObj EMPTY_BSON_OBJ;
+//const mongo::BSONObj EMPTY_BSON_OBJ;
 int waitingInterval = 60;
 int taskLength = 120;
 int numTasks = 5;
 
-using namespace mongodb_store;
+//using namespace mongodb_store;
 using namespace std;
 
 ros::NodeHandle *n;
@@ -187,9 +187,9 @@ int main(int argc,char* argv[])
 {
 	ros::init(argc, argv, "infremen");
 	n = new ros::NodeHandle();
-        MessageStoreProxy messageStore(*n,"message_store");
-	geometry_msgs::PoseStamped dummyPose;	
-	messageStore.insert(dummyPose);
+//        MessageStoreProxy messageStore(*n,"message_store");
+//	geometry_msgs::PoseStamped dummyPose;	
+//	messageStore.insert(dummyPose);
 	ros::Subscriber  topoMapSub = n->subscribe("/topological_map", 1000, loadMap);
 	ros::Subscriber  currentNodeSub = n->subscribe("/closest_node", 1000, getCurrentNode);
 	ros::Subscriber  getCommandSub = n->subscribe("/socialCardReader/commands", 1000, getCommand);
