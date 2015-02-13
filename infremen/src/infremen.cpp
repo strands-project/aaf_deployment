@@ -19,8 +19,8 @@
 #define MAX_EDGES 10000
 
 const mongo::BSONObj EMPTY_BSON_OBJ;
-int waitingInterval = 30;
-int taskLength = 60;
+int waitingInterval = 60;
+int taskLength = 120;
 int numTasks = 5;
 
 using namespace mongodb_store;
@@ -167,7 +167,7 @@ int generateTasks()
 		strands_executive_msgs::AddTask taskAdd;
 		strands_executive_msgs::Task task;
 		task.start_node_id = frelementSet.frelements[node]->id;
-		task.action = "/go_to_person_action";
+		task.action = "wait_action";
 		task.start_after = ros::Time::now()+ros::Duration(taskLength*i);
 		task.end_before  = ros::Time::now()+ros::Duration(taskLength*(i+1)-1);
 		task.max_duration = ros::Duration(waitingInterval);
