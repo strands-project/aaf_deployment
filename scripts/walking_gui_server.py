@@ -39,9 +39,12 @@ class WalkingInterfaceServer(object):
         if goal.waypoint == 'right':
             client_utils.display_relative_page(self.display_no,
                                                'turn_right.html')
-        else:
+        elif goal.waypoint == 'left':
             client_utils.display_relative_page(self.display_no,
                                                'turn_left.html')
+        else:
+            client_utils.display_relative_page(self.display_no,
+                                               'straight.html')
 
         if self._as.is_preempt_requested():
             rospy.logwarn("Aborting the goal...")
