@@ -9,7 +9,7 @@ import os
 import json
 import requests
 import datetime
-from std_msgs.msg import Int8
+from std_msgs.msg import Int32
 from threading import Lock
 import pygame
 import xmltodict
@@ -81,7 +81,7 @@ urls = (
 
     
 # A ROS publisher for click-feedback
-active_screen_pub =  rospy.Publisher("/info_terminal/active_screen", Int8, queue_size=1)
+active_screen_pub =  rospy.Publisher("/info_terminal/active_screen", Int32, queue_size=1)
     
 
 app = web.application(urls, globals())
