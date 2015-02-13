@@ -133,10 +133,16 @@ class GuidingServer():
         yDiff = path.poses[-1].pose.position.y - path.poses[0].pose.position.y
         xDiff = path.poses[-1].pose.position.x - path.poses[0].pose.position.x
         
-        angle = math.atan2(yDiff,xDiff)
+        angle = math.degrees(math.atan2(yDiff,xDiff))
         
-        if angle > -math.pi/2 and angle < math.pi/2:
+        if angle > -90 and angle < 85:
             direction = 'right'
+            walking_interface_goal = GuidingGoal()
+            walking_interface_goal.waypoint = direction
+            self.client_walking_interface.send_goal_and_wait(walking_interface_goal)
+            self.client_walking_interface.get_result()
+        elif angle >= 85 and angle <= 95:
+            direction = 'straight'
             walking_interface_goal = GuidingGoal()
             walking_interface_goal.waypoint = direction
             self.client_walking_interface.send_goal_and_wait(walking_interface_goal)
