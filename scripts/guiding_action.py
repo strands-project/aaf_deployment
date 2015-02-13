@@ -1,9 +1,8 @@
 #! /usr/bin/env python
 import rospy
 import actionlib
-# import tf
 import numpy
-# import mutex
+import math
 
 from aaf_walking_group.msg import GuidingAction, GuidingGoal
 from aaf_walking_group.msg import EmptyAction, EmptyActionGoal
@@ -11,6 +10,7 @@ import topological_navigation.msg
 from std_msgs.msg import String
 from strands_navigation_msgs.srv import PauseResumeNav
 from nav_msgs.msg import Odometry
+from nav_msgs.msg import Path
 
 
 class GuidingServer():
@@ -44,6 +44,14 @@ class GuidingServer():
             self.odom_callback,
             queue_size=1
         )
+        
+        self.path_subscriber = rospy.Subscriber(
+            "/move_base/DWAPlannerROS/local_plan",
+            Path,
+            self.path_callback,
+            queue_size = 1
+        )
+        
         self.last_location = Odometry()
         self.pause = 0
         self.begin = 1
@@ -61,18 +69,10 @@ class GuidingServer():
         navgoal.target = goal.waypoint
         self.client.send_goal(navgoal)
 
-        # calling walking interface server
-        direction = 'right'
-        walking_interface_goal = GuidingGoal()
-        walking_interface_goal.waypoint = direction
-        self.client_walking_interface.send_goal_and_wait(walking_interface_goal)
-        self.client_walking_interface.get_result()
-
-        # self.client.wait_for_result()
+        self.client.wait_for_result()
         ps = self.client.get_result()
         print ps
         self.server.set_succeeded()
-        # what to do when it fails?
 
     def _on_node_shutdown(self):
         self.client.cancel_all_goals()
@@ -128,7 +128,26 @@ class GuidingServer():
             self.begin = 0
 
         self.counter += 1
-
+        
+    def path_callback(self, path): 
+        yDiff = path.poses[-1].pose.position.y - path.poses[0].pose.position.y
+        xDiff = path.poses[-1].pose.position.x - path.poses[0].pose.position.x
+        
+        angle = math.atan2(yDiff,xDiff)
+        
+        if angle > -math.pi/2 and angle < math.pi/2:
+            direction = 'right'
+            walking_interface_goal = GuidingGoal()
+            walking_interface_goal.waypoint = direction
+            self.client_walking_interface.send_goal_and_wait(walking_interface_goal)
+            self.client_walking_interface.get_result()
+        else:
+            direction = 'left'
+            walking_interface_goal = GuidingGoal()
+            walking_interface_goal.waypoint = direction
+            self.client_walking_interface.send_goal_and_wait(walking_interface_goal)
+            self.client_walking_interface.get_result()
+        
 
 if __name__ == '__main__':
     rospy.init_node('guiding_server')
