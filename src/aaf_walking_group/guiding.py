@@ -38,7 +38,7 @@ class Guiding(smach.State):
 
         try:
             music_client = rospy.ServiceProxy('aaf_music_player_service', MusicPlayerService)
-            music_client(MusicPlayerServiceRequest.STOP)
+            music_client(MusicPlayerServiceRequest.PAUSE)
         except rospy.ServiceException, e:
             rospy.logwarn("Service call failed: %s" % e)
 
