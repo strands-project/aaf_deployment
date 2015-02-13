@@ -49,6 +49,7 @@
   <build_depend>strands_webserver</build_depend>
   <build_depend>actionlib</build_depend>
   <build_depend>actionlib_msgs</build_depend>
+  <build_depend>aaf_music_player</build_depend>
 
   <run_depend>mongodb_store</run_depend>
   <run_depend>roscpp</run_depend>
@@ -59,6 +60,9 @@
   <run_depend>strands_webserver</run_depend>
   <run_depend>actionlib</run_depend>
   <run_depend>actionlib_msgs</run_depend>
+  <run_depend>aaf_music_player</run_depend>
+  <run_depend>aaf_waypoint_sounds</run_depend>
+  <run_depend>walking_group_recovery</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
