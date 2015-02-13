@@ -74,6 +74,7 @@ catkin_python_setup()
    Interface.action
    Empty.action
    Guiding.action
+   StateMachine.action
  )
 
 ## Generate added messages and services with any dependencies listed here

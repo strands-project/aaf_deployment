@@ -28,7 +28,7 @@ class GuideInterface(smach.State):
         rospy.sleep(1)
 
         # Guide interface returning the next waypoint
-        waypoints = self.waypointset['slow']
+        waypoints = self.waypointset
         rospy.loginfo("I am at: " + userdata.current_waypoint)
         next_waypoint = ""
         for elem in waypoints.items():
