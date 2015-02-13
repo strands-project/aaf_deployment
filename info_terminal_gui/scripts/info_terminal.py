@@ -102,7 +102,8 @@ class MasterPage(object):
 class Menu(object):
     def GET(self):
         active_screen_pub.publish(Menu.id)
-        menu =  "Death by Schnitzel"
+        menu =  mongo_client().menu.find_one()
+        
         return render.menu(menu)
 
 class Weather(object):
