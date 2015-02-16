@@ -2,10 +2,8 @@ cmake_minimum_required(VERSION 2.8.3)
 project(aaf_waypoint_sounds)
 
 find_package(catkin REQUIRED COMPONENTS
-    genmsg
     actionlib
     actionlib_msgs
-    mary_tts
     rospy
 )
 
