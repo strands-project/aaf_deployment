@@ -1,0 +1,6 @@
+Meal: Lunch
+Soup: Tomato Soup with Bread
+Appetizer: Cucumber Salad and Tomato Salad
+Main Course: Sphagetti with Tomato Sauce
+Dessert: Apfel Strudel and Vanila Sauce
+Drinks: Apple Schorle and Coffee and Tea

@@ -1,0 +1,33 @@
+$def with (events)
+
+<div class="row">
+<div class="col-md-4">
+	<div class="row text-center">
+	<a href="/">
+		<img src="static/back-icon.png" class="img-thumbnail img-responsive" 
+			style="border:5px solid black;max-height:300px"><br>
+		<h1>Back to Start</h1>
+	</a>
+	</div>
+</div>  
+<div class="col-md-8">
+	<div class="row text-center">	
+		<h1>Events Or What Ever</h1>
+		<hr>
+	</div>
+	<div class="row">
+		$for event in events:
+			<div class="row">
+				<div class="col-md-3">
+					<img src="$event[0]" style="min-height:150px">	
+				</div>
+				<div class="col-md-9">
+					$:event[1]
+				</div>
+			</div>
+	</div>
+</div>
+</div>
+
+
+

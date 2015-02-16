@@ -1,0 +1,101 @@
+$def with (strings, datetime)
+
+ <script type="text/javascript">
+    function startTime()
+    {
+    var today=new Date();
+    var h=today.getHours();
+    var m=today.getMinutes();
+    var s=today.getSeconds();
+     
+    // add a zero in front of numbers<10
+    m=checkTime(m);
+    s=checkTime(s);
+    document.getElementById('clock').innerHTML=h+":"+m+" " + "Uhr";
+
+    t=setTimeout('startTime()',500);
+    }
+
+    function checkTime(i)
+    {
+    if (i<10)
+      {
+      i="0" + i;
+      }
+    return i;
+    }
+</script>
+
+
+<div class="container-fluid">
+
+<div class="row">
+  <!-- left column -->
+  <div class="col-md-4">
+    <div class="row text-center">
+      <a href="weather">
+        <img src="static/weather-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
+        <h1>Weather Information</h1>
+      </a>
+    </div>
+ 
+  <div class="row">&nbsp;</div>
+    <div class="row text-center">
+      <a href="menu">
+        <img src="static/food-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
+        <h1>$strings["Cafeteria Menu"]</h1>
+      </a>
+    </div>
+  </div>
+  
+  <!-- central clock -->
+  <div class="col-md-4 text-center vcenter">
+    <canvas id="clockid" class="CoolClock:classic:150"></canvas>  
+    <b><h1><div id="clock"></div></h1></b>
+    <script type="text/javascript">startTime();</script>
+    <br><br>
+    <h1><b>$datetime.date.strftime(datetime.date.today(),"%A")</b></h1>
+    <h1><b>$datetime.date.strftime(datetime.date.today(),"%d %B")</b></h1>
+    <h1><b>$datetime.date.strftime(datetime.date.today(),"%Y")</b></h1>
+  </div>
+  
+  <!-- right column -->
+  <div class="col-md-4">
+    <div class="row text-center">
+       <a href="events">
+        <img src="static/events-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
+        <h1>Coming Events </h1>
+      </a>
+    </div>
+ 
+  <!--<div class="row">&nbsp;</div>-->
+    <!--<div class="row text-center">-->
+       <!--<a href="go_away">-->
+        <!--<img src="static/go-away-icon.png" class="img-thumbnail img-responsive" style="max-height:300px"><br>-->
+        <!--<h1>Send Robot Away</h1>-->
+      <!--</a>-->
+    <!--</div>-->
+  <!--</div>-->
+  
+  <!--<div class="row">&nbsp;</div>-->
+    <!--<div class="row text-center">-->
+       <!--<a href="play_music">-->
+        <!--<img src="static/music-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>-->
+        <!--<h1>Play Some Music</h1>-->
+      <!--</a>-->
+    <!--</div>-->
+  <!--</div>-->
+  
+  <div class="row">&nbsp;</div>
+    <div class="row text-center">
+       <a href="/photo_album/0">
+        <img src="static/photos-icon.jpeg" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
+        <h1>View Photo Album</h1>
+      </a>
+    </div>
+  </div>
+  
+</div>
+
+
+</div>
