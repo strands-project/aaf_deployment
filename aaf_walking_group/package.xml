@@ -22,6 +22,7 @@
   <build_depend>actionlib_msgs</build_depend>
   <build_depend>aaf_music_player</build_depend>
   <build_depend>geometry_msgs</build_depend>
+  <build_depend>message_generation</build_depend>
   <build_depend>mongodb_store</build_depend>
   <build_depend>nav_msgs</build_depend>
   <build_depend>roscpp</build_depend>
@@ -40,6 +41,7 @@
   <run_depend>aaf_music_player</run_depend>
   <run_depend>aaf_waypoint_sounds</run_depend>
   <run_depend>geometry_msgs</run_depend>
+  <run_depend>message_runtime</run_depend>
   <run_depend>mongodb_store</run_depend>
   <run_depend>nav_msgs</run_depend>
   <run_depend>roscpp</run_depend>

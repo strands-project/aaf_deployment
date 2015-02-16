@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
   aaf_music_player
   geometry_msgs
+  message_generation
   mongodb_store
   nav_msgs
   roscpp
