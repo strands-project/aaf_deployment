@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta content="text/html; charset=windows-1252" http-equiv="content-type">
+	<title></title>
+	<script src="js/jquery.js"></script>
+	<script src="js/display.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.js"></script>
+	<script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
+	<script src="roslibjs/build/roslib.js"></script>
+	<script src="ros2djs/include/EaselJS/easeljs.js"></script>
+	<script src="ros2djs/build/ros2d.js"></script>
+	<script src="ros3djs/include/threejs/three.js"></script>
+	<script src="ros3djs/include/ColladaAnimationCompress/ColladaLoader2.js"></script>
+	<script src="ros3djs/build/ros3d.min.js"></script>
+	<script src="nav2djs/build/nav2d.js"></script>
+	<script src="bootstrap/dist/js/bootstrap.js"></script>
+	</head>
+	<body style="background-image:url(img/strandsbg.png); width: 1024px; height: 768px; background-repeat:no-repeat;">
+
+	<!-- Go back to the main page -->
+	<a href="entertainment.html"><img style="position: absolute; left: 916px; top: 12px; width: 100px; height: 85px;"
+		title="Auswahl" alt="Auswahl" src="img/button_liste_notext.png"></a>
+
+	<div id="soundDiv" style="position: absolute; width:700px; left: 162px; top: 90px;">
+		<img id="imgElem" src="img/sheetmusic.png" />
+	</div>
+
+	<div id="prevDiv">
+		<img style="position: absolute; left: 70px; top: 473px; width: 300px; height: 255px;"
+			title="Musik" alt="Musik" src="img/button_zurueck.png" onclick="javascript:prev()">
+	</div>
+
+	<div id="pauseDiv">
+		<img style="position: absolute; left: 380px; top: 473px; width: 300px; height: 255px;"
+			title="Musik" alt="Musik" src="img/button_stopp.png" onclick="javascript:playPause()">
+	</div>
+	<div id="playDiv">
+		<img style="position: absolute; left: 380px; top: 473px; width: 300px; height: 255px;"
+			title="Musik" alt="Musik" src="img/button_start.png" onclick="javascript:playPause()">
+	</div>
+
+	<div id="nextDiv">
+		<img style="position: absolute; left: 690px; top: 473px; width: 300px; height: 255px;"
+			title="Musik" alt="Musik" src="img/button_vor.png" onclick="javascript:next()">
+	</div>
+  
+	<script>
+		var hostname = location.hostname;
+
+		var ros = new ROSLIB.Ros({
+		 // this is filled by the ros node when writing this page to the web server, but doesn't currently work
+		  // url : '<dynamic>bridge_server</dynamic>'
+		  url : 'ws://'+hostname+':9090'
+		});
+	
+		var playDiv = document.getElementById("playDiv"); 
+		var pauseDiv = document.getElementById("pauseDiv");
+		var playing = false;
+        showHideButtons();
+
+		function prev() {
+			var result = aafMusicPlayerService(2);
+
+			playing = true;
+            showHideButtons();
+
+			console.log('prev() called');
+		} 
+
+		function next() {
+			var result = aafMusicPlayerService(3);
+
+			playing = true;
+            showHideButtons();
+            
+			console.log('next() called');
+		}
+
+		function playPause() { 
+			if (playing == true) {
+				var result = aafMusicPlayerService(1);
+	            playing = false;
+			} else {
+				var result = aafMusicPlayerService(0);
+	            playing = true;
+			}
+            showHideButtons();
+		}
+
+        function showHideButtons() {
+            if (playing == true) {
+				playDiv.style.display = 'none';
+				pauseDiv.style.display = 'block';
+
+			} else {
+				playDiv.style.display = 'block';
+				pauseDiv.style.display = 'none';
+			}
+        }
+
+		function aafMusicPlayerService(actionId) {
+			var service_result;
+
+			var service_button = new ROSLIB.Service({ros : ros, name : '/music_player_service', serviceType : 'music_player/MusicPlayerService'});
+			var request_button = new ROSLIB.ServiceRequest({player_action : actionId});        
+			service_button.callService(request_button, function(result) { service_result = result; console.log(result); });
+			
+			return service_result;
+		}
+	</script> 
+  </body>
+</html>
