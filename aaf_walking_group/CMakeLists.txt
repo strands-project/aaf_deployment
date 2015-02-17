@@ -4,7 +4,7 @@ project(aaf_walking_group)
 find_package(catkin REQUIRED COMPONENTS
   actionlib
   actionlib_msgs
-  aaf_music_player
+  music_player
   geometry_msgs
   message_generation
   mongodb_store

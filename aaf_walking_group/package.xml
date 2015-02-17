@@ -20,7 +20,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>actionlib</build_depend>
   <build_depend>actionlib_msgs</build_depend>
-  <build_depend>aaf_music_player</build_depend>
+  <build_depend>music_player</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>message_generation</build_depend>
   <build_depend>mongodb_store</build_depend>
@@ -38,7 +38,7 @@
 
   <run_depend>actionlib</run_depend>
   <run_depend>actionlib_msgs</run_depend>
-  <run_depend>aaf_music_player</run_depend>
+  <run_depend>music_player</run_depend>
   <run_depend>aaf_waypoint_sounds</run_depend>
   <run_depend>geometry_msgs</run_depend>
   <run_depend>message_runtime</run_depend>

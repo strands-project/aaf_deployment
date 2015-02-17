@@ -102,7 +102,7 @@
 		function aafMusicPlayerService(actionId) {
 			var service_result;
 
-			var service_button = new ROSLIB.Service({ros : ros, name : '/aaf_music_player_service', serviceType : 'aaf_music_player/MusicPlayerService'});
+			var service_button = new ROSLIB.Service({ros : ros, name : '/music_player_service', serviceType : 'music_player/MusicPlayerService'});
 			var request_button = new ROSLIB.ServiceRequest({player_action : actionId});        
 			service_button.callService(request_button, function(result) { service_result = result; console.log(result); });
 			

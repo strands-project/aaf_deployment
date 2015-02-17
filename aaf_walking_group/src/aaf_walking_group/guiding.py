@@ -5,7 +5,7 @@ import smach
 from copy import deepcopy
 import actionlib
 from aaf_walking_group.msg import GuidingAction, GuidingActionGoal, GuidingGoal
-from aaf_music_player.srv import MusicPlayerService, MusicPlayerServiceRequest, MusicPlayerServiceResponse
+from music_player.srv import MusicPlayerService, MusicPlayerServiceRequest, MusicPlayerServiceResponse
 
 
 class Guiding(smach.State):
@@ -26,7 +26,7 @@ class Guiding(smach.State):
         nav_client.wait_for_server()
 
         try:
-            music_client = rospy.ServiceProxy('aaf_music_player_service', MusicPlayerService)
+            music_client = rospy.ServiceProxy('music_player_service', MusicPlayerService)
             music_client(MusicPlayerServiceRequest.PLAY)
         except rospy.ServiceException, e:
             rospy.logwarn("Service call failed: %s" % e)
@@ -37,7 +37,7 @@ class Guiding(smach.State):
         nav_client.send_goal_and_wait(goal)
 
         try:
-            music_client = rospy.ServiceProxy('aaf_music_player_service', MusicPlayerService)
+            music_client = rospy.ServiceProxy('music_player_service', MusicPlayerService)
             music_client(MusicPlayerServiceRequest.PAUSE)
         except rospy.ServiceException, e:
             rospy.logwarn("Service call failed: %s" % e)

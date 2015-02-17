@@ -2,7 +2,7 @@
   <arg name="waypoint_set" default="aaf_waypoints"/>
   <arg name="meta_name" default="waypoint_set"/>
   <arg name="collection_name" default="aaf_walking_group"/>
-  <arg name="music_folder" default="$(find aaf_music_player)/media"/>
+  <arg name="music_folder" default="$(find music_player)/media"/>
   <arg name="waypoint_sounds_folder" default="$(find aaf_waypoint_sounds)/media"/>
   <arg name="waypoint_sounds" default='{"Lift1": "fringilla-coelebs.mp3", "WayPoint7": "larus-ridibundus.mp3", "Cafeteria": "melanitta-fusca.mp3", "WayPoint8": "turdus-merula.mp3"}'/>
 
@@ -22,7 +22,7 @@
     <arg name="audio_folder" value="$(arg waypoint_sounds_folder)"/>
     <arg name="waypoint_sounds" value="$(arg waypoint_sounds)"/>
   </include>
-  <node pkg="aaf_music_player" type="aaf_music_player_server.py" name="aaf_music_player_server">
+  <node pkg="music_player" type="music_player_server.py" name="music_player_server">
     <param name="folder" type="string" value="$(arg music_folder)"/>
   </node>
   <node pkg="walking_group_recovery" type="toggle_walking_group_recovery_server.py" name="toggle_walking_group_recovery_server"/>
