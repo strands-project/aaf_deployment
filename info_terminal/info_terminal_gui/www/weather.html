@@ -1,0 +1,31 @@
+$def with (weather)
+
+
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="row text-center">
+      <a href="/">
+        <img src="static/back-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
+        <h1>Back to Menu</h1>
+      </a>
+    </div>
+  </div>  
+  <div class="col-md-8">
+    <div class="row text-center">
+      <h1> Current Weather </h1>
+      <hr>
+    </div>
+    <div class="row text-center">
+
+      <img width="500" height="500" src="$weather['data']['current_condition'][-1]['weatherIconUrl'][-1]['value']">
+    </div>
+    <div class="row text-center">
+
+      <h1>$weather['data']['current_condition'][-1]['temp_C'] Celcius</h1>
+    </div>
+    <div class="row text-center">
+      <h1>$weather['data']['current_condition'][-1]['weatherDesc'][0]['value']</h1>
+    </div>
+  </div>
+</div>

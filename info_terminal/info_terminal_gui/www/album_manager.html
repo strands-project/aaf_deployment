@@ -1,0 +1,47 @@
+$def with (image_count)
+
+<div class="row">
+<div class="col-md-12">
+	<div class="row text-center">	
+		<h1>Photo Album Manager</h1>
+		<hr>
+		Here are the images currently in use. Please click "Delete" next to any
+		image you wish to remove from the collection, and use the "upload" button
+		to add images to the collection. Images should be in JPEG format.
+	</div>
+	<div class="row text-center">
+		<h3>Upload a new image:</h3><br/>
+	</div>	
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<form method="POST" enctype="multipart/form-data" action="">
+			<br/>
+				<input type="file" name="myfile" />
+				<br/>
+				<input value="Upload" type="submit"/>
+			</form>
+		</div>	
+		<div class="col-md-3"></div>
+	</div>
+
+	<div class="row text-center">
+		<h3>Remove existing images:</h3><br/>
+	</div>	
+
+	$for img in range(image_count):
+		<div class="row text-center">	
+			<div class="col-md-8">
+			<img src="/get_photo/$img" style="max-height:200px;max-width:200px">
+			</div>
+			<div class="col-md-4 text-left">
+			<a href="/photo_album_manager/delete/$img"><h3>Delete this image.</h3></a>
+			</div>
+
+		</div>
+
+</div>
+</div>
+
+
+
