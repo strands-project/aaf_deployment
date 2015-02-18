@@ -1,0 +1,8 @@
+# goal definition
+string next_point 
+string[] possible_points 
+---
+# result definition
+string chosen_point 
+---
+# feedback
