@@ -41,12 +41,14 @@
   <build_depend>genmsg</build_depend>
   <build_depend>message_runtime</build_depend>
   <build_depend>mongodb_store</build_depend>
+  <build_depend>strands_executive_msgs</build_depend>
+  <build_depend>actionlib</build_depend>
+  <build_depend>actionlib_msgs</build_depend>
+  
   <run_depend>roscpp</run_depend>
   <run_depend>message_runtime</run_depend>
   <run_depend>genmsg</run_depend>
-
-  <build_depend>actionlib</build_depend>
-  <build_depend>actionlib_msgs</build_depend>
+  <run_depend>strands_executive_msgs</run_depend>
   <run_depend>actionlib</run_depend>
   <run_depend>actionlib_msgs</run_depend>
 
