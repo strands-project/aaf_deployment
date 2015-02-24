@@ -5,7 +5,7 @@ find_package(catkin REQUIRED COMPONENTS  mongodb_store roscpp actionlib_msgs act
 
 set ( CMAKE_CXX_FLAGS "-Ofast -march=native -mno-avx -ggdb")
 
-catkin_package(CATKIN_DEPENDS roscpp message_runtime actionlib_msgs strands_executive_msgs)
+catkin_package(CATKIN_DEPENDS roscpp message_runtime actionlib_msgs strands_executive_msgs std_msgs strands_navigation_msgs mongodb_store_msgs geometry_msgs)
 
 include_directories(${catkin_INCLUDE_DIRS}) 
 
