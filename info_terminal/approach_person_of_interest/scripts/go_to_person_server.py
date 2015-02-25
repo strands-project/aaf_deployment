@@ -119,7 +119,7 @@ class GoToPersonAction(object):
 
     self.send_feedback('Turning the camera to the person...')
     #turn head cam to person
-    self.ptugoal.pan = 160
+    self.ptugoal.pan = -180
     self.ptugoal.tilt = 20
     self.ptuclient.send_goal(self.ptugoal)
     self.ptuclient.wait_for_result()
@@ -152,23 +152,6 @@ class GoToPersonAction(object):
       rospy.sleep(0.5)
       self.eyelid_command.position=[100]
       self.pub.publish(self.eyelid_command)
-
-#just for testing the ptu
-      self.ptugoal.pan = 160
-      self.ptugoal.tilt = 20
-      self.ptuclient.send_goal(self.ptugoal)
-      self.ptuclient.wait_for_result()
-
-
-      self.send_feedback('Turning the camera to the person...')
-      #turn head cam to person
-      self.ptugoal.pan = 160
-      self.ptugoal.tilt = 20
-      self.ptuclient.send_goal(self.ptugoal)
-      self.ptuclient.wait_for_result()
-      self.send_feedback('camera turned successfully!')
-
-      self.exit_as()
 
 
 #      self.currentPan=20
