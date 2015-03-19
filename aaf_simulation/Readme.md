@@ -1,4 +1,4 @@
-strands_uol_sim
+aaf_sim
 ===============
 
 This package contains files that are necessary for running STRANDS simulations on the University of Lincoln environments.
