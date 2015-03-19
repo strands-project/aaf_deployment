@@ -12,7 +12,6 @@
   <author email="jpulidofentanes@lincoln.ac.uk">Jaime Pulido Fentanes</author>
 
   <run_depend>strands_morse</run_depend>
-  <run_depend>strands_utils</run_depend>
   <run_depend>strands_navigation</run_depend>
   
   <buildtool_depend>catkin</buildtool_depend>
