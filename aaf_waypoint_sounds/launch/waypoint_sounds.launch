@@ -2,7 +2,7 @@
     <arg name="music_set" default="aaf_walking_group"/>
     <!-- This will be inside .ros unless provided with full path -->
     <arg name="audio_folder" default="aaf_waypoint_sounds"/>
-    <arg name="waypoint_sounds" default='{"WayPoint1": "fringilla-coelebs.mp3", "WayPoint2": "larus-ridibundus.mp3", "WayPoint3": "melanitta-fusca.mp3", "WayPoint4": "turdus-merula.mp3"}'/>
+    <arg name="waypoint_sounds_file"/>
 
     <node pkg="aaf_waypoint_sounds" type="aaf_waypoint_player.py" name="aaf_waypoint_player" output="screen">
         <!-- The set in mongodb_media_server to use for the waypoint sounds -->
@@ -10,7 +10,7 @@
         <!-- The folder to store the media files while being player -->
         <param name="audio_folder" type="string" value="$(arg audio_folder)"/>
         <!-- Json dictionary mapping waypoints to mp3 files, see above for example -->
-        <param name="waypoint_sounds" type="string" value="$(arg waypoint_sounds)"/>
+        <rosparam command="load" file="$(arg waypoint_sounds_file)"/>
     </node>
 
 </launch>
