@@ -19,12 +19,14 @@ import pprint
 
 class WalkingGroupStateMachine(object):
     def __init__(self, name):
+        rospy.loginfo("Creating " + name + " server...")
         self._as = actionlib.SimpleActionServer(
             name,
             StateMachineAction,
             self.execute,
             auto_start=False
         )
+        self._as.register_preempt_callback(self.preempt_callback)
 
         nav_client = actionlib.SimpleActionClient("guiding", GuidingAction)
         nav_client.wait_for_server()
@@ -43,7 +45,9 @@ class WalkingGroupStateMachine(object):
         # Setting http root
         http_root = roslib.packages.get_pkg_dir('aaf_walking_group') + '/www'
         strands_webserver.client_utils.set_http_root(http_root)
+        rospy.loginfo(" ... starting " + name)
         self._as.start()
+        rospy.loginfo(" ... started " + name)
 
 
     def execute(self, goal):
@@ -51,22 +55,23 @@ class WalkingGroupStateMachine(object):
         self.waypointset = self.loadConfig(self.waypointset_name, collection_name=self.waypointset_collection, meta_name=self.waypointset_meta)
         pprint.pprint(self.waypointset)
         # Create a SMACH state machine
-        sm = smach.StateMachine(outcomes=['succeeded', 'aborted', 'preempted'])
-        sm.userdata.current_waypoint = goal.start_waypoint
+        self.sm = smach.StateMachine(outcomes=['succeeded', 'aborted', 'preempted'])
+        self.sm.userdata.current_waypoint = goal.start_waypoint
         sis = smach_ros.IntrospectionServer(
             'walking_group_state_machine',
-            sm,
+            self.sm,
             '/walking_group_machine'
         )
         sis.start()
         # Open the container
-        with sm:
+        with self.sm:
             # Add states to the container
             smach.StateMachine.add(
                 'ENTERTAIN',
                 Entertain(self.display_no),
                 transitions={
-                    'key_card': 'GUIDE_INTERFACE'
+                    'key_card': 'GUIDE_INTERFACE',
+                    'killall': 'preempted'
                 },
                 remapping={'current_waypoint' : 'current_waypoint'}
             )
@@ -86,16 +91,21 @@ class WalkingGroupStateMachine(object):
                 transitions={
                     'reached_point': 'ENTERTAIN',
                     'reached_final_point': 'succeeded',
-                    'key_card': 'GUIDE_INTERFACE'
+                    'key_card': 'GUIDE_INTERFACE',
+                    'killall': 'preempted'
                 },
                 remapping={'waypoint' : 'waypoint'}
             )
 
         # Execute SMACH plan
-        sm.execute()
+        self.sm.execute()
 
         sis.stop()
         self._as.set_succeeded()
+
+    def preempt_callback(self):
+        rospy.logwarn("Walking group preempt requested")
+        self.sm.request_preempt()
 
     def loadConfig(self, dataset_name, collection_name="aaf_walking_group", meta_name="waypoint_set"):
         msg_store = MessageStoreProxy(collection=collection_name)

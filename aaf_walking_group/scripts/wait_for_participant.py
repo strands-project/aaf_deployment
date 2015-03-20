@@ -14,19 +14,22 @@ class WaitForParticipant(object):
         self.display_no = rospy.get_param("~display_no", 0)
         self.pressed = False
         rospy.Service(name+'/button', Empty, self.button)
+        rospy.loginfo("Creating " + name + " server...")
         self._as = actionlib.SimpleActionServer(
             name,
             EmptyAction,
             self.execute,
             auto_start=False
         )
+        rospy.loginfo(" ... starting " + name)
         self._as.start()
+        rospy.loginfo(" ... started " + name)
 
     def execute(self, goal):
         print "Called"
         self.pressed = False
         strands_webserver.client_utils.display_relative_page(self.display_no, "continue_page.html")
-        while not self.pressed and not rospy.is_shutdown():
+        while not self.pressed and not rospy.is_shutdown() and not self._as.is_preempt_requested():
             pass
         print "Leave"
         self._as.set_succeeded()
