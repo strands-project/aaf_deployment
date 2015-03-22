@@ -90,16 +90,14 @@ class GuidingServer():
         rospy.logwarn("Guiding action preempt requested")
         self.client.cancel_all_goals()
         self.empty_client.cancel_all_goals()
-        while not rospy.is_shutdown():
-            try:
-                pause_service = rospy.ServiceProxy(
-                    '/monitored_navigation/pause_nav',
-                    PauseResumeNav
-                )
-                pause_service(0)
-                break
-            except rospy.ServiceException, e:
-                print "Service call failed: %s" % e
+        try:
+            pause_service = rospy.ServiceProxy(
+                '/monitored_navigation/pause_nav',
+                PauseResumeNav
+            )
+            pause_service(0)
+        except rospy.ServiceException, e:
+            rospy.logwarn("Service call failed: %s" % e)
 
     def _on_node_shutdown(self):
         self.client.cancel_all_goals()
