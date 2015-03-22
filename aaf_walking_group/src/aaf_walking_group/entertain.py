@@ -27,6 +27,8 @@ class Entertain(smach.State):
         while not self.card and not rospy.is_shutdown() and not self.preempt_requested():
             pass
         if self.preempt_requested():
+            self.sub.unregister()
+            self.sub = None
             return 'killall'
         return 'key_card'
 

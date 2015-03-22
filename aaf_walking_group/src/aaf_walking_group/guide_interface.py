@@ -74,5 +74,4 @@ class GuideInterface(smach.State):
     def cancel_srv(self, req):
         rospy.loginfo("Cancelation of guide inteface requested.")
         self._client.cancel_all_goals()
-
         return EmptyResponse()

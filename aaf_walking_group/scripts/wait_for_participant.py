@@ -32,7 +32,10 @@ class WaitForParticipant(object):
         while not self.pressed and not rospy.is_shutdown() and not self._as.is_preempt_requested():
             pass
         print "Leave"
-        self._as.set_succeeded()
+        if not self._as.is_preempt_requested():
+            self._as.set_succeeded()
+        else:
+            self._as.set_preempted()
 
     def button(self, req):
         print "Pressed"
