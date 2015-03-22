@@ -13,6 +13,7 @@ from aaf_walking_group.entertain import Entertain
 from aaf_walking_group.guide_interface import GuideInterface
 from aaf_walking_group.guiding import Guiding
 from aaf_walking_group.msg import GuidingAction, EmptyAction, StateMachineAction
+from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
 import actionlib
 import json
 import pprint
@@ -59,9 +60,20 @@ class WalkingGroupStateMachine(object):
         self.preempt_srv = rospy.Service('/walking_group/cancel', Empty, self.preempt_srv_cb)
         self.waypointset = self.loadConfig(self.waypointset_name, collection_name=self.waypointset_collection, meta_name=self.waypointset_meta)
         pprint.pprint(self.waypointset)
+
+        try:
+            rospy.loginfo("Creating waypoint sound service proxy and waiting ...")
+            s = rospy.ServiceProxy('aaf_waypoint_sounds_service', WaypointSoundsService)
+            s.wait_for_service()
+            rospy.loginfo(" .. calling waypoint sound service")
+            s(WaypointSoundsServiceRequest.RESUME)
+            rospy.loginfo(" .. started waypoint sound service")
+        except rospy.ServiceException, e:
+            rospy.logwarn("Service call failed: %s" % e)
+
         # Create a SMACH state machine
         self.sm = smach.StateMachine(outcomes=['succeeded', 'aborted', 'preempted'])
-        self.sm.userdata.current_waypoint = goal.start_waypoint
+        self.sm.userdata.current_waypoint = self.waypointset[goal.group][str(min([int(x) for x in self.waypointset[goal.group].keys()]))]
         sis = smach_ros.IntrospectionServer(
             'walking_group_state_machine',
             self.sm,
@@ -92,7 +104,7 @@ class WalkingGroupStateMachine(object):
             )
             smach.StateMachine.add(
                 'GUIDING',
-                Guiding(),
+                Guiding(waypoints=self.waypointset[goal.group]),
                 transitions={
                     'reached_point': 'ENTERTAIN',
                     'reached_final_point': 'succeeded',
@@ -107,8 +119,16 @@ class WalkingGroupStateMachine(object):
 
         sis.stop()
         self.preempt_srv.shutdown()
+        try:
+            rospy.loginfo("Creating waypoint sound service proxy and waiting ...")
+            s = rospy.ServiceProxy('aaf_waypoint_sounds_service', WaypointSoundsService)
+            s.wait_for_service()
+            rospy.loginfo(" ... calling waypoint sound service")
+            s(WaypointSoundsServiceRequest.PAUSE)
+            rospy.loginfo(" ... stopped waypoint sound service")
+        except rospy.ServiceException, e:
+            rospy.logwarn("Service call failed: %s" % e)
         if not self._as.is_preempt_requested() and self._as.is_active():
-            print "test"
             self._as.set_succeeded()
 
     def preempt_callback(self):
