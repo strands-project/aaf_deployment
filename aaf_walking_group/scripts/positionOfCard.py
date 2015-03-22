@@ -16,17 +16,17 @@ class generate_QSR:
     def __init__(self):
         '''Initialize ros publisher, ros subscriber'''
         # topic where we publish
-        self.qsr_pub = rospy.Publisher("/socialCardReader/QSR_generator", String)
+        self.qsr_pub = rospy.Publisher("/socialCardReader/QSR_generator", String, queue_size=10)
 
         # subscribed Topic
         self.Subscriber = rospy.Subscriber("/socialCardReader/cardposition", PoseStamped, self.callback,  queue_size = 1)
-        
+
         if VERBOSE :
             print "subscribed to /socialCardReader/cardposition"
 
 
     def callback(self, position):
- 
+
         if VERBOSE :
             rospy.loginfo("Card position (x,y,z): [ %f, %f, %f ]"%(position.pose.position.x, position.pose.position.y, position.pose.position.z))
 
@@ -36,10 +36,10 @@ class generate_QSR:
 
             if VERBOSE :
               rospy.loginfo("the card is %s" %result)
-        
+
         # Publish qsr
         self.qsr_pub.publish(result)
-        
+
 def main(args):
 
     '''Initializes and cleanup ros node'''

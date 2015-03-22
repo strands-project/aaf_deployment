@@ -1,12 +1,13 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
+#import os
 
 import rospy
-import roslib
+#import roslib
 import actionlib
 from std_msgs.msg import String
+from std_srvs.srv import Empty, EmptyRequest
 
 import strands_webserver.page_utils as page_utils
 import strands_webserver.client_utils as client_utils
@@ -23,11 +24,12 @@ class InterfaceServer(object):
         self._action_name = name
         self.display_no = rospy.get_param("~display", 0)
 
+        # Done in state machine
         # tell the webserver where it should look for web files to serve
-        http_root = os.path.join(
-            roslib.packages.get_pkg_dir("aaf_walking_group"),
-            "www")
-        client_utils.set_http_root(http_root)
+#        http_root = os.path.join(
+#            roslib.packages.get_pkg_dir("aaf_walking_group"),
+#            "www")
+#        client_utils.set_http_root(http_root)
 
         # Starting server
         rospy.loginfo("%s: Starting action server", name)
@@ -57,7 +59,7 @@ class InterfaceServer(object):
         result = InterfaceResult()
         client_utils.display_relative_page(self.display_no, 'guiding.html')
 
-        while self.request_name == '':
+        while self.request_name == '' and not rospy.is_shutdown(): # and not self._as.is_preempt_requested():
             rospy.sleep(0.1)
 
         if self.request_name == 'next':
@@ -67,7 +69,12 @@ class InterfaceServer(object):
             #                                    'next_waypoint.html')
             self._as.set_succeeded(result)
         elif self.request_name == 'abort':
-            self.preemptCallback()
+            try:
+                s = rospy.ServiceProxy('/walking_group/guide_interface/cancel', Empty)
+                s()
+            except rospy.ServiceException, e:
+                rospy.logwarn("Service call failed: %s" % e)
+            self._as.set_preempted()
             # client_utils.display_relative_page(self.display_no, 'abort.html')
         else:
             self.request_name = ''
@@ -115,7 +122,7 @@ class InterfaceServer(object):
 
     def preemptCallback(self):
         rospy.logwarn("Aborting the goal...")
-        self._as.set_preempted()
+        self.request_name = 'abort'
 
     def button(self, request):
         self.request_name = request.name
