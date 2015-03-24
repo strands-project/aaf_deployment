@@ -2,20 +2,26 @@
 import rospy
 import actionlib
 import numpy
-import math
 
-from aaf_walking_group.msg import GuidingAction, GuidingGoal
+
+from aaf_walking_group.msg import GuidingAction
 from aaf_walking_group.msg import EmptyAction, EmptyActionGoal
 import topological_navigation.msg
 from std_msgs.msg import String
 from strands_navigation_msgs.srv import PauseResumeNav
 from nav_msgs.msg import Odometry
-from nav_msgs.msg import Path
 
 
 class GuidingServer():
 
     def __init__(self):
+        
+        self.last_location = Odometry()
+        self.pause = 0
+        self.begin = 1
+        self.counter = 0
+        
+        
         self.server = actionlib.SimpleActionServer(
             'guiding',
             GuidingAction,
@@ -44,28 +50,20 @@ class GuidingServer():
             self.odom_callback,
             queue_size=1
         )
-        
-        self.path_subscriber = rospy.Subscriber(
-            "/move_base/DWAPlannerROS/local_plan",
-            Path,
-            self.path_callback,
-            queue_size = 1
-        )
-        
-        self.last_location = Odometry()
-        self.pause = 0
-        self.begin = 1
-        self.counter = 0
-        self.last_direction = ""
 
         self.client_walking_interface = actionlib.SimpleActionClient(
             'walking_interface_server',
-            GuidingAction
+            EmptyAction
         )
         self._client.wait_for_server()
+        
+        
 
     def execute(self, goal):
         self.begin = 1
+        
+        self.client_walking_interface.send_goal(EmptyActionGoal())
+        
         navgoal = topological_navigation.msg.GotoNodeGoal()
         navgoal.target = goal.waypoint
         self.client.send_goal(navgoal)
@@ -74,6 +72,8 @@ class GuidingServer():
         ps = self.client.get_result()
         print ps
         self.server.set_succeeded()
+        
+        self.client_walking_interface.cancel_goal()
 
     def _on_node_shutdown(self):
         self.client.cancel_all_goals()
@@ -83,6 +83,7 @@ class GuidingServer():
             # call action server
             if data.data == 'near':
                 self.odom_subscriber = None
+                self.client_walking_interface.cancel_goal()
                 self.empty_client.send_goal_and_wait(EmptyActionGoal())
                 try:
                     pause_service = rospy.ServiceProxy(
@@ -94,6 +95,7 @@ class GuidingServer():
                     print "the guy is near, fear him"
                 except rospy.ServiceException, e:
                     print "Service call failed: %s" % e
+                self.client_walking_interface.cancel_goal()
                 self.odom_subscriber = rospy.Subscriber("odom", Odometry,
                                                         self.odom_callback)
 
@@ -130,34 +132,6 @@ class GuidingServer():
 
         self.counter += 1
         
-    def path_callback(self, path): 
-        if self.server.is_active() and self.pause == 0:
-            yDiff = path.poses[-1].pose.position.y - path.poses[0].pose.position.y
-            xDiff = path.poses[-1].pose.position.x - path.poses[0].pose.position.x
-            
-            angle = math.degrees(math.atan2(yDiff,xDiff))
-            
-            if angle > -90 and angle < 85:
-                if not self.last_direction == "right":
-                    direction = 'right'
-                    walking_interface_goal = GuidingGoal()
-                    walking_interface_goal.waypoint = direction
-                    self.client_walking_interface.send_goal(walking_interface_goal)
-                    self.last_direction = "right"
-            elif angle >= 85 and angle <= 95:
-                if not self.last_direction == "straight":
-                    direction = 'straight'
-                    walking_interface_goal = GuidingGoal()
-                    walking_interface_goal.waypoint = direction
-                    self.client_walking_interface.send_goal(walking_interface_goal)
-                    self.last_direction = "straight"
-            else:
-                if not self.last_direction == "left":
-                    direction = 'left'
-                    walking_interface_goal = GuidingGoal()
-                    walking_interface_goal.waypoint = direction
-                    self.client_walking_interface.send_goal(walking_interface_goal)
-                    self.last_direction = "left"
         
 
 if __name__ == '__main__':
