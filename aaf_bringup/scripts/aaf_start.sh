@@ -34,8 +34,7 @@ tmux select-window -t $SESSION:4
 tmux send-keys "roslaunch strands_bringup strands_ui.launch"
 
 tmux select-window -t $SESSION:5
-tmux send-keys "roslaunch strands_bringup strands_navigation.launch map:=/opt/strands/maps/WW_GF_2015_02_22-cropped.yaml with_no_go_map:=false topological_map:=WW_GF_2015_02_22 no_go_map:=/opt/strands/map│
-s/WW_GF_2015_02_22-cropped.yaml with_human_aware:=true"
+tmux send-keys "roslaunch strands_bringup strands_navigation.launch map:=/opt/strands/maps/WW_GF_2015_02_22-cropped.yaml with_no_go_map:=false topological_map:=WW_GF_2015_02_22 no_go_map:=/opt/strands/maps/WW_GF_2015_02_22-cropped.yaml with_human_aware:=true"
 
 tmux select-window -t $SESSION:6
 #tmux send-keys "roslaunch strands_linda linda_people_perception.launch"
