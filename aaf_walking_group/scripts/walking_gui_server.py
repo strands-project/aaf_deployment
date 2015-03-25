@@ -39,7 +39,8 @@ class WalkingInterfaceServer(object):
             queue_size=10)
             
         self.head = JointState()
-        self.head.name = "HeadPan"
+        self.head.header.stamp = rospy.Time.now()
+        self.head.name = ["HeadPan"]
         
         self.topological_nodes = rospy.wait_for_message(
             '/topological_map',
@@ -66,10 +67,10 @@ class WalkingInterfaceServer(object):
         self.ts.registerCallback(self.filter_callback)
         
         #tell the webserver where it should look for web files to serve
-        http_root = os.path.join(
-            roslib.packages.get_pkg_dir("aaf_walking_group"),
-            "www")
-        client_utils.set_http_root(http_root)
+        #http_root = os.path.join(
+        #    roslib.packages.get_pkg_dir("aaf_walking_group"),
+        #    "www")
+        #client_utils.set_http_root(http_root)
 
         #Starting server
         rospy.loginfo("%s: Starting walking interface action server", name)
@@ -126,6 +127,7 @@ class WalkingInterfaceServer(object):
                     self.coordinates.poses.append(j.pose)
 
     def executeCallback(self, goal):
+        self.previous_direction = ""
         while not self._as.is_preempt_requested():
             if time.time() - self.start_time > 5:#reconfigurable parameter
                 self.direction = "stop"
@@ -134,7 +136,7 @@ class WalkingInterfaceServer(object):
                                                        'stop.html')
                     rospy.loginfo("STOP")
                     #move head straight
-                    self.head.position = 0
+                    self.head.position = [0]
                     self.head_pub.publish(self.head)
                     self.previous_direction = "stop"
             else:
@@ -143,7 +145,7 @@ class WalkingInterfaceServer(object):
                         client_utils.display_relative_page(self.display_no,
                                                            'turn_right.html')
                         #move head right
-                        self.head.position = -80
+                        self.head.position = [-30]
                         self.head_pub.publish(self.head)
                         rospy.loginfo("Moving right...")
                         self.previous_direction = "right"
@@ -152,7 +154,7 @@ class WalkingInterfaceServer(object):
                         client_utils.display_relative_page(self.display_no,
                                                            'turn_left.html')
                         #move head left
-                        self.head.position = 80
+                        self.head.position = [30]
                         self.head_pub.publish(self.head)
                         rospy.loginfo("Moving left...")
                         self.previous_direction = "left"
@@ -161,7 +163,7 @@ class WalkingInterfaceServer(object):
                         client_utils.display_relative_page(self.display_no,
                                                            'straight.html')
                         #move head straight
-                        self.head.position = 0
+                        self.head.position = [0]
                         self.head_pub.publish(self.head)
                         rospy.loginfo("Moving straight...")
                         self.previous_direction = "straight"

@@ -40,7 +40,7 @@ class GuidingServer():
         rospy.loginfo("Creating interface client...")
         self.client_walking_interface = actionlib.SimpleActionClient(
             '/walking_interface_server',
-            GuidingAction
+            EmptyAction
         )
         self.client_walking_interface.wait_for_server()
         rospy.loginfo(" ... done ")
@@ -65,7 +65,7 @@ class GuidingServer():
             'walking_interface_server',
             EmptyAction
         )
-        self._client.wait_for_server()
+        self.client_walking_interface.wait_for_server()
         rospy.loginfo(" ... starting "+name)
         self.server.start()
         rospy.loginfo(" ... started "+name)
@@ -73,7 +73,7 @@ class GuidingServer():
     def execute(self, goal):
         self.begin = 0
         self.pause = 0
-		self.client_walking_interface.send_goal(EmptyActionGoal())
+        self.client_walking_interface.send_goal(EmptyActionGoal())
         navgoal = topological_navigation.msg.GotoNodeGoal()
         navgoal.target = goal.waypoint
         self.client.send_goal(navgoal)
@@ -81,7 +81,7 @@ class GuidingServer():
         self.client.wait_for_result()
         ps = self.client.get_result()
         print ps
-		self.client_walking_interface.cancel_goal()
+        self.client_walking_interface.cancel_goal()
         self.server.set_succeeded()
 
 
@@ -118,7 +118,7 @@ class GuidingServer():
                     print "the guy is near, fear him"
                 except rospy.ServiceException, e:
                     print "Service call failed: %s" % e
-				self.client_walking_interface.send_goal(EmptyActionGoal())
+                self.client_walking_interface.send_goal(EmptyActionGoal())
                 self.odom_subscriber = rospy.Subscriber("odom", Odometry,
                                                         self.odom_callback)
 
@@ -132,7 +132,7 @@ class GuidingServer():
 
                 lenght = numpy.sqrt(x*x + y*y)
 
-                if lenght >= 2.0:
+                if lenght >= 5.0:
                     # self.odom_subscriber.unregister()
                     print "reached 2.0 meters"
                     try:
