@@ -14,6 +14,7 @@ from aaf_walking_group.guide_interface import GuideInterface
 from aaf_walking_group.guiding import Guiding
 from aaf_walking_group.msg import GuidingAction, EmptyAction, StateMachineAction
 from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
+from aaf_walking_group.utils import PTU
 import actionlib
 import json
 import pprint
@@ -50,6 +51,8 @@ class WalkingGroupStateMachine(object):
 
         self.preempt_srv = None
 
+        self.ptu = PTU()
+
         rospy.loginfo(" ... starting " + name)
         self._as.start()
         rospy.loginfo(" ... started " + name)
@@ -57,6 +60,9 @@ class WalkingGroupStateMachine(object):
 
     def execute(self, goal):
         rospy.loginfo("Starting state machine")
+
+        self.ptu.turnPTU(-180, 10)
+
         self.preempt_srv = rospy.Service('/walking_group/cancel', Empty, self.preempt_srv_cb)
         self.waypointset = self.loadConfig(self.waypointset_name, collection_name=self.waypointset_collection, meta_name=self.waypointset_meta)
         pprint.pprint(self.waypointset)
@@ -119,6 +125,7 @@ class WalkingGroupStateMachine(object):
 
         sis.stop()
         self.preempt_srv.shutdown()
+        self.ptu.turnPTU(0, 0)
         try:
             rospy.loginfo("Creating waypoint sound service proxy and waiting ...")
             s = rospy.ServiceProxy('aaf_waypoint_sounds_service', WaypointSoundsService)
