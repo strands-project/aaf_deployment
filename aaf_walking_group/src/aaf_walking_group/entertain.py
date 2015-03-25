@@ -4,11 +4,10 @@ import rospy
 import smach
 from std_msgs.msg import String
 import strands_webserver.client_utils
-from aaf_walking_group.utils import Gaze
 
 
 class Entertain(smach.State):
-    def __init__(self, display_no):
+    def __init__(self, display_no, gaze):
         smach.State.__init__(
             self,
             outcomes=['key_card', 'killall'],
@@ -16,9 +15,9 @@ class Entertain(smach.State):
             output_keys=['current_waypoint']
         )
         self.display_no = display_no
-        self.gaze = Gaze()
         self.card = False
         self.sub = None
+	self.gaze = gaze
 
     def execute(self, userdata):
         self.gaze.people()

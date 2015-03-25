@@ -14,7 +14,7 @@ from aaf_walking_group.guide_interface import GuideInterface
 from aaf_walking_group.guiding import Guiding
 from aaf_walking_group.msg import GuidingAction, EmptyAction, StateMachineAction
 from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
-from aaf_walking_group.utils import PTU
+from aaf_walking_group.utils import PTU, Gaze
 import actionlib
 import json
 import pprint
@@ -52,6 +52,7 @@ class WalkingGroupStateMachine(object):
         self.preempt_srv = None
 
         self.ptu = PTU()
+        self.gaze = Gaze()
 
         rospy.loginfo(" ... starting " + name)
         self._as.start()
@@ -91,7 +92,7 @@ class WalkingGroupStateMachine(object):
             # Add states to the container
             smach.StateMachine.add(
                 'ENTERTAIN',
-                Entertain(self.display_no),
+                Entertain(self.display_no, self.gaze),
                 transitions={
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
