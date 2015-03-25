@@ -5,11 +5,13 @@ from actionlib_msgs.msg import *
 import actionlib
 from std_msgs.msg import String
 
+from aaf_waypoint_sounds.srv import *
+
 from pygame_managed_player.pygame_player import PyGamePlayer
 from mongodb_media_server import MediaClient
 
 from os import listdir
-from os.path import isfile, join, splitext, exists
+from os.path import isfile, join, splitext, exists, expanduser
 from os import makedirs
 
 import pygame
@@ -38,8 +40,6 @@ class AAFWaypointPlayer(object):
         port = rospy.get_param('mongodb_port')
 
         self.mc = MediaClient(hostname, port)
-
-        music_set = "aaf_walking_group"
 
         sets = self.mc.get_sets("Music")
         object_id = None
@@ -81,11 +81,25 @@ class AAFWaypointPlayer(object):
         #pygame.mixer.init()
         self.player = PyGamePlayer(0.2, 1.0, 0.5, frequency=44100)
         rospy.Subscriber("/current_node", String, self.waypoint_subscriber)
+
+        self.enable_sounds = False
+        self.service = rospy.Service('aaf_waypoint_sounds_service', WaypointSoundsService, self.toggle_service)
+
         while not rospy.is_shutdown():
             # In case anything needs checking
             rospy.sleep(1)
 
+    def toggle_service(self, req):
+        if req.toggle_action == WaypointSoundsServiceRequest.RESUME:
+            self.enable_sounds = True
+        elif req.toggle_action == WaypointSoundsServiceRequest.PAUSE:
+            self.enable_sounds = False
+
+        return WaypointSoundsServiceResponse()
+
     def waypoint_subscriber(self, waypoint):
+        if not self.enable_sounds:
+            return
         if waypoint.data not in self.waypoint_sounds:
             return
         #pygame.mixer.music.stop()

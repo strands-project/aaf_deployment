@@ -4,6 +4,7 @@ import rospy
 import smach
 from std_msgs.msg import String
 import strands_webserver.client_utils
+from aaf_walking_group.utils import Gaze
 
 
 class Entertain(smach.State):
@@ -15,10 +16,12 @@ class Entertain(smach.State):
             output_keys=['current_waypoint']
         )
         self.display_no = display_no
+        self.gaze = Gaze()
         self.card = False
         self.sub = None
 
     def execute(self, userdata):
+        self.gaze.people()
         self.card = False
         self.sub = rospy.Subscriber("/socialCardReader/commands", String, callback=self.callback)
         rospy.loginfo("Showing entertainment interface.")
@@ -26,6 +29,7 @@ class Entertain(smach.State):
         rospy.loginfo("I am at: " + userdata.current_waypoint)
         while not self.card and not rospy.is_shutdown() and not self.preempt_requested():
             pass
+        self.gaze.preempt()
         if self.preempt_requested():
             self.sub.unregister()
             self.sub = None
