@@ -1,0 +1,10 @@
+<launch>
+
+	<node pkg="aaf_control_ui" type="server.py" name="aaf_control_ui_server" output="screen">
+		<param name="lang" value="de" />
+	</node>
+
+	<include ns="control_pc" file="$(find strands_webtools)/launch/webtools.launch" />
+
+
+</launch>
