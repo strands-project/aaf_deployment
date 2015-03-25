@@ -40,10 +40,10 @@ class PTU():
         self.ptuClient.wait_for_server()
         rospy.loginfo("...done")
 
-    def turnPTU(self, pan):
+    def turnPTU(self, pan, tilt):
         goal = flir_pantilt_d46.msg.PtuGotoGoal()
         goal.pan = pan
-        goal.tilt = 10
+        goal.tilt = tilt
         goal.pan_vel = 60
         goal.tilt_vel = 60
         self.ptuClient.send_goal(goal)
