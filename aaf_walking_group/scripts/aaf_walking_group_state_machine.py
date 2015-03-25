@@ -31,10 +31,18 @@ class WalkingGroupStateMachine(object):
         )
         self._as.register_preempt_callback(self.preempt_callback)
 
+        rospy.loginfo("Creating guiding client...")
         nav_client = actionlib.SimpleActionClient("guiding", GuidingAction)
         nav_client.wait_for_server()
+        rospy.loginfo(" ... done")
+        rospy.loginfo("Creating wait client...")
         wait_client = actionlib.SimpleActionClient("wait_for_participant", EmptyAction)
         wait_client.wait_for_server()
+        rospy.loginfo(" ... done")
+        rospy.loginfo("Creating image server client...")
+        self.image_client = actionlib.SimpleActionClient("/aaf_walking_group/image_server", EmptyAction)
+        self.image_client.wait_for_server()
+        rospy.loginfo(" ... done")
         # Get parameters
         self.display_no = rospy.get_param("~display_no", 0)
         self.waypointset_name = rospy.get_param("~mongodb_params/waypointset_name", "")
@@ -92,7 +100,7 @@ class WalkingGroupStateMachine(object):
             # Add states to the container
             smach.StateMachine.add(
                 'ENTERTAIN',
-                Entertain(self.display_no, self.gaze),
+                Entertain(self.display_no, self.gaze, self.image_client),
                 transitions={
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'

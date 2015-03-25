@@ -2,15 +2,12 @@ body {}
 h2 {font-size:200%}
 p {font-size:200%}
 .button-style {
-	-moz-box-shadow:inset 0px 1px 21px -1px #ffffff;
-	-webkit-box-shadow:inset 0px 1px 21px -1px #ffffff;
-	box-shadow:inset 0px 1px 21px -1px #ffffff;
-background-color: Transparent;
-    background-repeat:no-repeat;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;
-    outline:none;
+	background-color: Transparent;
+   background-repeat:no-repeat;
+   border: none;
+   cursor:pointer;
+   overflow: hidden;
+   outline:none;
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ffffff');
 	-webkit-border-top-left-radius:10px;
 	-moz-border-radius-topleft:10px;
@@ -37,33 +34,20 @@ background-color: Transparent;
 	text-decoration:none;
 	text-align:center;
 	text-shadow:1px 1px 1px #1570cd;
+   padding-left: 15px;
+   background-size: 100%;
 }
-.button-style:hover {
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ffffff');
-	background-color:Transparent;
-}.button-style:active {
-	
+.button-style:active {
+	border:1px solid Transparent;
 }
 .start-button {
-  background: url('img/button_start.png') left center no-repeat;
-  padding-left: 15px;
-  background-size: 100%;
+  background: url('img/button_start.png') left center / 100% no-repeat;
 }
-.start-button:hover {
-  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #ffffff) );
-  background:-moz-linear-gradient( center top, #ffffff 5%, #ffffff 100% );
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ffffff');
-  background-color:Transparent;
-  background: url('img/button_start.png') left center no-repeat;
-  padding-left: 15px;
-  background-size: 100%;
+.back-button {
+  background: url('img/button_zurueck.png') left center / 100% no-repeat;
 }
-.start-button:active {
-  background: url('img/button_start.png') left center no-repeat;
-  padding-left: 15px;
-  border:1px solid #ffffff;
-  background-size: 100%;
-	
+.next-button {
+  background: url('img/button_vor.png') left center / 100% no-repeat;
 }
 .speechout{
   border-radius: 10px 10px 10px 10px;
