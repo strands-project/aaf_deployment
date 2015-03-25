@@ -3,7 +3,9 @@
 import rospy
 import smach
 import actionlib
+from actionlib_msgs.msg import GoalStatus
 from aaf_walking_group.msg import InterfaceAction, InterfaceGoal
+from std_srvs.srv import Empty, EmptyResponse
 
 class GuideInterface(smach.State):
     def __init__(self, waypointset):
@@ -21,9 +23,11 @@ class GuideInterface(smach.State):
             InterfaceAction
         )
         self._client.wait_for_server()
-        rospy.loginfo("...done")
+        rospy.loginfo(" ...done")
+        self.srv = None
 
     def execute(self, userdata):
+        self.srv = rospy.Service('/walking_group/guide_interface/cancel', Empty, self.cancel_srv)
         rospy.loginfo("Showing guide interface")
         rospy.sleep(1)
 
@@ -45,10 +49,29 @@ class GuideInterface(smach.State):
         goal.next_point = next_waypoint
         rospy.loginfo("Sending a goal to interface server...")
         self._client.send_goal_and_wait(goal)
-        result = self._client.get_result()
-        rospy.loginfo("Got the chosen next waypoint.")
-        next_waypoint = result.chosen_point
+        state = self._client.get_state()
+        self.srv.shutdown()
+        if state == GoalStatus.SUCCEEDED:
+            result = self._client.get_result()
+            rospy.loginfo("Got the chosen next waypoint.")
+            next_waypoint = result.chosen_point
 
-        rospy.loginfo("I will go to: " + next_waypoint)
-        userdata.waypoint = next_waypoint
-        return 'move_to_point'
+            rospy.loginfo("I will go to: " + next_waypoint)
+            userdata.waypoint = next_waypoint
+            return 'move_to_point'
+        elif self._preempt_requested:
+            return 'killall'
+        else:
+            return 'aborted'
+
+    def request_preempt(self):
+        """Overload the preempt request method to cancel interface goal."""
+        self._client.cancel_all_goals()
+        smach.State.request_preempt(self)
+        self.srv.shutdown()
+        rospy.logwarn("Guide Interface Preempted!")
+
+    def cancel_srv(self, req):
+        rospy.loginfo("Cancelation of guide inteface requested.")
+        self._client.cancel_all_goals()
+        return EmptyResponse()
