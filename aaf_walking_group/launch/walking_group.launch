@@ -10,6 +10,7 @@
 
   <node pkg="aaf_walking_group" type="wait_for_participant.py" name="wait_for_participant" output="screen"/>
   <node pkg="aaf_walking_group" type="guiding_action.py" name="guiding_server" output="screen"/>
+  <node pkg="aaf_walking_group" type="image_server.py" name="image_server" output="screen"/>
   <node pkg="social_card_reader" type="social_card_reader" name="social_card_reader" output="screen"/>
   <node pkg="aaf_walking_group" type="interface_server.py" name="interface_server" output="screen"/>
   <node pkg="aaf_walking_group" type="walking_gui_server.py" name="walking_interface_server" output="screen"/>
