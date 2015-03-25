@@ -1,13 +1,13 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#import os
+# import os
 
 import rospy
-#import roslib
+# import roslib
 import actionlib
 from std_msgs.msg import String
-from std_srvs.srv import Empty, EmptyRequest
+from std_srvs.srv import Empty
 
 import strands_webserver.page_utils as page_utils
 import strands_webserver.client_utils as client_utils
@@ -26,10 +26,10 @@ class InterfaceServer(object):
 
         # Done in state machine
         # tell the webserver where it should look for web files to serve
-#        http_root = os.path.join(
-#            roslib.packages.get_pkg_dir("aaf_walking_group"),
-#            "www")
-#        client_utils.set_http_root(http_root)
+        # http_root = os.path.join(
+        #     roslib.packages.get_pkg_dir("aaf_walking_group"),
+        #     "www")
+        # client_utils.set_http_root(http_root)
 
         # Starting server
         rospy.loginfo("%s: Starting action server", name)
@@ -59,23 +59,29 @@ class InterfaceServer(object):
         result = InterfaceResult()
         client_utils.display_relative_page(self.display_no, 'guiding.html')
 
-        while self.request_name == '' and not rospy.is_shutdown(): # and not self._as.is_preempt_requested():
+        while self.request_name == '' and not rospy.is_shutdown():
             rospy.sleep(0.1)
 
         if self.request_name == 'next':
             result.chosen_point = goal.next_point
             rospy.loginfo(result)
-            # client_utils.display_relative_page(self.display_no,
-            #                                    'next_waypoint.html')
             self._as.set_succeeded(result)
         elif self.request_name == 'abort':
             try:
-                s = rospy.ServiceProxy('/walking_group/guide_interface/cancel', Empty)
+                s = rospy.ServiceProxy(
+                    '/walking_group/guide_interface/cancel', Empty
+                )
                 s()
-            except rospy.ServiceException, e:
+            except rospy.ServiceException as e:
                 rospy.logwarn("Service call failed: %s" % e)
             self._as.set_preempted()
-            # client_utils.display_relative_page(self.display_no, 'abort.html')
+        elif self.request_name == 'killall':
+            try:
+                s = rospy.ServiceProxy('/walking_group/cancel', Empty)
+                s()
+            except rospy.ServiceException as e:
+                rospy.logwarn("Service call failed: %s" % e)
+            self._as.set_preempted()
         else:
             self.request_name = ''
             self.listWaypointPage(goal.possible_points)
@@ -83,8 +89,6 @@ class InterfaceServer(object):
                 rospy.sleep(0.1)
             result.chosen_point = self.request_name
             rospy.loginfo(result)
-            # client_utils.display_relative_page(self.display_no,
-            #                                    'next_waypoint.html')
             self._as.set_succeeded(result)
 
     def listWaypointPage(self, possible_points):
@@ -102,14 +106,12 @@ class InterfaceServer(object):
         content = ''
         for i in range(len(buttons)):
             if i == 0:
-                content += page_utils.generate_named_button_page(notice,
-                                                                 buttons[i],
-                                                                 self._action_name)
+                content += page_utils.generate_named_button_page(
+                    notice, buttons[i], self._action_name)
             else:
                 content += "<p></p>"
-                content += page_utils.generate_named_button_page('', buttons[i],
-                                                                 self._action_name)
-
+                content += page_utils.generate_named_button_page(
+                    '', buttons[i], self._action_name)
         content_with_bg = self.createBGWaypointPage(content)
         client_utils.display_content(self.display_no, content_with_bg)
 
