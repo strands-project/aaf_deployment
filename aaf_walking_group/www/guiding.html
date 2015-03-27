@@ -18,9 +18,9 @@
     <script src="bootstrap/dist/js/bootstrap.js"></script>
 
   </head>
-  <body style="width: 1024px; height: 768px; background-repeat:no-repeat;">
+  <body style="width: 1000px; height: 750px; background-repeat:no-repeat;">
   
-	<div id="logoDiv" style="position: absolute; width:616px; height: 300px; left: 204px; top: 64px;">
+	<div id="logoDiv" style="position: absolute; width:616px; height: 300px; left: 192px; top: 50px;">
   		<img id="imgElem" width="616" height="300" src="img/walkinggroup.png" />
   		<audio id="soundplayer">
   			// TODO: Song to play while walking
@@ -29,33 +29,33 @@
   
   	<!-- interaction buttons -->
   	  <button type="button" onclick="javascript:waypointList()"
-            class="button-style liste-txt-button" style="position: absolute; left: 40px; top: 428px; width: 250px; height: 212px;"></button>
+            class="button-style liste-txt-button" style="position: absolute; left: 16px; top: 428px; width: 220px; height: 187px;"></button>
         
-     <div id="textLeft" style="position: absolute; left: -155px; top: 628px;
+     <div id="textLeft" style="position: absolute; left: -186px; top: 600px;
         width: 200px; height: 100px; float: left; text-align: center;">
-        <textarea class="speechout" id="stop">Liste aller Treffpunkte</textarea>
+        <textarea class="speechout" id="stop">Liste aller Rastpunkte</textarea>
     </div>       
        
     <button type="button" onclick="javascript:abort()"
-            class="button-style film-button" style="position: absolute; left: 270px; top: 428px; width: 250px; height: 212px;"></button>
+            class="button-style film-button" style="position: absolute; left: 252px; top: 428px; width: 220px; height: 187px;"></button>
     
-    <div id="textMiddleLeft" style="position: absolute; left: 75px; top: 628px;
+    <div id="textMiddleLeft" style="position: absolute; left: 48px; top: 600px;
         width: 200px; height: 100px; float: left; text-align: center;">
         <textarea class="speechout" id="stop">Unterhaltung</textarea>
     </div>       
 
     <button type="button" onclick="javascript:killall()"
-            class="button-style abbruch-button" style="position: absolute; left: 500px; top: 428px; width: 250px; height: 212px;"></button>
+            class="button-style abbruch-button" style="position: absolute; left: 488px; top: 428px; width: 220px; height: 187px;"></button>
     
-     <div id="textMiddleRight" style="position: absolute; left: 305px; top: 628px;
+     <div id="textMiddleRight" style="position: absolute; left: 283px; top: 600px;
         width: 200px; height: 100px; float: left; text-align: center;">
         <textarea class="speechout" id="stop">Abbruch der Tour</textarea>
     </div>
 
    <button type="button" onclick="javascript:nextWaypoint()"
-            class="button-style weiter-button" style="position: absolute; left: 730px; top: 428px; width: 250px; height: 212px;"></button>
+            class="button-style weiter-button" style="position: absolute; left: 724px; top: 428px; width: 220px; height: 187px;"></button>
 
-    <div id="textRight" style="position: absolute; left: 540px; top: 628px;
+    <div id="textRight" style="position: absolute; left: 522px; top: 600px;
         width: 200px; height: 100px; float: left; text-align: center;">
         <textarea class="speechout" id="saytext">Der n&auml;chste Punkt ist </textarea>
     </div>
@@ -105,7 +105,7 @@
       // Formats the pose for outputting.
       var say = message.data;
     
-      document.getElementById("saytext").value="Der n&auml;chste Punkt ist " + say;
+      document.getElementById("saytext").value="Der nächste Punkt ist " + say;
     });
   </script>
 </html>

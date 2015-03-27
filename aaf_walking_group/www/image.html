@@ -24,14 +24,14 @@
   <body style="width: 1024px; height: 768px; background-repeat:no-repeat;">
   
    <!-- Go back to the main page -->
-  <a class="button-style liste-button" style="position: absolute; left: 916px; top: 661px; width: 100px; height: 85px;" href="entertainment.html"></a>
+  <a class="button-style liste-button" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
   
   <div id="mjpeg" style="position: absolute; left: 192px; top: 10px; width: 640px; height: 480px;"></div>
   
   <button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/aaf_walking_group/image_server/prev', serviceType : 'std_srvs/Empty'}); var request_button = new ROSLIB.ServiceRequest({});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
-            class="button-style back-button" style="position: absolute; left: 141px; top: 473px; width: 300px; height: 255px;"></button>
+            class="button-style back-button" style="position: absolute; left: 80px; top: 480px; width: 300px; height: 255px;"></button>
   <button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/aaf_walking_group/image_server/next', serviceType : 'std_srvs/Empty'}); var request_button = new ROSLIB.ServiceRequest({});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
-            class="button-style next-button" style="position: absolute; left: 582px; top: 473px; width: 300px; height: 255px;"></button>
+            class="button-style next-button" style="position: absolute; left: 620px; top: 480px; width: 300px; height: 255px;"></button>
 
   <script type="text/javascript">
         /**
