@@ -53,10 +53,6 @@ class WalkingGroupStateMachine(object):
             rospy.logfatal("Please run with _mongodb_params/waypointset_name:=<waypointset_name>")
             return
 
-        # Setting http root
-        http_root = roslib.packages.get_pkg_dir('aaf_walking_group') + '/www'
-        strands_webserver.client_utils.set_http_root(http_root)
-
         self.preempt_srv = None
 
         self.ptu = PTU()
@@ -69,6 +65,10 @@ class WalkingGroupStateMachine(object):
 
     def execute(self, goal):
         rospy.loginfo("Starting state machine")
+
+        # Setting http root
+        http_root = roslib.packages.get_pkg_dir('aaf_walking_group') + '/www'
+        strands_webserver.client_utils.set_http_root(http_root)
 
         self.ptu.turnPTU(-180, 10)
 
