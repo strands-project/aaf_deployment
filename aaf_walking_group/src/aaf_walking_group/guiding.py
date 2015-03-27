@@ -69,6 +69,8 @@ class Guiding(smach.State):
             state = self.nav_client.get_state()
 
         self.music_control("pause")
+        self.sub.unregister()
+        self.sub = None
 
         if self.preempt_requested() and not self.card:
             return 'killall'

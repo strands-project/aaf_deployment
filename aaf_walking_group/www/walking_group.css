@@ -52,6 +52,30 @@ p {font-size:200%}
 .next-button {
   background: url('img/button_vor.png') left center / 100% no-repeat;
 }
+.musik-button {
+  background: url('img/button_musik.png') left center / 100% no-repeat;
+}
+.film-button {
+  background: url('img/button_film.png') left center / 100% no-repeat;
+}
+.bilder-button {
+  background: url('img/button_bilder.png') left center / 100% no-repeat;
+}
+.liste-button {
+  background: url('img/button_liste_notext.png') left center / 100% no-repeat;
+}
+.liste-txt-button {
+  background: url('img/button_liste.png') left center / 100% no-repeat;
+}
+.abbruch-button {
+  background: url('img/button_abbruch.png') left center / 100% no-repeat;
+}
+.weiter-button {
+  background: url('img/button_weiter.png') left center / 100% no-repeat;
+}
+.weiter-up-button {
+  background: url('img/button_weiter_up.png') left center / 100% no-repeat;
+}
 .speechout{
   border-radius: 10px 10px 10px 10px;
   -moz-border-radius: 10px 10px 10px 10px;

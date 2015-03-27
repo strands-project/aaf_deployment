@@ -17,9 +17,9 @@
       <script src="nav2djs/build/nav2d.js"></script>
       <script src="bootstrap/dist/js/bootstrap.js"></script>
   </head>
-  <body style="background-image:url(img/strandsbg.png); width: 1024px; height: 768px; background-repeat:no-repeat;">
+  <body style="width: 1024px; height: 768px; background-repeat:no-repeat;">
   
-    <button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/wait_for_participant/button', serviceType : 'std_srvs/Empty'}); var request_button = new ROSLIB.ServiceRequest({});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')" class="button-style start-button"
+    <button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/wait_for_participant/button', serviceType : 'std_srvs/Empty'}); var request_button = new ROSLIB.ServiceRequest({});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')" class="button-style weiter-up-button"
             style="position: absolute; left: 50px; top: 50px; width: 924px; height: 668px;"></button>
     
     <script type="text/javascript">
