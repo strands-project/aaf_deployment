@@ -43,6 +43,9 @@ p {font-size:200%}
 .start-button {
   background: url('img/button_start.png') left center / 100% no-repeat;
 }
+.stopp-button {
+  background: url('img/button_stopp.png') left center / 100% no-repeat;
+}
 .back-button {
   background: url('img/button_zurueck.png') left center / 100% no-repeat;
 }
