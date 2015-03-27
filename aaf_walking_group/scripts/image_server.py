@@ -97,7 +97,6 @@ class ImageServer(object):
         self.image_index = self.image_index + 1
         if self.image_index >= len(self.file_names):
             self.image_index = 0
-        print self.file_names[self.image_index]
         self.cv_image = self.bridge.cv2_to_imgmsg(cv2.imread(self.file_names[self.image_index]), "bgr8")
         return EmptyResponse()
 
@@ -105,7 +104,6 @@ class ImageServer(object):
         self.image_index = self.image_index - 1
         if self.image_index < 0:
             self.image_index = len(self.file_names) - 1
-        print self.file_names[self.image_index]
         self.cv_image = self.bridge.cv2_to_imgmsg(cv2.imread(self.file_names[self.image_index]), "bgr8")
         return EmptyResponse()
 

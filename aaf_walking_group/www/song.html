@@ -15,34 +15,35 @@
 	<script src="ros3djs/build/ros3d.min.js"></script>
 	<script src="nav2djs/build/nav2d.js"></script>
 	<script src="bootstrap/dist/js/bootstrap.js"></script>
+	<link rel="stylesheet" type="text/css" href="walking_group.css">
 	</head>
-	<body style="background-image:url(img/strandsbg.png); width: 1024px; height: 768px; background-repeat:no-repeat;">
+	<body style="width: 1024px; height: 768px; background-repeat:no-repeat;">
 
 	<!-- Go back to the main page -->
-	<a href="entertainment.html"><img style="position: absolute; left: 916px; top: 12px; width: 100px; height: 85px;"
-		title="Auswahl" alt="Auswahl" src="img/button_liste_notext.png"></a>
+	<a href="entertainment.html"><img style="position: absolute; left: 916px; top: 661px; width: 100px; height: 85px;"
+        title="Auswahl" alt="Auswahl" src="img/button_liste_notext.png"></a>
 
 	<div id="soundDiv" style="position: absolute; width:700px; left: 162px; top: 90px;">
 		<img id="imgElem" src="img/sheetmusic.png" />
 	</div>
-
+  
 	<div id="prevDiv">
-		<img style="position: absolute; left: 70px; top: 473px; width: 300px; height: 255px;"
-			title="Musik" alt="Musik" src="img/button_zurueck.png" onclick="javascript:prev()">
+		<button type="button" onclick="javascript:prev()"
+            class="button-style back-button" style="position: absolute; left: 100px; top: 473px; width: 300px; height: 255px;"></button>
 	</div>
 
 	<div id="pauseDiv">
-		<img style="position: absolute; left: 380px; top: 473px; width: 300px; height: 255px;"
-			title="Musik" alt="Musik" src="img/button_stopp.png" onclick="javascript:playPause()">
+      <button type="button" onclick="javascript:playPause()"
+            class="button-style stopp-button" style="position: absolute; left: 362px; top: 473px; width: 300px; height: 255px;"></button>
 	</div>
 	<div id="playDiv">
-		<img style="position: absolute; left: 380px; top: 473px; width: 300px; height: 255px;"
-			title="Musik" alt="Musik" src="img/button_start.png" onclick="javascript:playPause()">
+      <button type="button" onclick="javascript:playPause()"
+            class="button-style start-button" style="position: absolute; left: 362px; top: 473px; width: 300px; height: 255px;"></button>
 	</div>
 
 	<div id="nextDiv">
-		<img style="position: absolute; left: 690px; top: 473px; width: 300px; height: 255px;"
-			title="Musik" alt="Musik" src="img/button_vor.png" onclick="javascript:next()">
+      <button type="button" onclick="javascript:next()"
+            class="button-style next-button" style="position: absolute; left: 625px; top: 473px; width: 300px; height: 255px;"></button>
 	</div>
   
 	<script>
