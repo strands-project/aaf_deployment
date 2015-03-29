@@ -1,64 +1,51 @@
 <!DOCTYPE html>
 <html>
-  <head>
-	<meta content="text/html; charset=windows-1252" http-equiv="content-type">
-	<title></title>
-	<script src="js/jquery.js"></script>
-	<script src="js/display.js"></script>
-	<script type="text/javascript" src="js/jquery-ui.js"></script>
-	<script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
-	<script src="roslibjs/build/roslib.js"></script>
-	<script src="ros2djs/include/EaselJS/easeljs.js"></script>
-	<script src="ros2djs/build/ros2d.js"></script>
-	<script src="ros3djs/include/threejs/three.js"></script>
-	<script src="ros3djs/include/ColladaAnimationCompress/ColladaLoader2.js"></script>
-	<script src="ros3djs/build/ros3d.min.js"></script>
-	<script src="nav2djs/build/nav2d.js"></script>
-	<script src="bootstrap/dist/js/bootstrap.js"></script>
-	<link rel="stylesheet" type="text/css" href="walking_group.css">
+   <head>
+		<meta content="text/html; charset=windows-1252" http-equiv="content-type">
+		<title></title>
+		<script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
+		<script src="roslibjs/build/roslib.js"></script>
+		<link rel="stylesheet" type="text/css" href="walking_group.css">
 	</head>
-	<body style="width: 1024px; height: 768px; background-repeat:no-repeat;">
+	<body style="width: 1000px; height: 750px; background-repeat:no-repeat;">
 
 	<!-- Go back to the main page -->
-	<a href="entertainment.html"><img style="position: absolute; left: 916px; top: 661px; width: 100px; height: 85px;"
-        title="Auswahl" alt="Auswahl" src="img/button_liste_notext.png"></a>
+	<a class="button-style liste-button" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
 
-	<div id="soundDiv" style="position: absolute; width:700px; left: 162px; top: 90px;">
+	<div id="soundDiv" style="position: absolute; width:700px; left: 150px; top: 65px;">
 		<img id="imgElem" src="img/sheetmusic.png" />
 	</div>
   
 	<div id="prevDiv">
 		<button type="button" onclick="javascript:prev()"
-            class="button-style back-button" style="position: absolute; left: 100px; top: 473px; width: 300px; height: 255px;"></button>
+            class="button-style back-button" style="position: absolute; left: 80px; top: 480px; width: 300px; height: 255px;"></button>
 	</div>
 
 	<div id="pauseDiv">
       <button type="button" onclick="javascript:playPause()"
-            class="button-style stopp-button" style="position: absolute; left: 362px; top: 473px; width: 300px; height: 255px;"></button>
+            class="button-style stopp-button" style="position: absolute; left: 350px; top: 480px; width: 300px; height: 255px;"></button>
 	</div>
 	<div id="playDiv">
       <button type="button" onclick="javascript:playPause()"
-            class="button-style start-button" style="position: absolute; left: 362px; top: 473px; width: 300px; height: 255px;"></button>
+            class="button-style start-button" style="position: absolute; left: 350px; top: 480px; width: 300px; height: 255px;"></button>
 	</div>
 
 	<div id="nextDiv">
       <button type="button" onclick="javascript:next()"
-            class="button-style next-button" style="position: absolute; left: 625px; top: 473px; width: 300px; height: 255px;"></button>
+            class="button-style next-button" style="position: absolute; left: 620px; top: 480px; width: 300px; height: 255px;"></button>
 	</div>
   
 	<script>
 		var hostname = location.hostname;
 
 		var ros = new ROSLIB.Ros({
-		 // this is filled by the ros node when writing this page to the web server, but doesn't currently work
-		  // url : '<dynamic>bridge_server</dynamic>'
-		  url : 'ws://'+hostname+':9090'
+		   url : 'ws://'+hostname+':9090'
 		});
 	
 		var playDiv = document.getElementById("playDiv"); 
 		var pauseDiv = document.getElementById("pauseDiv");
 		var playing = false;
-        showHideButtons();
+      showHideButtons();
 
 		function prev() {
 			var result = aafMusicPlayerService(2);

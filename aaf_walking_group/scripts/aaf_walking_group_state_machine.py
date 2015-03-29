@@ -13,6 +13,7 @@ from aaf_walking_group.entertain import Entertain
 from aaf_walking_group.guide_interface import GuideInterface
 from aaf_walking_group.guiding import Guiding
 from aaf_walking_group.msg import GuidingAction, EmptyAction, StateMachineAction
+from aaf_walking_group.srv import GetMediaId
 from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
 from aaf_walking_group.utils import PTU, Gaze
 import actionlib
@@ -39,9 +40,13 @@ class WalkingGroupStateMachine(object):
         wait_client = actionlib.SimpleActionClient("wait_for_participant", EmptyAction)
         wait_client.wait_for_server()
         rospy.loginfo(" ... done")
-        rospy.loginfo("Creating image server client...")
-        self.image_client = actionlib.SimpleActionClient("/aaf_walking_group/image_server", EmptyAction)
-        self.image_client.wait_for_server()
+        rospy.loginfo("Waiting for media server services...")
+        rospy.loginfo(" ... images")
+        s = rospy.ServiceProxy('/aaf_walking_group/image_server/get_id', GetMediaId)
+        s.wait_for_service()
+        rospy.loginfo(" ... video")
+        s = rospy.ServiceProxy('/aaf_walking_group/video_server/get_id', GetMediaId)
+        s.wait_for_service()
         rospy.loginfo(" ... done")
         # Get parameters
         self.display_no = rospy.get_param("~display_no", 0)
@@ -100,7 +105,7 @@ class WalkingGroupStateMachine(object):
             # Add states to the container
             smach.StateMachine.add(
                 'ENTERTAIN',
-                Entertain(self.display_no, self.gaze, self.image_client),
+                Entertain(self.display_no, self.gaze),
                 transitions={
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'

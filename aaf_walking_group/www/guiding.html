@@ -4,23 +4,12 @@
     <meta content="text/html; charset=windows-1252" http-equiv="content-type">
     <link rel="stylesheet" type="text/css" href="walking_group.css">
     <title></title>
-    <script src="js/jquery.js"></script>
-    <script src="js/display.js"></script>
-    <script type="text/javascript" src="js/jquery-ui.js"></script>
     <script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
-    <script src="roslibjs/build/roslib.js"></script>
-    <script src="ros2djs/include/EaselJS/easeljs.js"></script>
-    <script src="ros2djs/build/ros2d.js"></script>
-    <script src="ros3djs/include/threejs/three.js"></script>
-    <script src="ros3djs/include/ColladaAnimationCompress/ColladaLoader2.js"></script>
-    <script src="ros3djs/build/ros3d.min.js"></script>
-    <script src="nav2djs/build/nav2d.js"></script>
-    <script src="bootstrap/dist/js/bootstrap.js"></script>
-
+    <script src="roslibjs/build/roslib.js"></script>    
   </head>
-  <body style="background-image:url(img/strandsbg.png); width: 1024px; height: 768px; background-repeat:no-repeat;">
+  <body style="width: 1000px; height: 750px; background-repeat:no-repeat;">
   
-	<div id="logoDiv" style="position: absolute; width:616px; height: 300px; left: 204px; top: 64px;">
+	<div id="logoDiv" style="position: absolute; width:616px; height: 300px; left: 192px; top: 50px;">
   		<img id="imgElem" width="616" height="300" src="img/walkinggroup.png" />
   		<audio id="soundplayer">
   			// TODO: Song to play while walking
@@ -28,36 +17,36 @@
 	</div>
   
   	<!-- interaction buttons -->
-	<img style="position: absolute; left: 40px; top: 428px; width: 250px; height: 212px;"
-        title="Liste" alt="Liste" src="img/button_liste.png" onclick="javascript:waypointList()">
+  	  <button type="button" onclick="javascript:waypointList()"
+            class="button-style liste-txt-button" style="position: absolute; left: 16px; top: 428px; width: 220px; height: 187px;"></button>
         
-      <div id="textLeft" style="position: absolute; left: -155px; top: 628px;
+     <div id="textLeft" style="position: absolute; left: -186px; top: 600px;
         width: 200px; height: 100px; float: left; text-align: center;">
-        <textarea class="speechout" id="stop">Liste aller Treffpunkte</textarea>
+        <textarea class="speechout" id="stop">Liste aller Rastpunkte</textarea>
     </div>       
        
-    <img style="position: absolute; left: 270px; top: 428px; width: 250px; height: 212px;"
-        title="Entertain" alt="Entertain" src="img/button_film.png" onclick="javascript:abort()">
-
-     <div id="textMiddleLeft" style="position: absolute; left: 75px; top: 628px;
+    <button type="button" onclick="javascript:abort()"
+            class="button-style film-button" style="position: absolute; left: 252px; top: 428px; width: 220px; height: 187px;"></button>
+    
+    <div id="textMiddleLeft" style="position: absolute; left: 48px; top: 600px;
         width: 200px; height: 100px; float: left; text-align: center;">
-        <textarea class="speechout" id="stop">Zurueck zu Unterhaltung</textarea>
+        <textarea class="speechout" id="stop">Unterhaltung</textarea>
     </div>       
 
-    <img style="position: absolute; left: 500px; top: 428px; width: 250px; height: 212px;"
-        title="Abbruch" alt="Abbruch" src="img/button_abbruch.png" onclick="javascript:killall()">
-
-     <div id="textMiddleRight" style="position: absolute; left: 305px; top: 628px;
+    <button type="button" onclick="javascript:killall()"
+            class="button-style abbruch-button" style="position: absolute; left: 488px; top: 428px; width: 220px; height: 187px;"></button>
+    
+     <div id="textMiddleRight" style="position: absolute; left: 283px; top: 600px;
         width: 200px; height: 100px; float: left; text-align: center;">
-        <textarea class="speechout" id="stop">Abbruch der aktuellen Punkte</textarea>
+        <textarea class="speechout" id="stop">Abbruch der Tour</textarea>
     </div>
 
-	<img style="position: absolute; left: 730px; top: 428px; width: 250px; height: 212px;"
-        title="Weiter" alt="Weiter" src="img/button_weiter.png" onclick="javascript:nextWaypoint()">
+   <button type="button" onclick="javascript:nextWaypoint()"
+            class="button-style weiter-button" style="position: absolute; left: 724px; top: 428px; width: 220px; height: 187px;"></button>
 
-    <div id="textRight" style="position: absolute; left: 540px; top: 628px;
+    <div id="textRight" style="position: absolute; left: 522px; top: 600px;
         width: 200px; height: 100px; float: left; text-align: center;">
-        <textarea class="speechout" id="saytext">Der nachte Punkt ist </textarea>
+        <textarea class="speechout" id="saytext">Der n&auml;chste Punkt ist </textarea>
     </div>
   </body>
   
@@ -68,31 +57,31 @@
     var soundPlayer = document.getElementById("soundplayer"); 
 
 	function waypointList() {
+      console.log('List Called');
 		var service_button = new ROSLIB.Service({ros : ros, name : '/interface_server/button', serviceType : 'strands_webserver/CallButton'}); 
         var request_button = new ROSLIB.ServiceRequest({name: 'list'});  
         service_button.callService(request_button, function(result) {console.log('Called service'); }); 
-        console.log('List Called');
 	} 
 
 	function abort() {
+	   console.log('Unterhaltung Called');
 		var service_button = new ROSLIB.Service({ros : ros, name : '/interface_server/button', serviceType : 'strands_webserver/CallButton'}); 
         var request_button = new ROSLIB.ServiceRequest({name: 'abort'});  
-        service_button.callService(request_button, function(result) {console.log('Called service'); }); 
-        console.log('Abort Called');	
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 	
     }
 
     function killall() {
+      console.log('Abbruch Called');
 		var service_button = new ROSLIB.Service({ros : ros, name : '/interface_server/button', serviceType : 'strands_webserver/CallButton'}); 
         var request_button = new ROSLIB.ServiceRequest({name: 'killall'});  
-        service_button.callService(request_button, function(result) {console.log('Called service'); }); 
-        console.log('Abort Called');	
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 	
     }
 
 	function nextWaypoint() {
+	   console.log('Weiter Called');
 		var service_button = new ROSLIB.Service({ros : ros, name : '/interface_server/button', serviceType : 'strands_webserver/CallButton'}); 
         var request_button = new ROSLIB.ServiceRequest({name:'next'});  
-        service_button.callService(request_button, function(result) {console.log('Called service'); }); 
-        console.log('Next Called');	
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 	
     }
 
     var sayTopic = new ROSLIB.Topic({
@@ -105,7 +94,7 @@
       // Formats the pose for outputting.
       var say = message.data;
     
-      document.getElementById("saytext").value="Der nachte Punkt ist " + say;
+      document.getElementById("saytext").value="Der nächste Punkt ist " + say;
     });
   </script>
 </html>

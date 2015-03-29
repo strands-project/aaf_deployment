@@ -61,11 +61,6 @@ class GuidingServer():
         self.begin = 0
         self.counter = 0
 
-        self.client_walking_interface = actionlib.SimpleActionClient(
-            'walking_interface_server',
-            EmptyAction
-        )
-        self.client_walking_interface.wait_for_server()
         rospy.loginfo(" ... starting "+name)
         self.server.start()
         rospy.loginfo(" ... started "+name)
@@ -80,9 +75,12 @@ class GuidingServer():
 
         self.client.wait_for_result()
         ps = self.client.get_result()
-        print ps
+        print "Guiding result:", ps
         self.client_walking_interface.cancel_goal()
-        self.server.set_succeeded()
+        if not self.server.is_preempt_requested():
+            self.server.set_succeeded()
+        else:
+            self.server.set_preempted()
 
 
     def preempt_callback(self):
@@ -154,8 +152,8 @@ class GuidingServer():
             self.begin = 0
 
         self.counter += 1
-        
-        
+
+
 
 if __name__ == '__main__':
     rospy.init_node('guiding_server')

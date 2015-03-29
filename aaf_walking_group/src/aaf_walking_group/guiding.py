@@ -40,10 +40,12 @@ class Guiding(smach.State):
 
     def execute(self, userdata):
         rospy.loginfo("Guiding group")
+        self.recall_preempt()
         rospy.sleep(1)
         self.card = False
 
         rospy.loginfo("I am going to: " + userdata.waypoint)
+        print self.card, self.preempt_requested()
         # Action server that does all the black magic for navigation
         for elem in self.waypoints.items():
             if elem[1] == userdata.waypoint:
@@ -56,19 +58,25 @@ class Guiding(smach.State):
 
         goal = GuidingGoal()
         goal.waypoint = userdata.waypoint
-        if not self.card:
-            self.nav_client.send_goal(goal)
-            # Necessary to account for seeing the card immediately after the goal was sent.
-            # That leads to the goal being pending while trying to cancel and thefore not
-            # cancelling, loosing every chance of doing so. Solution: wait until not pending
-            # before subscribing to card reader for preempt callback.
-            while self.nav_client.get_state() == GoalStatus.PENDING:
-                rospy.sleep(0.01)
-            self.sub = rospy.Subscriber("/socialCardReader/commands", String, callback=self.callback)
-            self.nav_client.wait_for_result()
-            state = self.nav_client.get_state()
+
+        self.nav_client.send_goal(goal)
+        # Necessary to account for seeing the card immediately after the goal was sent.
+        # That leads to the goal being pending while trying to cancel and thefore not
+        # cancelling, loosing every chance of doing so. Solution: wait until not pending
+        # before subscribing to card reader for preempt callback.
+        while self.nav_client.get_state() == GoalStatus.PENDING:
+            rospy.sleep(0.01)
+        rospy.loginfo("Subscribing")
+        print self.card, self.preempt_requested()
+        self.sub = rospy.Subscriber("/socialCardReader/commands", String, callback=self.callback)
+        self.nav_client.wait_for_result()
+        state = self.nav_client.get_state()
 
         self.music_control("pause")
+        rospy.loginfo("Un-subscribing")
+        print self.card, self.preempt_requested()
+        self.sub.unregister()
+        self.sub = None
 
         if self.preempt_requested() and not self.card:
             return 'killall'
@@ -94,6 +102,6 @@ class Guiding(smach.State):
         rospy.loginfo("got card: " + str(data.data))
         if data.data == "PAUSE_WALK":
             self.card = True
-            self.sub.unregister()
-            self.sub = None
+#            self.sub.unregister()
+#            self.sub = None
             self.request_preempt()
