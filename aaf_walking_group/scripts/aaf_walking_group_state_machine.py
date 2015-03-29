@@ -107,6 +107,7 @@ class WalkingGroupStateMachine(object):
         # Create a SMACH state machine
         self.sm = smach.StateMachine(outcomes=['succeeded', 'aborted', 'preempted'])
         self.sm.userdata.current_waypoint = self.waypointset[goal.group]["waypoints"][str(min([int(x) for x in self.waypointset[goal.group]["waypoints"].keys()]))]
+        self.sm.userdata.play_music = True
         sis = smach_ros.IntrospectionServer(
             'walking_group_state_machine',
             self.sm,
@@ -123,7 +124,7 @@ class WalkingGroupStateMachine(object):
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
-                remapping={'current_waypoint' : 'current_waypoint'}
+                remapping={'current_waypoint' : 'current_waypoint', 'play_music' : 'play_music'}
             )
             smach.StateMachine.add(
                 'GUIDE_INTERFACE',
@@ -133,7 +134,7 @@ class WalkingGroupStateMachine(object):
                     'aborted': 'ENTERTAIN',
                     'killall': 'preempted'
                 },
-                remapping={'current_waypoint' : 'current_waypoint'}
+                remapping={'current_waypoint' : 'current_waypoint', 'play_music' : 'play_music'}
             )
             smach.StateMachine.add(
                 'GUIDING',
@@ -144,7 +145,7 @@ class WalkingGroupStateMachine(object):
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
-                remapping={'waypoint' : 'waypoint'}
+                remapping={'waypoint' : 'waypoint', 'play_music' : 'play_music'}
             )
             smach.StateMachine.add(
                 'RESTING_CONT',
@@ -155,7 +156,7 @@ class WalkingGroupStateMachine(object):
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
-                remapping={'current_waypoint' : 'current_waypoint'}
+                remapping={'current_waypoint' : 'current_waypoint', 'play_music' : 'play_music'}
             )
 
         # Execute SMACH plan

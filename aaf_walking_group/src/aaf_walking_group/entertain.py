@@ -11,8 +11,8 @@ class Entertain(smach.State):
         smach.State.__init__(
             self,
             outcomes=['key_card', 'killall'],
-            input_keys=['current_waypoint'],
-            output_keys=['current_waypoint']
+            input_keys=['current_waypoint', 'play_music'],
+            output_keys=['current_waypoint', 'play_music']
         )
         self.display_no = display_no
         self.card = False

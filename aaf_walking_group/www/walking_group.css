@@ -79,6 +79,12 @@ p {font-size:200%}
 .rast-button {
   background: url('img/button_rast.png') left center / 100% no-repeat;
 }
+.music-on-button {
+  background: url('img/button_musik_on.png') left center / 100% no-repeat;
+}
+.music-off-button {
+  background: url('img/button_musik_off.png') left center / 100% no-repeat;
+}
 .speechout{
   border-radius: 10px 10px 10px 10px;
   -moz-border-radius: 10px 10px 10px 10px;

@@ -12,8 +12,8 @@ class RestingPoint(smach.State):
         smach.State.__init__(
             self,
             outcomes=['key_card', 'killall','rest','continue'],
-            input_keys=['current_waypoint'],
-            output_keys=['waypoint', 'current_waypoint']
+            input_keys=['current_waypoint', 'play_music'],
+            output_keys=['waypoint', 'current_waypoint', 'play_music']
         )
         self.display_no = display_no
         self.waypoints = waypointset

@@ -15,8 +15,8 @@ class Guiding(smach.State):
         smach.State.__init__(
             self,
             outcomes=['reached_point', 'reached_final_point', 'key_card', 'killall'],
-            input_keys=['waypoint'],
-            output_keys=['current_waypoint']
+            input_keys=['waypoint', 'play_music'],
+            output_keys=['current_waypoint', 'play_music']
         )
         self.waypoints = waypoints
         self.distance = distance
@@ -55,7 +55,8 @@ class Guiding(smach.State):
                     key = "1"
                 self.previous_waypoint = self.waypoints[key]
 
-        self.music_control("play")
+        if userdata.play_music:
+            self.music_control("play")
 
         goal = GuidingGoal()
         goal.waypoint = userdata.waypoint
