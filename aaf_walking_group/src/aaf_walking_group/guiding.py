@@ -8,6 +8,7 @@ import actionlib
 from actionlib_msgs.msg import GoalStatus
 from aaf_walking_group.msg import GuidingAction, GuidingGoal
 from music_player.srv import MusicPlayerService, MusicPlayerServiceRequest
+from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
 
 
 class Guiding(smach.State):
@@ -32,10 +33,14 @@ class Guiding(smach.State):
     def music_control(self, command):
         try:
             music_client = rospy.ServiceProxy('music_player_service', MusicPlayerService)
+            rospy.loginfo("Creating waypoint sound service proxy and waiting ...")
+            s = rospy.ServiceProxy('aaf_waypoint_sounds_service', WaypointSoundsService)
             if command == "play":
                 music_client(MusicPlayerServiceRequest.PLAY)
+                s(WaypointSoundsServiceRequest.PAUSE)
             elif command == "pause":
                 music_client(MusicPlayerServiceRequest.PAUSE)
+                s(WaypointSoundsServiceRequest.RESUME)
         except rospy.ServiceException, e:
             rospy.logwarn("Service call failed: %s" % e)
 
@@ -57,6 +62,8 @@ class Guiding(smach.State):
 
         if userdata.play_music:
             self.music_control("play")
+        else:
+            self.music_control("pause")
 
         goal = GuidingGoal()
         goal.waypoint = userdata.waypoint

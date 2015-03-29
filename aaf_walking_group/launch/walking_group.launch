@@ -2,7 +2,7 @@
   <arg name="waypoint_set" default="aaf_waypoints"/>
   <arg name="meta_name" default="waypoint_set"/>
   <arg name="collection_name" default="aaf_walking_group"/>
-  <arg name="music_folder" default="$(find music_player)/media"/>
+  <arg name="music_player_priority" default="0.9"/>
   <arg name="waypoint_sounds_folder" default="$(find aaf_waypoint_sounds)/media"/>
   <arg name="waypoint_sounds_file" default="$(find aaf_walking_group)/conf/waypoint_sounds.yaml" />
   <arg name="music_set_group" default="aaf_walking_group"/>
@@ -35,12 +35,13 @@
     <arg name="music_set" value="$(arg music_set_waypoints)"/>
     <arg name="waypoint_sounds_file" value="$(arg waypoint_sounds_file)"/>
   </include>
-  <node pkg="music_player" type="music_player_server.py" name="music_player_server" respawn="true">
+  <node pkg="music_player" type="music_player_server.py" name="music_player_server" output="screen" respawn="true">
     <param name="music_set" type="string" value="$(arg music_set_group)"/>
+    <param name="priority" type="double" value="$(arg music_player_priority)"/>
   </node>
   <include file="$(find sound_player_server)/launch/sound_player.launch">
     <arg name="music_set" value="$(arg music_set_jingles)"/>
   </include>
-  <node pkg="walking_group_recovery" type="toggle_walking_group_recovery_server.py" name="toggle_walking_group_recovery_server" respawn="true"/>
+  <node pkg="walking_group_recovery" type="toggle_walking_group_recovery_server.py" name="toggle_walking_group_recovery_server" output="screen" respawn="true"/>
 
 </launch>
