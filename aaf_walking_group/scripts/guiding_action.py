@@ -61,6 +61,7 @@ class GuidingServer():
         self.pause = 0
         self.begin = 0
         self.counter = 0
+        self.distance = 5.0
 
         rospy.loginfo(" ... starting "+name)
         self.server.start()
@@ -69,6 +70,7 @@ class GuidingServer():
     def execute(self, goal):
         self.begin = 0
         self.pause = 0
+        self.distance = goal.distance
         self.client_walking_interface.send_goal(EmptyActionGoal())
         navgoal = topological_navigation.msg.GotoNodeGoal()
         navgoal.target = goal.waypoint
@@ -106,6 +108,7 @@ class GuidingServer():
             if data.data == 'near':
                 self.odom_subscriber = None
                 self.client_walking_interface.cancel_goal()
+                rospy.loginfo("Therapist is close enough. Show continue button")
                 self.empty_client.send_goal_and_wait(EmptyActionGoal())
                 try:
                     pause_service = rospy.ServiceProxy(
@@ -114,7 +117,6 @@ class GuidingServer():
                     )
                     pause_service(0)
                     self.pause = 0
-                    print "the guy is near, fear him"
                 except rospy.ServiceException, e:
                     print "Service call failed: %s" % e
                 self.client_walking_interface.send_goal(EmptyActionGoal())
@@ -131,9 +133,9 @@ class GuidingServer():
 
                 lenght = numpy.sqrt(x*x + y*y)
 
-                if lenght >= 5.0:
+                if lenght >= self.distance:
                     # self.odom_subscriber.unregister()
-                    print "reached 2.0 meters"
+                    rospy.loginfo("Reached %f meters" % self.distance)
                     try:
                         pause_service = rospy.ServiceProxy(
                             '/monitored_navigation/pause_nav',
@@ -142,7 +144,7 @@ class GuidingServer():
                         pause_service(1)
                         self.pause = 1
                         self.begin = 1
-                        print "pause"
+                        rospy.loginfo("Navigation paused")
                         s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
                         s.wait_for_service()
                         s("jingle_stop.mp3")

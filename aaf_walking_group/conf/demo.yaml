@@ -1,12 +1,16 @@
 slow:
-    1: "WayPoint34"
-    2: "WayPoint14"
-    3: "WayPoint26"
-    4: "WayPoint15"
-    5: "WayPoint46"
+    stopping_distance: 3.0
+    waypoints:
+        1: "WayPoint34"
+        2: "WayPoint14"
+        3: "WayPoint26"
+        4: "WayPoint15"
+        5: "WayPoint46"
 fast:
-    1: "WayPoint34"
-    2: "WayPoint14"
-    3: "WayPoint26"
-    4: "WayPoint15"
-    5: "WayPoint46"
+    stopping_distance: 5.0
+    waypoints:
+        1: "WayPoint34"
+        2: "WayPoint14"
+        3: "WayPoint26"
+        4: "WayPoint15"
+        5: "WayPoint46"

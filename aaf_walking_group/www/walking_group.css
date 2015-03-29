@@ -76,6 +76,9 @@ p {font-size:200%}
 .weiter-up-button {
   background: url('img/button_weiter_up.png') left center / 100% no-repeat;
 }
+.rast-button {
+  background: url('img/button_rast.png') left center / 100% no-repeat;
+}
 .speechout{
   border-radius: 10px 10px 10px 10px;
   -moz-border-radius: 10px 10px 10px 10px;
