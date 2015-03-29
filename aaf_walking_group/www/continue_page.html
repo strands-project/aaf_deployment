@@ -9,7 +9,7 @@
   </head>
   <body style="width: 1000px; height: 750px; background-repeat:no-repeat;">
   
-    <button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/wait_for_participant/button', serviceType : 'std_srvs/Empty'}); var request_button = new ROSLIB.ServiceRequest({});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')" class="button-style weiter-up-button"
+    <button type="button" onclick="javascript:cont()" class="button-style weiter-up-button"
             style="position: absolute; left: 0px; top: 0px; width: 1000px; height: 750px;"></button>
     
     <script type="text/javascript">
@@ -21,6 +21,23 @@
               // url : '<dynamic>bridge_server</dynamic>'
               url : 'ws://'+hostname+':9090'
           });
+          
+          function cont() {
+				console.log('Called cont')
+				var service_button = new ROSLIB.Service({
+        			ros : ros, name : '/wait_for_participant/button', serviceType : 'std_srvs/Empty'
+        		}); 
+        		var request_button = new ROSLIB.ServiceRequest({});  
+        		service_button.callService(
+        			request_button, function(result) {}); 
+        			
+        		var service_button_jingle = new ROSLIB.Service({
+        			ros : ros, name : '/sound_player_service', serviceType : 'sound_player_server/PlaySoundService'
+        		}); 
+        		var request_button_jingle = new ROSLIB.ServiceRequest({filename : "jingle_patient_continue.mp3"});  
+        		service_button_jingle.callService(
+        			request_button_jingle, function(result) {});          
+        } 
 
     </script>    
   </body>
