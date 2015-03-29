@@ -37,11 +37,11 @@ class WalkingInterfaceServer(object):
             '/head/commanded_state',
             JointState,
             queue_size=10)
-            
+
         self.head = JointState()
         self.head.header.stamp = rospy.Time.now()
         self.head.name = ["HeadPan"]
-        
+
         self.topological_nodes = rospy.wait_for_message(
             '/topological_map',
             TopologicalMap)
@@ -50,22 +50,22 @@ class WalkingInterfaceServer(object):
             "/topological_navigation/Route",
             TopologicalRoute,
             self.route_callback)
-            
+
         self.path_sub = message_filters.Subscriber(
             "/move_base/NavfnROS/plan",
             Path)
-            
+
         self.pose_sub = message_filters.Subscriber(
             "/pose_extractor/pose",
             PoseStamped)
-            
+
         self.ts = message_filters.ApproximateTimeSynchronizer(
             [self.path_sub, self.pose_sub],
             10,
             10)
-            
+
         self.ts.registerCallback(self.filter_callback)
-        
+
         #tell the webserver where it should look for web files to serve
         #http_root = os.path.join(
         #    roslib.packages.get_pkg_dir("aaf_walking_group"),
@@ -80,32 +80,32 @@ class WalkingInterfaceServer(object):
             execute_cb=self.executeCallback,
             auto_start=False
         )
-        
+
         self._as.start()
         rospy.loginfo("%s: ...done.", name)
-        
-    
+
+
     def filter_callback(self, path, pose):
         self.start_time = time.time()
-        
+
         robot_angle = tf.transformations.euler_from_quaternion([pose.pose.orientation.x, pose.pose.orientation.y, pose.pose.orientation.z, pose.pose.orientation.w])
-        
+
         yDiff = path.poses[-1].pose.position.y - pose.pose.position.y
         xDiff = path.poses[-1].pose.position.x - pose.pose.position.x
-        
+
         dist = math.sqrt(xDiff*xDiff + yDiff*yDiff)
-        
+
         if dist > 1.0:
             angle = robot_angle[-1] - math.atan2(yDiff,xDiff)
-        
+
             while angle > math.pi:
                 angle -= 2*math.pi
-            
+
             while angle < -math.pi:
                 angle += 2*math.pi
-            
+
             #print math.degrees(angle)
-        
+
             if abs(math.degrees(angle)) < 30:
                 self.direction = "straight"
             else:
@@ -115,9 +115,9 @@ class WalkingInterfaceServer(object):
                     self.direction = "left"
         else:
             self.direction = "straight"
-                
-        
-        
+
+
+
     def route_callback(self, data):
         #search for waypouint and store coordinates
         print data.nodes
@@ -128,7 +128,7 @@ class WalkingInterfaceServer(object):
 
     def executeCallback(self, goal):
         self.previous_direction = ""
-        while not self._as.is_preempt_requested():
+        while not self._as.is_preempt_requested() and not rospy.is_shutdown():
             if time.time() - self.start_time > 5:#reconfigurable parameter
                 self.direction = "stop"
                 if self.previous_direction != self.direction:
@@ -149,7 +149,7 @@ class WalkingInterfaceServer(object):
                         self.head_pub.publish(self.head)
                         rospy.loginfo("Moving right...")
                         self.previous_direction = "right"
-                    
+
                     elif self.direction == 'left':
                         client_utils.display_relative_page(self.display_no,
                                                            'turn_left.html')
@@ -158,7 +158,7 @@ class WalkingInterfaceServer(object):
                         self.head_pub.publish(self.head)
                         rospy.loginfo("Moving left...")
                         self.previous_direction = "left"
-                        
+
                     else:
                         client_utils.display_relative_page(self.display_no,
                                                            'straight.html')
@@ -167,10 +167,12 @@ class WalkingInterfaceServer(object):
                         self.head_pub.publish(self.head)
                         rospy.loginfo("Moving straight...")
                         self.previous_direction = "straight"
-                
+
         if self._as.is_preempt_requested():
             self._as.set_preempted()
-            
+        else:
+            self._as.set_succeeded()
+
     def _on_node_shutdown(self):
         self.client.cancel_all_goals()
 

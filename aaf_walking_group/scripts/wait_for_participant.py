@@ -30,7 +30,7 @@ class WaitForParticipant(object):
         self.pressed = False
         strands_webserver.client_utils.display_relative_page(self.display_no, "continue_page.html")
         while not self.pressed and not rospy.is_shutdown() and not self._as.is_preempt_requested():
-            pass
+            rospy.sleep(0.1)
         print "Leave"
         if not self._as.is_preempt_requested():
             self._as.set_succeeded()
