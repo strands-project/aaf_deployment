@@ -16,6 +16,8 @@ from aaf_walking_group.msg import GuidingAction, EmptyAction, StateMachineAction
 from aaf_walking_group.srv import GetMediaId
 from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
 from aaf_walking_group.utils import PTU, Gaze
+from music_player.srv import MusicPlayerService
+from sound_player_server.srv import PlaySoundService
 import actionlib
 import json
 import pprint
@@ -46,6 +48,16 @@ class WalkingGroupStateMachine(object):
         s.wait_for_service()
         rospy.loginfo(" ... video")
         s = rospy.ServiceProxy('/aaf_walking_group/video_server/get_id', GetMediaId)
+        s.wait_for_service()
+        rospy.loginfo(" ... sound")
+        rospy.loginfo("  ... music")
+        s = rospy.ServiceProxy('/music_player_service', MusicPlayerService)
+        s.wait_for_service()
+        rospy.loginfo("  ... jingles")
+        s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+        s.wait_for_service()
+        rospy.loginfo("  ... waypoints")
+        s = rospy.ServiceProxy('/aaf_waypoint_sounds_service', WaypointSoundsService)
         s.wait_for_service()
         rospy.loginfo(" ... done")
         # Get parameters

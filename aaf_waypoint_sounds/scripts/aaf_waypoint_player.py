@@ -25,7 +25,7 @@ class AAFWaypointPlayer(object):
         if len(self.music_set) == 0:
             rospy.logwarn('No music set provided!')
             return
-        self.audio_folder = rospy.get_param('~audio_folder', '')
+        self.audio_folder = join(expanduser('~'), '.ros', 'aaf_waypoint_sounds')
         if len(self.audio_folder) == 0:
             rospy.logwarn('No audio folder provided!')
             return
