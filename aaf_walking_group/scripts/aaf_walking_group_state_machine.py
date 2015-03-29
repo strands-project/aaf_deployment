@@ -12,6 +12,7 @@ from mongodb_store.message_store import MessageStoreProxy
 from aaf_walking_group.entertain import Entertain
 from aaf_walking_group.guide_interface import GuideInterface
 from aaf_walking_group.guiding import Guiding
+from aaf_walking_group.reached_resting_point import RestingPoint
 from aaf_walking_group.msg import GuidingAction, EmptyAction, StateMachineAction
 from aaf_walking_group.srv import GetMediaId
 from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
@@ -93,7 +94,7 @@ class WalkingGroupStateMachine(object):
 
         # Create a SMACH state machine
         self.sm = smach.StateMachine(outcomes=['succeeded', 'aborted', 'preempted'])
-        self.sm.userdata.current_waypoint = self.waypointset[goal.group][str(min([int(x) for x in self.waypointset[goal.group].keys()]))]
+        self.sm.userdata.current_waypoint = self.waypointset[goal.group]["waypoints"][str(min([int(x) for x in self.waypointset[goal.group]["waypoints"].keys()]))]
         sis = smach_ros.IntrospectionServer(
             'walking_group_state_machine',
             self.sm,
@@ -114,7 +115,7 @@ class WalkingGroupStateMachine(object):
             )
             smach.StateMachine.add(
                 'GUIDE_INTERFACE',
-                GuideInterface(self.waypointset[goal.group]),
+                GuideInterface(self.waypointset[goal.group]["waypoints"]),
                 transitions={
                     'move_to_point': 'GUIDING',
                     'aborted': 'ENTERTAIN',
@@ -124,14 +125,25 @@ class WalkingGroupStateMachine(object):
             )
             smach.StateMachine.add(
                 'GUIDING',
-                Guiding(waypoints=self.waypointset[goal.group]),
+                Guiding(waypoints=self.waypointset[goal.group]["waypoints"], distance=self.waypointset[goal.group]["stopping_distance"]),
                 transitions={
-                    'reached_point': 'ENTERTAIN',
+                    'reached_point': 'RESTING_CONT',
                     'reached_final_point': 'succeeded',
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
                 remapping={'waypoint' : 'waypoint'}
+            )
+            smach.StateMachine.add(
+                'RESTING_CONT',
+                RestingPoint(self.display_no,self.waypointset[goal.group]["waypoints"]),
+                transitions={
+                    'rest': 'ENTERTAIN',
+                    'continue': 'GUIDING',
+                    'key_card': 'GUIDE_INTERFACE',
+                    'killall': 'preempted'
+                },
+                remapping={'current_waypoint' : 'current_waypoint'}
             )
 
         # Execute SMACH plan

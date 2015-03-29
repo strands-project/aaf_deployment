@@ -11,7 +11,7 @@ from music_player.srv import MusicPlayerService, MusicPlayerServiceRequest
 
 
 class Guiding(smach.State):
-    def __init__(self, waypoints):
+    def __init__(self, waypoints, distance):
         smach.State.__init__(
             self,
             outcomes=['reached_point', 'reached_final_point', 'key_card', 'killall'],
@@ -19,6 +19,7 @@ class Guiding(smach.State):
             output_keys=['current_waypoint']
         )
         self.waypoints = waypoints
+        self.distance = distance
         self.last_waypoint = waypoints[str(max([int(x) for x in waypoints.keys()]))]
         self.previous_waypoint = waypoints[str(min([int(x) for x in waypoints.keys()]))]
         self.sub = None
@@ -58,6 +59,7 @@ class Guiding(smach.State):
 
         goal = GuidingGoal()
         goal.waypoint = userdata.waypoint
+        goal.distance = self.distance
 
         self.nav_client.send_goal(goal)
         # Necessary to account for seeing the card immediately after the goal was sent.
