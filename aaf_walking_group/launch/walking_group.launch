@@ -10,11 +10,15 @@
   <arg name="video_set" default="aaf_video_set"/>
   <arg name="image_set" default="walking_group_pictures"/>
 
-  <node pkg="mjpeg_server" type="mjpeg_server" name="mjpeg_server" output="screen" respawn="true"/>
   <node pkg="aaf_walking_group" type="wait_for_participant.py" name="wait_for_participant" output="screen" respawn="true"/>
   <node pkg="aaf_walking_group" type="guiding_action.py" name="guiding_server" output="screen" respawn="true"/>
-  <node pkg="aaf_walking_group" type="image_server.py" name="image_server" output="screen" respawn="true">
-    <param name="image_set" type="string" value="$(arg image_set)"/>
+  <node pkg="aaf_walking_group" type="media_server.py" name="image_server" output="screen" respawn="true">
+    <param name="media_set" type="string" value="$(arg image_set)"/>
+    <param name="media_set_type" type="string" value="Photo"/>
+  </node>
+  <node pkg="aaf_walking_group" type="media_server.py" name="video_server" output="screen" respawn="true">
+    <param name="media_set" type="string" value="$(arg video_set)"/>
+    <param name="media_set_type" type="string" value="Video"/>
   </node>
   <node pkg="social_card_reader" type="social_card_reader" name="social_card_reader" output="screen" respawn="true"/>
   <node pkg="aaf_walking_group" type="interface_server.py" name="interface_server" output="screen" respawn="true"/>
@@ -34,9 +38,6 @@
   <node pkg="music_player" type="music_player_server.py" name="music_player_server" respawn="true">
     <param name="folder" type="string" value="$(arg music_folder)"/>
     <param name="music_set" type="string" value="$(arg music_set_group)"/>
-  </node>
-  <node pkg="mongodb_video_player" type="video_server.py" name="video_server" respawn="true">
-    <param name="video_set" type="string" value="$(arg video_set)"/>
   </node>
   <node pkg="walking_group_recovery" type="toggle_walking_group_recovery_server.py" name="toggle_walking_group_recovery_server" respawn="true"/>
 

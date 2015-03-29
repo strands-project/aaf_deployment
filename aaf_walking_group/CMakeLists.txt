@@ -27,6 +27,11 @@ catkin_python_setup()
 ## Declare ROS messages, services and actions ##
 ################################################
 
+add_service_files(
+  FILES
+  GetMediaId.srv
+)
+
 add_action_files(
   DIRECTORY action
   FILES

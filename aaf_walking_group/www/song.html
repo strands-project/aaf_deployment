@@ -1,21 +1,11 @@
 <!DOCTYPE html>
 <html>
-  <head>
-	<meta content="text/html; charset=windows-1252" http-equiv="content-type">
-	<title></title>
-	<script src="js/jquery.js"></script>
-	<script src="js/display.js"></script>
-	<script type="text/javascript" src="js/jquery-ui.js"></script>
-	<script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
-	<script src="roslibjs/build/roslib.js"></script>
-	<script src="ros2djs/include/EaselJS/easeljs.js"></script>
-	<script src="ros2djs/build/ros2d.js"></script>
-	<script src="ros3djs/include/threejs/three.js"></script>
-	<script src="ros3djs/include/ColladaAnimationCompress/ColladaLoader2.js"></script>
-	<script src="ros3djs/build/ros3d.min.js"></script>
-	<script src="nav2djs/build/nav2d.js"></script>
-	<script src="bootstrap/dist/js/bootstrap.js"></script>
-	<link rel="stylesheet" type="text/css" href="walking_group.css">
+   <head>
+		<meta content="text/html; charset=windows-1252" http-equiv="content-type">
+		<title></title>
+		<script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
+		<script src="roslibjs/build/roslib.js"></script>
+		<link rel="stylesheet" type="text/css" href="walking_group.css">
 	</head>
 	<body style="width: 1000px; height: 750px; background-repeat:no-repeat;">
 
@@ -49,15 +39,13 @@
 		var hostname = location.hostname;
 
 		var ros = new ROSLIB.Ros({
-		 // this is filled by the ros node when writing this page to the web server, but doesn't currently work
-		  // url : '<dynamic>bridge_server</dynamic>'
-		  url : 'ws://'+hostname+':9090'
+		   url : 'ws://'+hostname+':9090'
 		});
 	
 		var playDiv = document.getElementById("playDiv"); 
 		var pauseDiv = document.getElementById("pauseDiv");
 		var playing = false;
-        showHideButtons();
+      showHideButtons();
 
 		function prev() {
 			var result = aafMusicPlayerService(2);

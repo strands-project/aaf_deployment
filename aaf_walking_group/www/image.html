@@ -8,54 +8,41 @@
 	 <link rel="stylesheet" type="text/css" href="walking_group.css">
     <title>Images</title>
     <script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
-    <script type="text/javascript" src="mjpegcanvasjs/build/mjpegcanvas.min.js"></script>
     <script src="roslibjs/build/roslib.js"></script>
-	 <script src="js/jquery.js"></script>
-    <script src="js/display.js"></script>
-    <script type="text/javascript" src="js/jquery-ui.js"></script>
-    <script src="ros2djs/include/EaselJS/easeljs.js"></script>
-    <script src="ros2djs/build/ros2d.js"></script>
-    <script src="ros3djs/include/threejs/three.js"></script>
-    <script src="ros3djs/include/ColladaAnimationCompress/ColladaLoader2.js"></script>
-    <script src="ros3djs/build/ros3d.min.js"></script>
-    <script src="nav2djs/build/nav2d.js"></script>
-    <script src="bootstrap/dist/js/bootstrap.js"></script>
   </head>
-  <body style="width: 1024px; height: 768px; background-repeat:no-repeat;">
+  <body onload="setImage(0)" style="width: 1024px; height: 768px; background-repeat:no-repeat;">
   
-   <!-- Go back to the main page -->
+  <!-- Go back to the main page -->
   <a class="button-style liste-button" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
   
-  <div id="mjpeg" style="position: absolute; left: 192px; top: 10px; width: 640px; height: 480px;"></div>
+  <div class="landscape" style="position: absolute; left: 192px; top: 10px; width: 640px; height: 480px;">
+    <img id="img1" src="">
+  </div>
   
-  <button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/aaf_walking_group/image_server/prev', serviceType : 'std_srvs/Empty'}); var request_button = new ROSLIB.ServiceRequest({});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+  <button type="button" onclick="javascript:setImage(2)"
             class="button-style back-button" style="position: absolute; left: 80px; top: 480px; width: 300px; height: 255px;"></button>
-  <button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/aaf_walking_group/image_server/next', serviceType : 'std_srvs/Empty'}); var request_button = new ROSLIB.ServiceRequest({});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+  <button type="button" onclick="javascript:setImage(1)"
             class="button-style next-button" style="position: absolute; left: 620px; top: 480px; width: 300px; height: 255px;"></button>
 
   <script type="text/javascript">
-        /**
-        * Setup all visualization elements when the page is loaded. 
-        */
-      
-          var hostname = location.hostname;
+        var hostname = location.hostname;
         
-          // Create the main viewer.
-          var viewer = new MJPEGCANVAS.Viewer({
-          divID : 'mjpeg',
-          host : hostname,
-          width : 640,
-          height : 480,
-          topic : '/aaf_walking_group/image_server/image'
-          });
-          // Connecting to ROS
-          // -----------------
+        var ros = new ROSLIB.Ros({
+            url : 'ws://'+hostname+':9090'
+        }); 
           
-          var ros = new ROSLIB.Ros({
-             // this is filled by the ros node when writing this page to the web server, but doesn't currently work
-              // url : '<dynamic>bridge_server</dynamic>'
-              url : 'ws://'+hostname+':9090'
-          });                    
+        function setImage(actionId) {
+				console.log('Set image called')
+				var service_button = new ROSLIB.Service({
+        			ros : ros, name : '/aaf_walking_group/image_server/get_id', serviceType : 'aaf_walking_group/GetMediaId'
+        		}); 
+        		var request_button = new ROSLIB.ServiceRequest({action : actionId});  
+        		service_button.callService(
+        			request_button, function(result) {
+						document.getElementById('img1').src=("http://"+hostname+":8027/get_media_by_name/"+result.id);
+		            console.log(result.id); 
+        			});            
+        }                 
         
       </script>
   </body>
