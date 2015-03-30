@@ -45,34 +45,12 @@ class TranslatedStrings(object):
         
 strings =  TranslatedStrings(rospy.get_param("language", default="EN"))
 
-class MusicTracks(object):
-    def __init__(self):
-        with open(TEMPLATE_DIR+"/music-files/index.json", "r") as f:
-            self.available =  json.load(f)
-        self.active =  -1
-        
-    def play(self, track):
-        pygame.init()
-        pygame.mixer.init()
-        pygame.mixer.music.load("music-files/playlist/" + self.available[int(track)][1])
-        pygame.mixer.music.play()
-        self.active =  track
-        
-    def stop(self):
-        pygame.mixer.music.stop()
-        pygame.mixer.music.stop()
-        self.active =  -1
-        
-tracks =  MusicTracks()
-
 urls = (
     '/', 'MasterPage', 
     '/menu',  'Menu', 
     '/weather', 'Weather',
     '/events', 'Events',
-    '/go_away', 'GoAway',
-    '/play_music', 'PlayMusic', 
-    '/play_item/(.*)',  'PlayTrack', 
+    '/go_away', 'GoAway', 
     '/photo_album/(.*)',  'PhotoAlbum', 
     '/photo_album_manager', 'PhotoAlbumManager', 
     '/photo_album_manager/delete/(.*)', 'DeleteAlbumImage',
@@ -129,21 +107,6 @@ class GoAway(object):
     def GET(self):
         active_screen_pub.publish(GoAway.id)
         return "ok"
-    
-class PlayMusic(object):
-    def GET(self):
-        active_screen_pub.publish(PlayMusic.id)
-        return render.music(tracks.available, tracks.active)
-
-class PlayTrack(object):
-    def GET(self, track):
-        active_screen_pub.publish(PlayTrack.id)
-        track = int(track)
-        if track == -1:
-            tracks.stop()
-        else:
-            tracks.play(track)
-        return render.music(tracks.available, tracks.active)
     
 class PhotoAlbum(object):
     def GET(self, image_id):
@@ -206,7 +169,6 @@ for i, u in enumerate(urls):
     if u.startswith("/"):
         continue
     globals()[u].id = i
-    
     
 if __name__ == "__main__":
     print "Init ROS node."
