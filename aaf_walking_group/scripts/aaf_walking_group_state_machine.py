@@ -89,8 +89,8 @@ class WalkingGroupStateMachine(object):
         gazing = rospy.get_param("/human_aware_navigation/gaze_type")
         angle = round(rospy.get_param("/human_aware_navigation/detection_angle"),2)
         self.han_param = {
-            'gazing': gazing,
-            'angle': angle
+            'gaze_type': gazing,
+            'detection_angle': angle
         }
         rospy.loginfo("Found following default values for human_aware_navigation: %s", self.han_param)
 
@@ -103,8 +103,8 @@ class WalkingGroupStateMachine(object):
 
         self.ptu.turnPTU(-180, 10)
         dyn_param = {
-            'gazing': 1,
-            'angle': 80.0
+            'gaze_type': 1,
+            'detection_angle': 80.0
         }
         try:
             self.dyn_client.update_configuration(dyn_param)
