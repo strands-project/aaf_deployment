@@ -14,6 +14,8 @@ from threading import Lock
 import pygame
 import xmltodict
 
+from mongodb_media_server import MediaClient
+
 #WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q=Vienna,Austria"
 WEATHER_URL = "http://api.worldweatheronline.com/free/v2/weather.ashx?key=c2db94527204450837f1cf7b7772b&q=Vienna,Austria&num_of_days=2&tp=3&format=json"
 
@@ -45,38 +47,13 @@ class TranslatedStrings(object):
         
 strings =  TranslatedStrings(rospy.get_param("language", default="EN"))
 
-class MusicTracks(object):
-    def __init__(self):
-        with open(TEMPLATE_DIR+"/music-files/index.json", "r") as f:
-            self.available =  json.load(f)
-        self.active =  -1
-        
-    def play(self, track):
-        pygame.init()
-        pygame.mixer.init()
-        pygame.mixer.music.load("music-files/playlist/" + self.available[int(track)][1])
-        pygame.mixer.music.play()
-        self.active =  track
-        
-    def stop(self):
-        pygame.mixer.music.stop()
-        pygame.mixer.music.stop()
-        self.active =  -1
-        
-tracks =  MusicTracks()
-
 urls = (
     '/', 'MasterPage', 
     '/menu',  'Menu', 
     '/weather', 'Weather',
     '/events', 'Events',
-    '/go_away', 'GoAway',
-    '/play_music', 'PlayMusic', 
-    '/play_item/(.*)',  'PlayTrack', 
+    '/go_away', 'GoAway', 
     '/photo_album/(.*)',  'PhotoAlbum', 
-    '/photo_album_manager', 'PhotoAlbumManager', 
-    '/photo_album_manager/delete/(.*)', 'DeleteAlbumImage',
-    '/get_photo/(.*)', 'GetPhoto'
 )
 
     
@@ -130,75 +107,30 @@ class GoAway(object):
         active_screen_pub.publish(GoAway.id)
         return "ok"
     
-class PlayMusic(object):
-    def GET(self):
-        active_screen_pub.publish(PlayMusic.id)
-        return render.music(tracks.available, tracks.active)
-
-class PlayTrack(object):
-    def GET(self, track):
-        active_screen_pub.publish(PlayTrack.id)
-        track = int(track)
-        if track == -1:
-            tracks.stop()
-        else:
-            tracks.play(track)
-        return render.music(tracks.available, tracks.active)
-    
 class PhotoAlbum(object):
+    photos = None
     def GET(self, image_id):
+        if PhotoAlbum.photos is None or image_id == "":
+            # Rescan the info-terminal photo album in the media server.
+            print "Rescanning info-terminal photo set."
+            mc =  MediaClient(rospy.get_param('mongodb_host'),
+                              rospy.get_param('mongodb_port'))
+            PhotoAlbum.photos = mc.get_set(set_type_name="Photo/info-terminal")
         active_screen_pub.publish(PhotoAlbum.id)
+        if image_id == "":
+            image_id = 0
         image_id = int(image_id)
         current_image =  image_id
-        count =  get_image_count()
+        count =  len(PhotoAlbum.photos)
         next_image =  image_id + 1
         if next_image == count:
             next_image = 0
         prev_image =  image_id - 1
         if prev_image < 0:
             prev_image = count - 1
-        return render.photos(current_image, next_image, prev_image)
+        return render.photos(PhotoAlbum.photos[current_image][0],
+                             next_image, prev_image)
     
-class PhotoAlbumManager(object):
-    def GET(self):
-        image_count = get_image_count()
-        return render.album_manager(image_count)
-    def POST(self):
-        x = web.input(myfile={})
-        mongo_client().photos.insert({"name": x['myfile'].filename,
-                                      "content": Binary(x['myfile'].value),})
-        raise web.seeother('/photo_album_manager')
-
-class DeleteAlbumImage(object):
-    def GET(self, image_id):
-        # This inefficiency of my lazy mongo connection is pure shocking.
-        for i, image in enumerate(mongo_client().photos.find()):
-            if i == int(image_id):
-                mongo_client().photos.remove(image)
-                break
-        raise web.seeother('/photo_album_manager')
-
-class GetPhoto(object):
-    def GET(self, image_id):
-        # web.py serve an image
-        for i, image in enumerate(mongo_client().photos.find()):
-            if i == int(image_id):
-                print "Ok I have it"
-                break
-        else:
-            raise web.notfound()
-        name =  image["name"]
-        ext = name.split(".")[-1].lower() # Gather extension
-
-        cType = {
-            "png":"images/png",
-            "jpg":"images/jpeg",
-            "gif":"images/gif",
-            "ico":"images/x-icon"            }
-        
-        web.header("Content-Type", cType[ext]) # Set the Header
-        return image['content']
-        
     
 # Give each URL a unique number so that we can feedback which screen is active
 # as a ROS message
@@ -206,7 +138,6 @@ for i, u in enumerate(urls):
     if u.startswith("/"):
         continue
     globals()[u].id = i
-    
     
 if __name__ == "__main__":
     print "Init ROS node."
