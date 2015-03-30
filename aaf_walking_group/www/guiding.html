@@ -17,6 +17,15 @@
 	</div>
   
   	<!-- interaction buttons -->
+  	<div id="pauseDiv">
+      <button type="button" onclick="javascript:playPause()"
+            class="button-style music-off-button" style="position: absolute; left: 16px; top: 125px; width: 220px; height: 187px;"></button>
+	</div>
+	<div id="playDiv">
+      <button type="button" onclick="javascript:playPause()"
+            class="button-style music-on-button" style="position: absolute; left: 16px; top: 125px; width: 220px; height: 187px;"></button>
+	</div>
+	
   	  <button type="button" onclick="javascript:waypointList()"
             class="button-style liste-txt-button" style="position: absolute; left: 16px; top: 428px; width: 220px; height: 187px;"></button>
         
@@ -55,6 +64,11 @@
 
     var ros = new ROSLIB.Ros({url : 'ws://'+hostname+':9090'});
     var soundPlayer = document.getElementById("soundplayer"); 
+    var playDiv = document.getElementById("playDiv"); 
+	 var pauseDiv = document.getElementById("pauseDiv");
+	 var playing = false;
+    showHideButtons();
+      
 
 	function waypointList() {
       console.log('List Called');
@@ -81,7 +95,13 @@
 	   console.log('Weiter Called');
 		var service_button = new ROSLIB.Service({ros : ros, name : '/interface_server/button', serviceType : 'strands_webserver/CallButton'}); 
         var request_button = new ROSLIB.ServiceRequest({name:'next'});  
-        service_button.callService(request_button, function(result) {console.log('Called service'); }); 	
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 
+        var service_button_jingle = new ROSLIB.Service({
+        			ros : ros, name : '/sound_player_service', serviceType : 'sound_player_server/PlaySoundService'
+        		}); 
+  		var request_button_jingle = new ROSLIB.ServiceRequest({filename : "jingle_therapist_continue.mp3"});  
+  		service_button_jingle.callService(
+  			request_button_jingle, function(result) {}); 	
     }
 
     var sayTopic = new ROSLIB.Topic({
@@ -89,12 +109,43 @@
               name        : '/interface_server/next_waypoint',
               messageType : 'std_msgs/String'
     });
+    
+    function showHideButtons() {
+      	if (playing == false) {
+				playDiv.style.display = 'none';
+				pauseDiv.style.display = 'block';
+
+			} else {
+				playDiv.style.display = 'block';
+				pauseDiv.style.display = 'none';
+			}
+      }
+      
+      function playPause() { 
+			var service_button = new ROSLIB.Service({ros : ros, name : '/walking_group/guide_interface/toggle_music', serviceType : 'std_srvs/Empty'}); 
+        var request_button = new ROSLIB.ServiceRequest({});  
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 	
+		}
           
     sayTopic.subscribe(function(message) {
       // Formats the pose for outputting.
       var say = message.data;
     
       document.getElementById("saytext").value="Der nächste Punkt ist " + say;
+    });
+    
+    var musicTopic = new ROSLIB.Topic({
+              ros         : ros,
+              name        : '/walking_group_smach/play_music',
+              messageType : 'std_msgs/Bool'
+    });
+          
+    musicTopic.subscribe(function(message) {
+      // Formats the pose for outputting.
+      var music = message.data;
+    
+      playing = music;
+      showHideButtons();
     });
   </script>
 </html>

@@ -8,6 +8,7 @@ from aaf_walking_group.msg import EmptyAction, EmptyActionGoal
 import topological_navigation.msg
 from std_msgs.msg import String
 from strands_navigation_msgs.srv import PauseResumeNav
+from sound_player_server.srv import PlaySoundService
 from nav_msgs.msg import Odometry
 
 
@@ -144,6 +145,9 @@ class GuidingServer():
                         self.pause = 1
                         self.begin = 1
                         rospy.loginfo("Navigation paused")
+                        s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+                        s.wait_for_service()
+                        s("jingle_stop.mp3")
                     except rospy.ServiceException, e:
                         print "Service call failed: %s" % e
                     # self.odom_subscriber = rospy.Subscriber("odom", Odometry, self.odom_callback)

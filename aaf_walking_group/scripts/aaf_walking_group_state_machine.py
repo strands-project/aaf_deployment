@@ -17,6 +17,8 @@ from aaf_walking_group.msg import GuidingAction, EmptyAction, StateMachineAction
 from aaf_walking_group.srv import GetMediaId
 from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
 from aaf_walking_group.utils import PTU, Gaze
+from music_player.srv import MusicPlayerService
+from sound_player_server.srv import PlaySoundService
 import actionlib
 import json
 import pprint
@@ -47,6 +49,16 @@ class WalkingGroupStateMachine(object):
         s.wait_for_service()
         rospy.loginfo(" ... video")
         s = rospy.ServiceProxy('/aaf_walking_group/video_server/get_id', GetMediaId)
+        s.wait_for_service()
+        rospy.loginfo(" ... sound")
+        rospy.loginfo("  ... music")
+        s = rospy.ServiceProxy('/music_player_service', MusicPlayerService)
+        s.wait_for_service()
+        rospy.loginfo("  ... jingles")
+        s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+        s.wait_for_service()
+        rospy.loginfo("  ... waypoints")
+        s = rospy.ServiceProxy('/aaf_waypoint_sounds_service', WaypointSoundsService)
         s.wait_for_service()
         rospy.loginfo(" ... done")
         # Get parameters
@@ -95,6 +107,7 @@ class WalkingGroupStateMachine(object):
         # Create a SMACH state machine
         self.sm = smach.StateMachine(outcomes=['succeeded', 'aborted', 'preempted'])
         self.sm.userdata.current_waypoint = self.waypointset[goal.group]["waypoints"][str(min([int(x) for x in self.waypointset[goal.group]["waypoints"].keys()]))]
+        self.sm.userdata.play_music = True
         sis = smach_ros.IntrospectionServer(
             'walking_group_state_machine',
             self.sm,
@@ -111,7 +124,7 @@ class WalkingGroupStateMachine(object):
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
-                remapping={'current_waypoint' : 'current_waypoint'}
+                remapping={'current_waypoint' : 'current_waypoint', 'play_music' : 'play_music'}
             )
             smach.StateMachine.add(
                 'GUIDE_INTERFACE',
@@ -121,7 +134,7 @@ class WalkingGroupStateMachine(object):
                     'aborted': 'ENTERTAIN',
                     'killall': 'preempted'
                 },
-                remapping={'current_waypoint' : 'current_waypoint'}
+                remapping={'current_waypoint' : 'current_waypoint', 'play_music' : 'play_music'}
             )
             smach.StateMachine.add(
                 'GUIDING',
@@ -132,7 +145,7 @@ class WalkingGroupStateMachine(object):
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
-                remapping={'waypoint' : 'waypoint'}
+                remapping={'waypoint' : 'waypoint', 'play_music' : 'play_music'}
             )
             smach.StateMachine.add(
                 'RESTING_CONT',
@@ -143,7 +156,7 @@ class WalkingGroupStateMachine(object):
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
-                remapping={'current_waypoint' : 'current_waypoint'}
+                remapping={'current_waypoint' : 'current_waypoint', 'play_music' : 'play_music'}
             )
 
         # Execute SMACH plan
