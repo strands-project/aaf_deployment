@@ -5,6 +5,7 @@ import roslib
 import smach
 import smach_ros
 import std_msgs.msg
+from dynamic_reconfigure.client import Client as DynClient
 from std_srvs.srv import Empty, EmptyResponse
 import strands_webserver
 import strands_webserver.client_utils
@@ -75,11 +76,23 @@ class WalkingGroupStateMachine(object):
 
         self.ptu = PTU()
         self.gaze = Gaze()
+        self.dyn_client = DynClient(
+            "/human_aware_navigation"
+        )
+        self.get_current_han_settings()
 
         rospy.loginfo(" ... starting " + name)
         self._as.start()
         rospy.loginfo(" ... started " + name)
 
+    def get_current_han_settings(self):
+        gazing = rospy.get_param("/human_aware_navigation/gaze_type")
+        angle = round(rospy.get_param("/human_aware_navigation/detection_angle"),2)
+        self.han_param = {
+            'gaze_type': gazing,
+            'detection_angle': angle
+        }
+        rospy.loginfo("Found following default values for human_aware_navigation: %s", self.han_param)
 
     def execute(self, goal):
         rospy.loginfo("Starting state machine")
@@ -89,6 +102,14 @@ class WalkingGroupStateMachine(object):
         strands_webserver.client_utils.set_http_root(http_root)
 
         self.ptu.turnPTU(-180, 10)
+        dyn_param = {
+            'gaze_type': 1,
+            'detection_angle': 80.0
+        }
+        try:
+            self.dyn_client.update_configuration(dyn_param)
+        except rospy.ServiceException as e:
+            rospy.logerr("Caught service exception: %s", e)
 
         self.preempt_srv = rospy.Service('/walking_group/cancel', Empty, self.preempt_srv_cb)
         self.waypointset = self.loadConfig(self.waypointset_name, collection_name=self.waypointset_collection, meta_name=self.waypointset_meta)
@@ -165,6 +186,10 @@ class WalkingGroupStateMachine(object):
         sis.stop()
         self.preempt_srv.shutdown()
         self.ptu.turnPTU(0, 0)
+        try:
+            self.dyn_client.update_configuration(self.han_param)
+        except rospy.ServiceException as e:
+            rospy.logerr("Caught service exception: %s", e)
         try:
             rospy.loginfo("Creating waypoint sound service proxy and waiting ...")
             s = rospy.ServiceProxy('aaf_waypoint_sounds_service', WaypointSoundsService)
