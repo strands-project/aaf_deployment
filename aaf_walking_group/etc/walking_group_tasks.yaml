@@ -1,0 +1,40 @@
+{
+    'walking_group_slow': {
+        'action': 'walking_group',
+        'max_duration': {secs: 3600, nsecs: 0},
+        'group': 'slow'
+        'parameters': 
+            - 'music_set_group'
+            - 'waypoint_set'
+            - 'music_set_waypoints'
+            - 'video_set'
+            - 'image_set'
+            - 'music_set_jingles'
+        'values': 
+            - 'test2'
+            - 'aaf_test2'
+            - 'waypoint_tits'
+            - 'video_set'
+            - 'walking_group_pictures'
+            - 'jingles'
+    },
+    'walking_group_fast': {
+        'action': 'walking_group',
+        'max_duration': {secs: 3600, nsecs: 0}
+        'group': 'fast'
+        'parameters': 
+            - 'music_set_group'
+            - 'waypoint_set'
+            - 'music_set_waypoints'
+            - 'video_set'
+            - 'image_set'
+            - 'music_set_jingles'
+        'values': 
+            - 'test2'
+            - 'aaf_test2'
+            - 'waypoint_tits'
+            - 'video_set'
+            - 'walking_group_pictures'
+            - 'jingles'
+    }
+}

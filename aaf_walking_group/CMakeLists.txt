@@ -39,6 +39,7 @@ add_action_files(
   Empty.action
   Guiding.action
   StateMachine.action
+  WalkingGroup.action
 )
 
 generate_messages(
