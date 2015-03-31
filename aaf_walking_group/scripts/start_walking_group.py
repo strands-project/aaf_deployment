@@ -2,17 +2,28 @@
 # -*- coding: utf-8 -*-
 
 import rospy
+import rosparam
 import actionlib
 from actionlib_msgs.msg import GoalStatus
-from aaf_walking_group.msg import WalkingGroupAction, StateMachineAction, StateMachineGoal
+from aaf_walking_group.msg import EmptyAction, StateMachineAction, StateMachineGoal
 from roslaunch_axserver.msg import launchAction, launchGoal
 from strands_executive_msgs.abstract_task_server import AbstractTaskServer
+from std_msgs.msg import Bool
 
 class StartWalkingGroup(AbstractTaskServer):
-
-    def __init__(self, name):
+    TOPIC = "/walking_group_action_status"
+    def __init__(self, name, group, params, values):
         rospy.loginfo("Starting node: %s" % name)
         self.started = False
+        self.group = group
+        self.params = params
+        self.values = values
+
+        self.instance_running = False
+        self.sub = rospy.Subscriber(self.TOPIC, Bool, self.cb)
+        self.pub = rospy.Publisher(self.TOPIC, Bool, queue_size=10, latch=True)
+        self.pub.publish(self.instance_running)
+
         rospy.loginfo("Creating launch client...")
         self.launch_client = actionlib.SimpleActionClient("/launchServer", launchAction)
         self.launch_client.wait_for_server()
@@ -21,19 +32,28 @@ class StartWalkingGroup(AbstractTaskServer):
         rospy.loginfo(" ... starting " + name)
         super(StartWalkingGroup, self).__init__(
             name=name,
-            action_type=WalkingGroupAction,
+            action_type=EmptyAction,
             interruptible=False
         )
         self.server.register_preempt_callback(self.preempt_cb)
         rospy.loginfo(" ... started " + name)
 
+    def cb(self, msg):
+        self.instance_running = msg.data
+
     def execute(self, goal):
+        if self.instance_running:
+            rospy.logfatal("An instance of the walking roup is already running; cannot start a second.")
+            self.server.set_aborted()
+            return
+
+        self.pub.publish(True)
         self.started = False
         lg = launchGoal()
         lg.pkg = "aaf_walking_group"
         lg.launch_file = "walking_group.launch"
-        lg.parameters = goal.parameters
-        lg.values = goal.values
+        lg.parameters = self.params
+        lg.values = self.values
         lg.monitored_topics.append("/walking_group_smach/status")
         self.launch_client.send_goal(lg, feedback_cb=self.feedback_cb)
         rospy.loginfo("Wait for launch file to start ...")
@@ -46,8 +66,8 @@ class StartWalkingGroup(AbstractTaskServer):
         self.smach_client.wait_for_server()
         rospy.loginfo(" ... done")
         sg = StateMachineGoal()
-        sg.group = goal.group
-        rospy.loginfo("Starting statemachine and running walking group behaviour...")
+        sg.group = self.group
+        rospy.loginfo("Starting statemachine and running %s group..." % self.group)
         self.smach_client.send_goal(sg)
         while self.smach_client.get_state() == GoalStatus.PENDING and not self.server.is_preempt_requested() and not rospy.is_shutdown():
             rospy.sleep(0.1)
@@ -55,7 +75,7 @@ class StartWalkingGroup(AbstractTaskServer):
         self.smach_client.wait_for_result()
         state = self.smach_client.get_state()
         rospy.loginfo("Walking group finished")
-
+        self.pub.publish(False)
         if state == GoalStatus.SUCCEEDED:
             self.server.set_succeeded()
         elif state == GoalStatus.PREEMPTED:
@@ -73,7 +93,23 @@ class StartWalkingGroup(AbstractTaskServer):
     def feedback_cb(self, feed):
         self.started = feed.ready
 
+
+class StartGroups(object):
+
+    def __init__(self):
+        rospy.loginfo("Sarting walking groups")
+        paramlist=rosparam.load_file(rospy.get_param("~config_file"))[0][0]
+        self.server_list = []
+        for k in paramlist["walking_group"].keys():
+            self.server_list.append(StartWalkingGroup(
+                name=k,
+                group=paramlist["walking_group"][k]["group"],
+                params=paramlist["walking_group"][k]["parameters"],
+                values=paramlist["walking_group"][k]["values"]
+            ))
+
+
 if __name__ == "__main__":
     rospy.init_node("walking_group")
-    s = StartWalkingGroup(rospy.get_name())
+    s = StartGroups()
     rospy.spin()
