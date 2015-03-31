@@ -35,7 +35,6 @@ class StartWalkingGroup(AbstractTaskServer):
             action_type=EmptyAction,
             interruptible=False
         )
-        self.server.register_preempt_callback(self.preempt_cb)
         rospy.loginfo(" ... started " + name)
 
     def cb(self, msg):
