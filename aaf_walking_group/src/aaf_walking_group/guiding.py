@@ -9,6 +9,7 @@ from actionlib_msgs.msg import GoalStatus
 from aaf_walking_group.msg import GuidingAction, GuidingGoal
 from music_player.srv import MusicPlayerService, MusicPlayerServiceRequest
 from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
+from sound_player_server.srv import PlaySoundService
 
 
 class Guiding(smach.State):
@@ -47,11 +48,16 @@ class Guiding(smach.State):
     def execute(self, userdata):
         rospy.loginfo("Guiding group")
         self.recall_preempt()
-        rospy.sleep(1)
+        try:
+            s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+            s.wait_for_service()
+            s("jingle_therapist_continue.mp3")
+        except rospy.ServiceException, e:
+            rospy.logwarn("Service call failed: %s" % e)
+        rospy.sleep(2) # Magic number :(
         self.card = False
 
         rospy.loginfo("I am going to: " + userdata.waypoint)
-        print self.card, self.preempt_requested()
         # Action server that does all the black magic for navigation
         for elem in self.waypoints.items():
             if elem[1] == userdata.waypoint:
@@ -83,8 +89,6 @@ class Guiding(smach.State):
         state = self.nav_client.get_state()
 
         self.music_control("pause")
-        rospy.loginfo("Un-subscribing")
-        print self.card, self.preempt_requested()
         self.sub.unregister()
         self.sub = None
 
@@ -94,6 +98,13 @@ class Guiding(smach.State):
             userdata.current_waypoint = self.previous_waypoint
             return 'key_card'
         else:
+            try:
+                s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+                s.wait_for_service()
+                s("jingle_waypoint_reached.mp3")
+            except rospy.ServiceException, e:
+                rospy.logwarn("Service call failed: %s" % e)
+
             if state == GoalStatus.SUCCEEDED and not goal.waypoint == self.last_waypoint:
                 userdata.current_waypoint = deepcopy(userdata.waypoint)
                 return 'reached_point'

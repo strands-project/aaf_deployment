@@ -33,14 +33,7 @@
         		}); 
         		var request_button = new ROSLIB.ServiceRequest({});  
         		service_button.callService(
-        			request_button, function(result) {}); 
-        			
-        		var service_button_jingle = new ROSLIB.Service({
-        			ros : ros, name : '/sound_player_service', serviceType : 'sound_player_server/PlaySoundService'
-        		}); 
-        		var request_button_jingle = new ROSLIB.ServiceRequest({filename : "jingle_therapist_continue.mp3"});  
-        		service_button_jingle.callService(
-        			request_button_jingle, function(result) {});          
+        			request_button, function(result) {});       
         } 
 
     </script>    
