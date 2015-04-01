@@ -77,8 +77,6 @@ class GuidingServer():
         self.client.send_goal(navgoal)
 
         self.client.wait_for_result()
-        ps = self.client.get_result()
-        print "Guiding result:", ps
         self.client_walking_interface.cancel_goal()
         if not self.server.is_preempt_requested():
             self.server.set_succeeded()
@@ -117,8 +115,11 @@ class GuidingServer():
                     )
                     pause_service(0)
                     self.pause = 0
+                    s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+                    s.wait_for_service()
+                    s("jingle_patient_continue.mp3")
                 except rospy.ServiceException, e:
-                    print "Service call failed: %s" % e
+                    rospy.logwarn("Service call failed: %s" % e)
                 self.client_walking_interface.send_goal(EmptyActionGoal())
                 self.odom_subscriber = rospy.Subscriber("odom", Odometry,
                                                         self.odom_callback)
@@ -149,7 +150,7 @@ class GuidingServer():
                         s.wait_for_service()
                         s("jingle_stop.mp3")
                     except rospy.ServiceException, e:
-                        print "Service call failed: %s" % e
+                        rospy.logwarn("Service call failed: %s" % e)
                     # self.odom_subscriber = rospy.Subscriber("odom", Odometry, self.odom_callback)
                 self.counter = 0
         else:

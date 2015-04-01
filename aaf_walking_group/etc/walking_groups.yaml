@@ -1,6 +1,8 @@
 walking_group:
     walking_group_slow:
         group: 'slow'
+        start_location: 'WayPoint34'
+        max_duration: 3600
         parameters: 
             - 'music_set_group'
             - 'waypoint_set'
@@ -17,6 +19,8 @@ walking_group:
             - 'jingles'
     walking_group_fast:
         group: 'fast'
+        start_location: 'WayPoint34'
+        max_duration: 3600
         parameters: 
             - 'music_set_group'
             - 'waypoint_set'
