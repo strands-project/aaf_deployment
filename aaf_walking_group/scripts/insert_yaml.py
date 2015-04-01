@@ -21,7 +21,7 @@ if __name__ == '__main__':
     parser.add_argument("dataset_name", help="The name of the dataset. Saved in meta information using 'meta_name'", type=str)
     parser.add_argument("-i", "--input", help="Input yaml file", type=str, required=True)
     parser.add_argument("--collection_name", help="The collection name. Default: aaf_walking_group", type=str, default="aaf_walking_group")
-    parser.add_argument("--meta_name", help="The name of the meta filed to store 'dataset_name' in. Default: walking_group", type=str, default="waypoint_set")
+    parser.add_argument("--meta_name", help="The name of the meta filed to store 'dataset_name' in. Default: waypoint_set", type=str, default="waypoint_set")
     args = parser.parse_args()
 
     msg_store = MessageStoreProxy(collection=args.collection_name)
