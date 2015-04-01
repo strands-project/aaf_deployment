@@ -79,7 +79,9 @@ install(PROGRAMS
   scripts/insert_yaml.py
   scripts/interface_demo.py
   scripts/interface_server.py
+  scripts/media_server.py
   scripts/positionOfCard.py
+  scripts/start_walking_group.py
   scripts/wait_for_participant.py
   scripts/walking_gui_demo.py
   scripts/walking_gui_server.py
@@ -91,6 +93,10 @@ install(DIRECTORY launch
 )
 
 install(DIRECTORY conf
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+install(DIRECTORY etc
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
