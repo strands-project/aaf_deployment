@@ -17,7 +17,7 @@ from aaf_walking_group.reached_resting_point import RestingPoint
 from aaf_walking_group.msg import GuidingAction, EmptyAction, StateMachineAction
 from aaf_walking_group.srv import GetMediaId
 from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
-from aaf_walking_group.utils import PTU, Gaze
+from aaf_walking_group.utils import PTU, Gaze, RecoveryReconfigure
 from music_player.srv import MusicPlayerService
 from sound_player_server.srv import PlaySoundService
 import actionlib
@@ -76,6 +76,12 @@ class WalkingGroupStateMachine(object):
 
         self.ptu = PTU()
         self.gaze = Gaze()
+        self.recovery = RecoveryReconfigure(
+            name="/monitored_navigation/recover_states/",
+            whitelist={
+                 "sleep_and_retry" : [True, float("inf")]
+            }
+        )
         self.dyn_client = DynClient(
             "/human_aware_navigation"
         )
@@ -96,6 +102,11 @@ class WalkingGroupStateMachine(object):
 
     def execute(self, goal):
         rospy.loginfo("Starting state machine")
+
+        #Save current recovery behaviour states
+        self.recovery.save_current_configuration()
+        #and reconfigure
+        self.recovery.reconfigure(RecoveryReconfigure.SET)
 
         # Setting http root
         http_root = roslib.packages.get_pkg_dir('aaf_walking_group') + '/www'
@@ -122,8 +133,8 @@ class WalkingGroupStateMachine(object):
             rospy.loginfo(" .. calling waypoint sound service")
             s(WaypointSoundsServiceRequest.RESUME)
             rospy.loginfo(" .. started waypoint sound service")
-        except rospy.ServiceException, e:
-            rospy.logwarn("Service call failed: %s" % e)
+        except (rospy.ServiceException, rospy.ROSInterruptException) as e:
+            rospy.logwarn("waypoint sound service call failed: %s" % e)
 
         # Create a SMACH state machine
         self.sm = smach.StateMachine(outcomes=['succeeded', 'aborted', 'preempted'])
@@ -186,6 +197,7 @@ class WalkingGroupStateMachine(object):
         sis.stop()
         self.preempt_srv.shutdown()
         self.ptu.turnPTU(0, 0)
+        self.recovery.reconfigure(RecoveryReconfigure.RESET)
         try:
             self.dyn_client.update_configuration(self.han_param)
         except rospy.ServiceException as e:
@@ -197,7 +209,7 @@ class WalkingGroupStateMachine(object):
             rospy.loginfo(" ... calling waypoint sound service")
             s(WaypointSoundsServiceRequest.PAUSE)
             rospy.loginfo(" ... stopped waypoint sound service")
-        except rospy.ServiceException, e:
+        except (rospy.ServiceException, rospy.ROSInterruptException) as e:
             rospy.logwarn("Service call failed: %s" % e)
         if not self._as.is_preempt_requested() and self._as.is_active():
             self._as.set_succeeded()

@@ -5,6 +5,7 @@ import actionlib
 import flir_pantilt_d46.msg
 from sensor_msgs.msg import JointState
 import strands_gazing.msg
+from copy import deepcopy
 
 
 class Gaze():
@@ -70,3 +71,27 @@ class Head():
         self.head_command.name = ["EyeLids"]
         self.head_command.position = [100]
         self.pub.publish(self.head_command)
+
+class RecoveryReconfigure():
+    SET, RESET = range(2)
+
+    def __init__(self, name, whitelist):
+        self.name = name
+        self.whitelist = whitelist
+        self.save_current_configuration()
+
+    def save_current_configuration(self):
+        self.save = rospy.get_param(self.name)
+
+    def reconfigure(self, option):
+        if option == RecoveryReconfigure.RESET:
+            rospy.set_param(self.name, self.save)
+        elif option == RecoveryReconfigure.SET:
+            to_set = deepcopy(self.save)
+            for k in to_set.keys():
+                if not k in self.whitelist.keys():
+                    to_set[k][0] = False
+                else:
+                    to_set[k] = self.whitelist[k]
+            rospy.set_param(self.name, to_set)
+
