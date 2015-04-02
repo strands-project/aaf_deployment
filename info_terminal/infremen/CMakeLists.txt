@@ -22,7 +22,7 @@ include_directories(${catkin_INCLUDE_DIRS})
 
 add_executable(infremen src/infremen.cpp)
 
-add_dependencies(infremen ${catkin_EXPORTED_TARGETS} mongodb_store)
+add_dependencies(infremen ${catkin_EXPORTED_TARGETS} mongodb_store infremen_generate_messages_cpp)
 
 add_library(infremen_frelement src/CFrelement.cpp)
 add_library(infremen_timer src/CTimer.cpp)
