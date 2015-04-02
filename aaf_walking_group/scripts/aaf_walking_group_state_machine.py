@@ -127,6 +127,7 @@ class WalkingGroupStateMachine(object):
 
         self.ptu.turnPTU(-180, 10)
         dyn_param = {
+            'timeout': 0.0,
             'gaze_type': 1,
             'detection_angle': 80.0
         }

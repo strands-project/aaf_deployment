@@ -1,15 +1,14 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
-
 import rospy
-import roslib
 import actionlib
 import message_filters
 import time
 import math
 import tf
+import dynamic_reconfigure
+import thread
 
 import strands_webserver.client_utils as client_utils
 from aaf_walking_group.msg import EmptyAction
@@ -40,7 +39,7 @@ class WalkingInterfaceServer(object):
 
         self.head = JointState()
         self.head.header.stamp = rospy.Time.now()
-        self.head.name = ["HeadPan"]
+        self.head.name = ["HeadPan", "HeadTilt"]
 
         self.topological_nodes = rospy.wait_for_message(
             '/topological_map',
@@ -135,8 +134,9 @@ class WalkingInterfaceServer(object):
                     client_utils.display_relative_page(self.display_no,
                                                        'stop.html')
                     rospy.loginfo("STOP")
+                    self.indicate = False
                     #move head straight
-                    self.head.position = [0]
+                    self.head.position = [0, 0]
                     self.head_pub.publish(self.head)
                     self.previous_direction = "stop"
             else:
@@ -144,8 +144,11 @@ class WalkingInterfaceServer(object):
                     if self.direction == 'right':
                         client_utils.display_relative_page(self.display_no,
                                                            'turn_right.html')
+                        #indicate
+                        self.indicate = True
+                        thread.start_new_thread(self.blink, ('right',))
                         #move head right
-                        self.head.position = [-30]
+                        self.head.position = [-30, 0]
                         self.head_pub.publish(self.head)
                         rospy.loginfo("Moving right...")
                         self.previous_direction = "right"
@@ -153,8 +156,11 @@ class WalkingInterfaceServer(object):
                     elif self.direction == 'left':
                         client_utils.display_relative_page(self.display_no,
                                                            'turn_left.html')
+                        #indicate
+                        self.indicate = True
+                        thread.start_new_thread(self.blink, ('right',))
                         #move head left
-                        self.head.position = [30]
+                        self.head.position = [30, 0]
                         self.head_pub.publish(self.head)
                         rospy.loginfo("Moving left...")
                         self.previous_direction = "left"
@@ -162,8 +168,9 @@ class WalkingInterfaceServer(object):
                     else:
                         client_utils.display_relative_page(self.display_no,
                                                            'straight.html')
+                        self.indicate = False
                         #move head straight
-                        self.head.position = [0]
+                        self.head.position = [0, 0]
                         self.head_pub.publish(self.head)
                         rospy.loginfo("Moving straight...")
                         self.previous_direction = "straight"
@@ -172,6 +179,25 @@ class WalkingInterfaceServer(object):
             self._as.set_preempted()
         else:
             self._as.set_succeeded()
+
+    def switchIndicator(self, isOn, side):
+        if side == "left":
+            client = dynamic_reconfigure.client.Client('/EBC')
+            params = {'Port0_5V_Enabled' : isOn}
+            client.update_configuration(params)
+        else:
+            client = dynamic_reconfigure.client.Client('/EBC')
+            params = {'Port1_5V_Enabled' : isOn}
+            client.update_configuration(params)
+
+    def blink(self, side):
+        r = rospy.Rate(2)
+        toggle = True
+
+        while self.indicate and not rospy.is_shutdown():
+            self.switchIndicator(toggle, side)
+            toggle = not toggle
+            r.sleep()
 
     def _on_node_shutdown(self):
         self.client.cancel_all_goals()
