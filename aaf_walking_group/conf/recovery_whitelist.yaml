@@ -1,3 +1,7 @@
 recover_states:
   sleep_and_retry: [true, .inf]
   walking_group_help: [true, .inf]
+  recover_bumper: [true, .inf]
+  recover_magnetic_strip: [true, .inf]
+  recover_stuck_on_carpet: [true, .inf]
+  
