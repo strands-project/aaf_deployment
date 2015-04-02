@@ -1,9 +1,20 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(infremen)
 
-find_package(catkin REQUIRED COMPONENTS  mongodb_store roscpp strands_executive_msgs std_msgs std_srvs strands_navigation_msgs mongodb_store_msgs geometry_msgs) 
+find_package(catkin REQUIRED COMPONENTS  
+	mongodb_store roscpp strands_executive_msgs std_msgs std_srvs
+	strands_navigation_msgs mongodb_store_msgs geometry_msgs
+	message_generation) 
 
 set ( CMAKE_CXX_FLAGS "-Ofast -march=native -mno-avx -ggdb")
+
+## Generate services in the 'srv' folder
+add_service_files(
+   FILES
+   CreateInFremenTask.srv
+)
+
+generate_messages(DEPENDENCIES geometry_msgs std_msgs strands_executive_msgs)
 
 catkin_package(CATKIN_DEPENDS roscpp strands_executive_msgs std_msgs std_srvs strands_navigation_msgs mongodb_store_msgs geometry_msgs mongodb_store)
 

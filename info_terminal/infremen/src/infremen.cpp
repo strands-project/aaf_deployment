@@ -6,7 +6,9 @@
 #include <strands_navigation_msgs/TopologicalMap.h>
 #include <strands_navigation_msgs/TopologicalNode.h>
 #include <strands_executive_msgs/AddTask.h>
+#include <strands_executive_msgs/Task.h>
 #include <strands_executive_msgs/SetExecutionStatus.h>
+#include <infremen/CreateInFremenTask.h>
 #include <mongodb_store_msgs/StringPair.h>
 #include <std_msgs/Empty.h>
 #include <geometry_msgs/PoseStamped.h>
@@ -145,15 +147,24 @@ void recalculate(const std_msgs::Empty::ConstPtr& msg)
 	recalculateModels();
 }
 
+
+int submitTasks() 
+{
+
+}
+
+
+
 /*generates a task - invoked every minute*/
-int generateTasks()
+bool generateTasks(int num, std::vector< ::strands_executive_msgs::Task > & tasks)	
 {
 	time_t t;
 	srand((unsigned int)time(&t));
-	strands_executive_msgs::SetExecutionStatus runExec;
+	//strands_executive_msgs::SetExecutionStatus runExec;
 	//if (taskClear.call(dummySrv)) ROS_INFO("Tasks cleared.");
-	for (int i=0;i<numTasks;i++)
+	for (int i=0;i<num;i++)
 	{
+		ROS_INFO("generating info_terminal task");
 		int node = 0;
 		float randomNum = 0;
 		if (numNodes > 0){
@@ -192,14 +203,23 @@ int generateTasks()
 		pair.second = "60";
 		task.arguments.push_back(pair);
 
-		if (taskAdder.call(taskAdd))
-		{
-			ROS_INFO("Task ID: %ld", taskAdd.response.task_id);
-		}
-		printf("Time slot: %i-%i %i %s \n",taskLength*i,taskLength*(i+1)-1,numNodes,frelementSet.frelements[node]->id);
+		tasks.push_back(task);
+
+		// if (taskAdder.call(taskAdd))
+		// {
+		// 	ROS_INFO("Task ID: %ld", taskAdd.response.task_id);
+		// }
+		// printf("Time slot: %i-%i %i %s \n",taskLength*i,taskLength*(i+1)-1,numNodes,frelementSet.frelements[node]->id);
 	}
-	runExec.request.status = true;
-	if (taskStart.call(runExec)) ROS_INFO("Task execution enabled.");
+	//runExec.request.status = true;
+	//if (taskStart.call(runExec)) ROS_INFO("Task execution enabled.");
+	return true;
+}
+
+/*generates a task - invoked every minute*/
+bool generateTasks(infremen::CreateInFremenTask::Request& req, infremen::CreateInFremenTask::Response& resp)	
+{
+	return generateTasks(req.num, resp.tasks);
 }
 
 
@@ -207,14 +227,16 @@ int main(int argc,char* argv[])
 {
 	ros::init(argc, argv, "infremen");
 	n = new ros::NodeHandle();
-        MessageStoreProxy messageStore(*n,"message_store");
+    //MessageStoreProxy messageStore(*n,"message_store");
 	geometry_msgs::PoseStamped dummyPose;	
-	ide = messageStore.insert(dummyPose);
+	//ide = messageStore.insert(dummyPose);
 
 	ros::Subscriber  topoMapSub = n->subscribe("/topological_map", 1000, loadMap);
 	ros::Subscriber  currentNodeSub = n->subscribe("/closest_node", 1000, getCurrentNode);
 	ros::Subscriber  getCommandSub = n->subscribe("/socialCardReader/commands", 1000, getCommand);
 	ros::Subscriber  interfaceSub = n->subscribe("/info_terminal/active_screen", 1000, interacted);
+	ros::ServiceServer service = n->advertiseService("create_infoterminal_tasks", generateTasks);
+
 	timer.start();
 	timer.reset(waitingInterval);
 	interactionTimer.start();
@@ -232,7 +254,7 @@ int main(int argc,char* argv[])
 		usleep(50000);
 		if (iii++>periodicity){
 			recalculateModels();
-			generateTasks();
+//	generateTasks();
 			iii=0;
 		}
 		if (timer.timeOut())timeOut();
