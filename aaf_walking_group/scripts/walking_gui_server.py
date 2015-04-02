@@ -64,6 +64,7 @@ class WalkingInterfaceServer(object):
         self.ts.registerCallback(self.filter_callback)
 
         self.dyn_client = DynClient('/EBC')
+        self.thread = None
 
         #tell the webserver where it should look for web files to serve
         #http_root = os.path.join(
@@ -148,10 +149,12 @@ class WalkingInterfaceServer(object):
                         self.head.position = [-30, 0]
                         self.head_pub.publish(self.head)
                         #indicate
-                        self.indicate = False
-                        self.thread.join()
+                        if self.thread:
+                            self.indicate = False
+                            self.thread.join()
                         self.indicate = True
                         self.thread = Thread(target=self.blink, args=('right',))
+                        self.thread.start()
                         rospy.loginfo("Moving right...")
                         self.previous_direction = "right"
 
@@ -162,10 +165,12 @@ class WalkingInterfaceServer(object):
                         self.head.position = [30, 0]
                         self.head_pub.publish(self.head)
                         #indicate
-                        self.indicate = False
-                        self.thread.join()
+                        if self.thread:
+                            self.indicate = False
+                            self.thread.join()
                         self.indicate = True
                         self.thread = Thread(target=self.blink, args=('left',))
+                        self.thread.start()
                         rospy.loginfo("Moving left...")
                         self.previous_direction = "left"
 
