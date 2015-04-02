@@ -7,7 +7,7 @@ import message_filters
 import time
 import math
 import tf
-import dynamic_reconfigure
+from dynamic_reconfigure.client import Client as DynClient
 import thread
 
 import strands_webserver.client_utils as client_utils
@@ -64,6 +64,8 @@ class WalkingInterfaceServer(object):
             10)
 
         self.ts.registerCallback(self.filter_callback)
+
+        self.dyn_client = DynClient('/EBC')
 
         #tell the webserver where it should look for web files to serve
         #http_root = os.path.join(
@@ -182,13 +184,10 @@ class WalkingInterfaceServer(object):
 
     def switchIndicator(self, isOn, side):
         if side == "left":
-            client = dynamic_reconfigure.client.Client('/EBC')
             params = {'Port0_5V_Enabled' : isOn}
-            client.update_configuration(params)
         else:
-            client = dynamic_reconfigure.client.Client('/EBC')
             params = {'Port1_5V_Enabled' : isOn}
-            client.update_configuration(params)
+        self.dyn_client.update_configuration(params)
 
     def blink(self, side):
         r = rospy.Rate(2)
@@ -198,6 +197,8 @@ class WalkingInterfaceServer(object):
             self.switchIndicator(toggle, side)
             toggle = not toggle
             r.sleep()
+
+        self.switchIndicator(False, side)
 
     def _on_node_shutdown(self):
         self.client.cancel_all_goals()
