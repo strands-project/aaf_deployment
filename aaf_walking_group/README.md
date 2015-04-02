@@ -102,11 +102,24 @@ walking_group:
  * `meta_name` _default="waypoint_set"_: The `meta_name` used when inserting the yaml file using `insert_yaml.py`
  * `collection_name` _default="aaf_walking_group"_: The `collection_name` used when inserting the yaml file using `insert_yaml.py`
  * `waypoint_sounds_file` _default="$(find aaf_walking_group)/conf/waypoint_sounds.yaml"_: The waypoint sounds file, describing the waypoints at which to play sounds and which sounds to play; see below.
- * `music_set_group` _default="aaf_walking_group"_: The media server music set to play during the walking phase and via the entertainment interface.
+ * `music_set_group` _default="aaf_walking_group_music"_: The media server music set to play during the walking phase and via the entertainment interface.
  * `music_set_waypoints` _default="aaf_waypoint_sounds"_: The media server music set containing the waypoint sounds.
  * `music_set_jingles` _default="aaf_jingles"_: The media server music set containing the jingles used.
- * `video_set` _default="aaf_video_set"_: The media server video set containing the videos shown during entertainment.
- * `image_set` _default="walking_group_pictures"_: The media server image set containing the pictures shown during entertainment.
+ * `music_set_recovery` _default="aaf_walking_group_recovery_sounds"_: The media server music set containing the jingles used.
+ * `video_set` _default="aaf_walking_group_videos"_: The media server video set containing the videos shown during entertainment.
+ * `image_set` _default="aaf_walking_group_pictures"_: The media server image set containing the pictures shown during entertainment.
+
+**Configuring the recovery behaviours**
+
+Recovery behaviours are dynamically turend on and off during start-up and after the end of the walking group to prevent some of them from kicking in, making the robot drive backwards. Additionally, a custom recovery behaviour, playing a sounds when in trouble, is added. To tell the navigation which behaviour should be used during the group, we create a so-called whitelist which could look like this:
+
+```
+recover_states:
+  sleep_and_retry: [true, .inf]
+  walking_group_help: [true, .inf]
+```
+
+This enables, the `sleep_and_retry` and `walking_group_help` recovery states and sets the possible retries to `inf`. Every behaviour not in this list, will be disabled during the group and reenabled afterwards.
 
 **Configuring the media sets**
 

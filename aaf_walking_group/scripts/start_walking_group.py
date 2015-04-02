@@ -43,7 +43,6 @@ class StartWalkingGroup(AbstractTaskServer):
         self.instance_running = msg.data
 
     def create(self, req):
-        print "CALLED"
         task = super(StartWalkingGroup, self).create(req)
         if task.start_node_id == '':
             task.start_node_id = self.location
@@ -109,6 +108,10 @@ class StartWalkingGroup(AbstractTaskServer):
         rospy.loginfo(" ... stopping smach")
         if self.smach_client:
             self.smach_client.cancel_all_goals()
+            rospy.loginfo(" ... waiting for smach to die")
+            # Wait until state machine is dead, so everything is reset bevore killing the components.
+            while not self.smach_client.get_state() == GoalStatus.PREEMPTED and not rospy.is_shutdown():
+                rospy.sleep(0.1)
         rospy.loginfo(" ... stopping launch server")
         self.launch_client.cancel_goal()
         rospy.loginfo(" ... preempted")

@@ -44,8 +44,9 @@ class GuideInterface(smach.State):
             if elem[1] == userdata.current_waypoint:
                 key = str(int(elem[0])+1)
                 if not key in waypoints.keys():
-                    key = "1"
+                    rospy.logfatal("No next waypoint found")
                 next_waypoint = waypoints[key]
+                break
 
         # Getting the next waypoint from guide interface
         rospy.loginfo("Opening the guide interface...")
