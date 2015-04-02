@@ -8,11 +8,9 @@ import time
 import math
 import tf
 from dynamic_reconfigure.client import Client as DynClient
-import thread
-
+from threading import Thread
 import strands_webserver.client_utils as client_utils
 from aaf_walking_group.msg import EmptyAction
-#from move_base_msgs.msg import MoveBaseActionGoal
 from nav_msgs.msg import Path
 from strands_navigation_msgs.msg import TopologicalMap, TopologicalRoute
 from sensor_msgs.msg import JointState
@@ -146,24 +144,28 @@ class WalkingInterfaceServer(object):
                     if self.direction == 'right':
                         client_utils.display_relative_page(self.display_no,
                                                            'turn_right.html')
-                        #indicate
-                        self.indicate = True
-                        thread.start_new_thread(self.blink, ('right',))
                         #move head right
                         self.head.position = [-30, 0]
                         self.head_pub.publish(self.head)
+                        #indicate
+                        self.indicate = False
+                        self.thread.join()
+                        self.indicate = True
+                        self.thread = Thread(target=self.blink, args=('right',))
                         rospy.loginfo("Moving right...")
                         self.previous_direction = "right"
 
                     elif self.direction == 'left':
                         client_utils.display_relative_page(self.display_no,
                                                            'turn_left.html')
-                        #indicate
-                        self.indicate = True
-                        thread.start_new_thread(self.blink, ('left',))
                         #move head left
                         self.head.position = [30, 0]
                         self.head_pub.publish(self.head)
+                        #indicate
+                        self.indicate = False
+                        self.thread.join()
+                        self.indicate = True
+                        self.thread = Thread(target=self.blink, args=('left',))
                         rospy.loginfo("Moving left...")
                         self.previous_direction = "left"
 
