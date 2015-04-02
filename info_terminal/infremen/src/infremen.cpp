@@ -148,10 +148,6 @@ void recalculate(const std_msgs::Empty::ConstPtr& msg)
 }
 
 
-int submitTasks() 
-{
-
-}
 
 
 
@@ -160,8 +156,6 @@ bool generateTasks(int num, std::vector< ::strands_executive_msgs::Task > & task
 {
 	time_t t;
 	srand((unsigned int)time(&t));
-	//strands_executive_msgs::SetExecutionStatus runExec;
-	//if (taskClear.call(dummySrv)) ROS_INFO("Tasks cleared.");
 	for (int i=0;i<num;i++)
 	{
 		ROS_INFO("generating info_terminal task");
@@ -176,14 +170,12 @@ bool generateTasks(int num, std::vector< ::strands_executive_msgs::Task > & task
 
 		//printf("Throw: %lf %i %s\n",randomNum,node,frelementSet.frelements[node]->id);
 
-		strands_executive_msgs::AddTask taskAdd;
 		strands_executive_msgs::Task task;
 		task.start_node_id = frelementSet.frelements[node]->id;
 		task.action = "/go_to_person_action";
 		task.start_after = ros::Time::now()+ros::Duration(taskLength*i);
 		task.end_before  = ros::Time::now()+ros::Duration(taskLength*(i+1)-1);
 		task.max_duration = ros::Duration(waitingInterval);
-		taskAdd.request.task = task;
 
 		mongodb_store_msgs::StringPair pair;
 
@@ -204,15 +196,7 @@ bool generateTasks(int num, std::vector< ::strands_executive_msgs::Task > & task
 		task.arguments.push_back(pair);
 
 		tasks.push_back(task);
-
-		// if (taskAdder.call(taskAdd))
-		// {
-		// 	ROS_INFO("Task ID: %ld", taskAdd.response.task_id);
-		// }
-		// printf("Time slot: %i-%i %i %s \n",taskLength*i,taskLength*(i+1)-1,numNodes,frelementSet.frelements[node]->id);
 	}
-	//runExec.request.status = true;
-	//if (taskStart.call(runExec)) ROS_INFO("Task execution enabled.");
 	return true;
 }
 
@@ -220,6 +204,24 @@ bool generateTasks(int num, std::vector< ::strands_executive_msgs::Task > & task
 bool generateTasks(infremen::CreateInFremenTask::Request& req, infremen::CreateInFremenTask::Response& resp)	
 {
 	return generateTasks(req.num, resp.tasks);
+}
+
+void submitTasks() 
+{
+	std::vector< ::strands_executive_msgs::Task > tasks;
+	strands_executive_msgs::SetExecutionStatus runExec;	
+	generateTasks(numTasks, tasks);
+	for (unsigned int i=0; i<tasks.size(); i++ ) 
+	{
+		strands_executive_msgs::AddTask taskAdd;
+		taskAdd.request.task = tasks[i];
+		if (taskAdder.call(taskAdd))
+		{
+			ROS_INFO("Task ID: %ld", taskAdd.response.task_id);
+		}
+	}
+	runExec.request.status = true;
+	if (taskStart.call(runExec)) ROS_INFO("Task execution enabled.");
 }
 
 
