@@ -160,7 +160,7 @@ class WalkingInterfaceServer(object):
                                                            'turn_left.html')
                         #indicate
                         self.indicate = True
-                        thread.start_new_thread(self.blink, ('right',))
+                        thread.start_new_thread(self.blink, ('left',))
                         #move head left
                         self.head.position = [30, 0]
                         self.head_pub.publish(self.head)
