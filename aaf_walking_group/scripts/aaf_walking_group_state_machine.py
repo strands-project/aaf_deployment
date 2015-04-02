@@ -2,6 +2,7 @@
 
 import rospy
 import roslib
+import rosparam
 import smach
 import smach_ros
 import std_msgs.msg
@@ -20,6 +21,7 @@ from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsService
 from aaf_walking_group.utils import PTU, Gaze, RecoveryReconfigure
 from music_player.srv import MusicPlayerService
 from sound_player_server.srv import PlaySoundService
+from walking_group_recovery.srv import ToggleWalkingGroupRecovery
 import actionlib
 import json
 import pprint
@@ -43,6 +45,11 @@ class WalkingGroupStateMachine(object):
         rospy.loginfo("Creating wait client...")
         wait_client = actionlib.SimpleActionClient("wait_for_participant", EmptyAction)
         wait_client.wait_for_server()
+        rospy.loginfo(" ... done")
+        rospy.loginfo("Waiting for recovery toggle services...")
+        rospy.loginfo(" ... images")
+        self.rec_srv = rospy.ServiceProxy('/toggle_walking_group_recovery', ToggleWalkingGroupRecovery)
+        self.rec_srv.wait_for_service()
         rospy.loginfo(" ... done")
         rospy.loginfo("Waiting for media server services...")
         rospy.loginfo(" ... images")
@@ -78,9 +85,7 @@ class WalkingGroupStateMachine(object):
         self.gaze = Gaze()
         self.recovery = RecoveryReconfigure(
             name="/monitored_navigation/recover_states/",
-            whitelist={
-                 "sleep_and_retry" : [True, float("inf")]
-            }
+            whitelist=rosparam.load_file(rospy.get_param("~recovery_whitelist"))[0][0]["recover_states"]
         )
         self.dyn_client = DynClient(
             "/human_aware_navigation"
@@ -103,6 +108,14 @@ class WalkingGroupStateMachine(object):
     def execute(self, goal):
         rospy.loginfo("Starting state machine")
 
+        try:
+            rospy.loginfo("Creating recovery toggle service proxy and waiting ...")
+            self.rec_srv.wait_for_service()
+            rospy.loginfo(" .. calling recovery toggle service")
+            self.rec_srv(True)
+            rospy.loginfo(" .. started walking group recovery")
+        except (rospy.ServiceException, rospy.ROSInterruptException) as e:
+            rospy.logwarn("waypoint sound service call failed: %s" % e)
         #Save current recovery behaviour states
         self.recovery.save_current_configuration()
         #and reconfigure
@@ -211,13 +224,22 @@ class WalkingGroupStateMachine(object):
             rospy.loginfo(" ... stopped waypoint sound service")
         except (rospy.ServiceException, rospy.ROSInterruptException) as e:
             rospy.logwarn("Service call failed: %s" % e)
+        try:
+            rospy.loginfo("Creating recovery toggle service proxy and waiting ...")
+            self.rec_srv.wait_for_service()
+            rospy.loginfo(" .. calling recovery toggle service")
+            self.rec_srv(False)
+            rospy.loginfo(" .. stopped walking group recovery")
+        except (rospy.ServiceException, rospy.ROSInterruptException) as e:
+            rospy.logwarn("Service call failed: %s" % e)
         if not self._as.is_preempt_requested() and self._as.is_active():
             self._as.set_succeeded()
+        else:
+            self._as.set_preempted()
 
     def preempt_callback(self):
         rospy.logwarn("Walking group preempt requested")
         self.sm.request_preempt()
-        self._as.set_preempted()
 
     def preempt_srv_cb(self, req):
         self.preempt_callback()

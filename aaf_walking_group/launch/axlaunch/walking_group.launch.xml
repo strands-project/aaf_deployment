@@ -3,11 +3,13 @@
   <arg name="meta_name" default="waypoint_set"/>
   <arg name="collection_name" default="aaf_walking_group"/>
   <arg name="waypoint_sounds_file" default="$(find aaf_walking_group)/conf/waypoint_sounds.yaml" />
-  <arg name="music_set_group" default="aaf_walking_group"/>
+  <arg name="recovery_whitelist" default="$(find aaf_walking_group)/conf/recovery_whitelist.yaml" />
+  <arg name="music_set_group" default="aaf_walking_group_music"/>
   <arg name="music_set_waypoints" default="aaf_waypoint_sounds"/>
   <arg name="music_set_jingles" default="aaf_jingles"/>
-  <arg name="video_set" default="aaf_video_set"/>
-  <arg name="image_set" default="walking_group_pictures"/>
+  <arg name="music_set_recovery" default="aaf_walking_group_recovery_sounds"/>
+  <arg name="video_set" default="aaf_walking_group_videos"/>
+  <arg name="image_set" default="aaf_walking_group_pictures"/>
 
   <node pkg="aaf_walking_group" type="wait_for_participant.py" name="wait_for_participant" output="screen" respawn="true"/>
   <node pkg="aaf_walking_group" type="guiding_action.py" name="guiding_server" output="screen" respawn="true"/>
@@ -27,6 +29,7 @@
     <param name="mongodb_params/waypointset_name" type="string" value="$(arg waypoint_set)"/>
     <param name="mongodb_params/waypointset_collection" type="string" value="$(arg collection_name)"/>
     <param name="mongodb_params/waypointset_meta" type="string" value="$(arg meta_name)"/>
+    <param name="recovery_whitelist" type="string" value="$(arg recovery_whitelist)"/>
   </node>
 
   <include file="$(find aaf_waypoint_sounds)/launch/waypoint_sounds.launch">
@@ -35,12 +38,15 @@
   </include>
   <node pkg="music_player" type="music_player_server.py" name="music_player_server" output="screen" respawn="true">
     <param name="music_set" type="string" value="$(arg music_set_group)"/>
-    <param name="priority" type="double" value="0.9"/>
+    <param name="priority" type="double" value="0.8"/>
   </node>
   <include file="$(find sound_player_server)/launch/sound_player.launch">
     <arg name="music_set" value="$(arg music_set_jingles)"/>
     <arg name="min_volume" value="0.0"/>
   </include>
-  <node pkg="walking_group_recovery" type="toggle_walking_group_recovery_server.py" name="toggle_walking_group_recovery_server" output="screen" respawn="true"/>
+  <node pkg="walking_group_recovery" type="toggle_walking_group_recovery_server.py" name="toggle_walking_group_recovery_server" output="screen" respawn="true">
+    <param name="music_set" type="string" value="$(arg music_set_recovery)"/>
+    <param name="audio_priority" type="double" value="0.9"/>
+  </node>
 
 </launch>
