@@ -59,7 +59,8 @@ class InfoTaskServer(AbstractTaskServer):
 
     def create(self, req):
         task = super(InfoTaskServer, self).create(req)
-        task.max_duration.secs = 600 # Default execution time: 10min
+        if task.max_duration.secs == 0:
+            task.max_duration.secs = 600 # Default execution time: 10min
         return task
 
     def button_pressed_callback(self, active_screen):
