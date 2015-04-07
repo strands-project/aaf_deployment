@@ -18,18 +18,24 @@ class Logger():
         rospy.loginfo(" ... done")
 
     def start_logging(self):
-        lg = launchGoal()
-        lg.pkg = "aaf_logging"
-        lg.launch_file = "logging.launch"
-        lg.monitored_topics.append("/logging_manager/log_stamped")
-        self.launch_client.send_goal(lg, feedback_cb=self.feedback_cb)
+        if not self.is_running():
+            self.running = False
+            lg = launchGoal()
+            lg.pkg = "aaf_logging"
+            lg.launch_file = "logging.launch"
+            lg.monitored_topics.append("/logging_manager/log_stamped")
+            self.launch_client.send_goal(lg, feedback_cb=self.feedback_cb)
+            while not self.is_running():
+                rospy.sleep(0.1)
 
     def stop_logging(self):
         rospy.loginfo("Logging preemption requested")
-        while not self.is_running() and not rospy.is_shutdown(): # Wait until launch file is up, otherwise it dies nastily
-            rospy.sleep(0.1)
-        rospy.loginfo(" ... stopping launch server")
-        self.launch_client.cancel_goal()
+        if self.is_running():
+            while not self.is_running() and not rospy.is_shutdown(): # Wait until launch file is up, otherwise it dies nastily
+                rospy.sleep(0.1)
+            rospy.loginfo(" ... stopping launch server")
+            self.running = False
+            self.launch_client.cancel_goal()
         rospy.loginfo(" ... preempted")
 
     def feedback_cb(self, feed):
