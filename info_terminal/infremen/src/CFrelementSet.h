@@ -22,9 +22,11 @@ class CFrelementSet
 		~CFrelementSet();
 
 		/*add new measurements  
-		  - if the name (ID) is new, then a new state is created the function returns 'false'
-		  - if not, the measurements are added to the state with the given ID and 'true' is returned*/
-		int add(const char *name,uint32_t times[],unsigned char states[],int length);
+		  - if the name (ID) is not in the collection of states and createNew is false, the function aborts with return code -1 
+		  - if the name (ID) is not in the collection of states and createNew is true, the new state is added to the collection
+		  - if not, the measurements are added to the state with the given ID 
+		  - the function returns -1 if the state does not exist (and was not created), otherwise it returne the number of added states*/
+		int add(const char *name,uint32_t times[],unsigned char states[],int length,bool createNew);
 
 		/*estimate probabilities of the given state for the given times - the probs array is an output
 		  returns false if the state with the given ID is not present in the collection
@@ -58,7 +60,7 @@ class CFrelementSet
 		/*save the model to a file*/
 		bool save(const char* name);
 
-		bool find(const char *name);
+		int find(const char *name);
 		CFrelement* frelements[MAX_LENGTH];
 		CFrelement* active;
 		int numFrelements;
