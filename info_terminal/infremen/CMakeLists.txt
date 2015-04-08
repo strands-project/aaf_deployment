@@ -28,7 +28,11 @@ include_directories(${catkin_INCLUDE_DIRS})
 
 add_executable(infremen src/infremen.cpp)
 
+<<<<<<< HEAD
 add_dependencies(infremen ${catkin_EXPORTED_TARGETS} mongodb_store ${PROJECT_NAME}_gencfg ${PROJECT_NAME}_genmsg infremen_generate_messages)
+=======
+add_dependencies(infremen ${catkin_EXPORTED_TARGETS} mongodb_store ${PROJECT_NAME}_gencfg ${PROJECT_NAME}_genmsg)
+>>>>>>> f9ae2361396d80a9a9c4ee58b3fa1302dd4039d3
 
 add_library(infremen_frelement src/CFrelement.cpp)
 add_library(infremen_timer src/CTimer.cpp)
