@@ -30,22 +30,24 @@
 #include <sstream>
 #include <cassert>
 
+using namespace mongodb_store;
+using namespace std;
+
 //FIXED parameters
 int windowDuration = 300;
 int rescheduleInterval = 86400;
 bool debug = true;
 
 //standard parameters
-string collectionName("WharfTest");
-
-using namespace mongodb_store;
-using namespace std;
+string collectionName;
+string scheduleDirectory;
 
 //runtine parameters
 float explorationRatio = 0.5;
-int8_t  minimalBatteryLevel = 80;
+int8_t   minimalBatteryLevel = 80;
+int32_t   minimalBatteryLevelTime = 0;
 int interactionTimeout = 30;
-int maxTaskNumber = 1; 
+int maxTaskNumber = 5;
 int taskDuration = 180;	
 
 //ROS communication
@@ -154,8 +156,9 @@ void getCurrentNode(const std_msgs::String::ConstPtr& msg)
 }
 
 /*loads relevant nodes from the map description*/
-void getRelevantNodes()
+int getRelevantNodes()
 {
+	int result = -1;
 	uint32_t times[1];
 	unsigned char signal[1];
 	strands_navigation_msgs::GetTaggedNodes srv;
@@ -166,11 +169,13 @@ void getRelevantNodes()
 		numNodes = frelementSet.numFrelements;
 		ROS_INFO("Number of infoterminal nodes: %d",numNodes);
 		for (int i=0;i<numNodes;i++) ROS_INFO("Infoterminal waypoint %i: %s.",i,frelementSet.frelements[i]->id);
+		result = numNodes;
 	}
 	else
 	{
 		ROS_ERROR("Failed to obtain InfoTerminal-relevant nodes");
-	}	
+	}
+	return result;	
 }
 
 /*get closest node*/
@@ -275,8 +280,12 @@ int generateNewSchedule(uint32_t givenTime)
 
 	/*save a file with a schedule TODO - save to mongo + interface calendar*/
 	time_t timeInfo = midnight;
+	char fileName[1000];
 	strftime(dummy, sizeof(dummy), "InfoTerminal-Schedule-%Y-%m-%d.txt",localtime(&timeInfo));
-	FILE* file = fopen(dummy,"w");
+	sprintf(fileName,"%s/%s",scheduleDirectory.c_str(),dummy);
+	printf("Generating schedule from %s\n",fileName);
+	FILE* file = fopen(fileName,"w+");
+	if (file == NULL)ROS_ERROR("Could not open Schedule file %s.",fileName);
 	for (int s=0;s<numSlots;s++)
 	{
 		sprintf(dummy,"%i ",s);
@@ -302,13 +311,16 @@ int generateSchedule(uint32_t givenTime)
 	for (int i = 0;i<numSlots;i++) timeSlots[i] = midnight+3600*24/numSlots*i; 
 	
 	/*open a schedule file - create a new one if it does not exist*/
+	char fileName[1000];
 	time_t timeInfo = midnight;
 	strftime(dummy, sizeof(dummy), "InfoTerminal-Schedule-%Y-%m-%d.txt",localtime(&timeInfo));
-	FILE* file = fopen(dummy,"r");
+	sprintf(fileName,"%s/%s",scheduleDirectory.c_str(),dummy);
+	printf("Retrieving schedule from %s\n",fileName);
+	FILE* file = fopen(fileName,"r");
 	if (file == NULL){
-		printf("Schedule file not found %s\n",dummy);
+		printf("Schedule file not found %s\n",fileName);
 		generateNewSchedule(givenTime);
-		file = fopen(dummy,"r");
+		file = fopen(fileName,"r");
 	}
 
 	/*read schedule file*/
@@ -381,8 +393,8 @@ int createTask(int slot)
 		taskAdd.request.task = task;
 		if (taskAdder.call(taskAdd))
 		{
-			sprintf(dummy," for timeslot %i: At %s go to %s.",slot,testTime,frelementSet.frelements[nodes[slot]]->id);
-			ROS_INFO("Task ID: %ld %s", taskAdd.response.task_id,dummy);
+			sprintf(dummy,"%s for timeslot %i on %s.",frelementSet.frelements[nodes[slot]]->id,slot,testTime);
+			ROS_INFO("Task %ld created %s at ", taskAdd.response.task_id,dummy);
 			taskIDs[slot] = taskAdd.response.task_id;
 		}
 	}else{
@@ -395,21 +407,23 @@ int createTask(int slot)
 /*drops and reschedules the following task on special conditions*/
 int modifyNextTask(int slot)
 {
-	/*do not run away during interactions*/
 	int lastNodeID = frelementSet.find(nodeName.c_str());
 	int chargeNodeID = frelementSet.find("ChargingPoint");
 	bool changeTaskFlag = false;
+	/*charge when low on battery*/
 	if (chargeNodeID != -1 && forceCharging){
 		 nodes[slot]=chargeNodeID;
 		 changeTaskFlag = true;
 		 ROS_INFO("Task %i should be changed to charging.",taskIDs[slot]);
 	}
+	/*do not run away during interactions*/
 	if (lastNodeID != -1 && (timeSlots[slot] - lastInteractionTime) < interactionTimeout)
 	{
 		 nodes[slot]=lastNodeID;
 		 changeTaskFlag = true;
 		 ROS_INFO("Task %i should be changed to last waypoint.",taskIDs[slot]);
 	}
+	/*do not run away during interactions*/
 	if (changeTaskFlag)
 	{
 		strands_executive_msgs::CancelTask taskCanc;
@@ -431,7 +445,6 @@ void guiCallBack(const info_task::Clicks &msg)
 	static bool firstGuiCallBack = true;
 	if (firstGuiCallBack==false)
 	{
-		/*TODO use message timestamps*/
 		ROS_INFO("Infremen: there were %ld interactions.",msg.page_array.size());
 		getClosestNode();
 		infremen::InfremenResult itr;
@@ -457,19 +470,16 @@ void printAllInteractions(uint32_t lastTime)
 		time_t timeInfo = p->time;
 		strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
 		ROS_INFO("There were %d interaction at %s at waypoint %s.",p->number,testTime,p->waypoint.c_str());
-		//messageStore.delete(p);
 	}
 
 	vector< boost::shared_ptr<infremen::AtomicInteraction> > atoms;
 	string id;
 	messageStore->queryNamed<infremen::AtomicInteraction>(collectionName,atoms,false);
-	//messageStore->query<infremen::AtomicInteraction>(atoms);
 	BOOST_FOREACH( boost::shared_ptr<infremen::AtomicInteraction> a,  atoms)
 	{
 		time_t timeInfo = a->time;
 		strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
 		ROS_INFO("Screen switched to %d interaction at %s at waypoint %s(%s) - robot pose %f %f %f.",a->screen,testTime,a->infoWaypoint.c_str(),a->waypoint.c_str(),a->robotPoseX,a->robotPoseY,a->robotPosePhi);
-		//messageStore.delete(a);
 	}
 }
 
@@ -478,14 +488,19 @@ int main(int argc,char* argv[])
 	//determine ROS time to local dignight offset - used to replan at midnight
 	tzset();
 	timeOffset = timezone+daylight*3600;
-	ROS_DEBUG("Time offset %i",timeOffset);
+	ROS_DEBUG("Local time offset %i",timeOffset);
 
 	//initialize ros and datacentre
 	ros::init(argc, argv, "infremen");
 	n = new ros::NodeHandle();
         messageStore = new MessageStoreProxy(*n,"message_store");
+	//load parameters
+	n->param<std::string>("/infremen/collectionName", collectionName, "WharfTest2");
+	n->param<std::string>("/infremen/scheduleDirectory", scheduleDirectory, "/localhome/strands/schedules");
+	//debug prints
 	printAllInteractions(-1);
 
+	//initialize dynamic reconfiguration feedback
 	dynamic_reconfigure::Server<infremen::infremenConfig> server;
 	dynamic_reconfigure::Server<infremen::infremenConfig>::CallbackType dynSer;
 	dynSer = boost::bind(&reconfigureCallback, _1, _2);
@@ -495,18 +510,14 @@ int main(int argc,char* argv[])
 	robotPoseSub = n->subscribe("/robot_pose", 1, poseCallback); 
 	//to get the current node 
 	currentNodeSub = n->subscribe("/closest_node", 1, getCurrentNode);
-
 	//to determine if charging is required
 	batterySub = n->subscribe("battery_state", 1, batteryCallBack);
 	//to receive feedback from task_info
 	infoTaskSub = n->subscribe("/info_terminal/task_outcome", 1, guiCallBack);
-
 	//to receive feedback about the task outcome 
 	infoTaskSub = n->subscribe("/info_terminal/task_outcome", 1, guiCallBack);
-
 	//to receive feedback from the gui itself 
 	guiSub = n->subscribe("/info_terminal/active_screen", 1, interacted);
-
 	//to get relevant nodes
 	nodeListClient = n->serviceClient<strands_navigation_msgs::GetTaggedNodes>("/topological_map_manager/get_tagged_nodes");
 	//to create task objects
@@ -516,18 +527,25 @@ int main(int argc,char* argv[])
 	//to remove tasks from the schedule
 	taskCancel = n->serviceClient<strands_executive_msgs::CancelTask>("/task_executor/cancel_task");
 	//get nodes tagged as InfoTerminal	
-	getRelevantNodes();
-
+	if (getRelevantNodes() < 0)
+	{
+		 ROS_ERROR("Topological navigation does not report about tagged nodes. Is it running?");
+		 return -1;
+	}
+	if (getRelevantNodes() == 0)
+	{
+		 ROS_ERROR("There are no Info-Terminal relevant nodes in the topological map ");
+		 return -1;
+	}
 	//generate schedule
 	ros::Time currentTime = ros::Time::now();
 	//buildModels(currentTime.sec);
 	generateSchedule(currentTime.sec);
-
-
 	//to start scheduler - for standalone testing 
 	ros::ServiceClient taskStart;
 	taskStart = n->serviceClient<strands_executive_msgs::SetExecutionStatus>("/task_executor/set_execution_status");
 
+	//TODO for testing only - remove later 
 	strands_executive_msgs::SetExecutionStatus runExec;
 	runExec.request.status = true;
 	if (taskStart.call(runExec)) ROS_INFO("Task execution enabled.");
@@ -536,11 +554,12 @@ int main(int argc,char* argv[])
 	{
 		ros::spinOnce();
 		sleep(1);
-		//ROS_INFO("Tasks: %i %i",numCurrentTasks,maxTaskNumber);
+		ROS_INFO("Infremen tasks: %i %i",numCurrentTasks,maxTaskNumber);
 		currentTimeSlot = getNextTimeSlot(0);
 		if (currentTimeSlot!=lastTimeSlot){
 			modifyNextTask(currentTimeSlot);
 			numCurrentTasks--;
+			if (numCurrentTasks < 0) numCurrentTasks = 0;
 		}
 		if (numCurrentTasks < maxTaskNumber)
 		{
@@ -552,7 +571,6 @@ int main(int argc,char* argv[])
 			}
 		}
 	}
-	frelementSet.save("latest.fre");
 	return 0;
 }
 

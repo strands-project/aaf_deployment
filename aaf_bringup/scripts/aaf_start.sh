@@ -59,7 +59,7 @@ tmux select-window -t $SESSION:10
 tmux send-keys "DISPLAY=:0 rosrun aaf_logging start_stop_logging.py"
 
 tmux select-window -t $SESSION:11
-tmux send-keys "DISPLAY=:0 TODO: info_terminal launch file"
+tmux send-keys "DISPLAY=:0  roslaunch info_terminal info_terminal.launch"
 
 tmux select-window -t $SESSION:12
 tmux send-keys "DISPLAY=:0 TODO: Bell bot launch file"
