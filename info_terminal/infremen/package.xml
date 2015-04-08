@@ -48,6 +48,7 @@
   <build_depend>strands_executive_msgs</build_depend>
   <build_depend>mongodb_store_msgs</build_depend>
   <build_depend>scitos_msgs</build_depend>
+  <build_depend>info_task</build_depend>
   
   <run_depend>roscpp</run_depend>
   <run_depend>genmsg</run_depend>
@@ -61,6 +62,7 @@
   <run_depend>mongodb_store_msgs</run_depend>
   <run_depend>geometry_msgs</run_depend>
   <run_depend>scitos_msgs</run_depend>
+  <run_depend>info_task</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

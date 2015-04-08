@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(infremen)
 
-find_package(catkin REQUIRED COMPONENTS  mongodb_store message_generation roscpp strands_executive_msgs std_msgs std_srvs strands_navigation_msgs mongodb_store_msgs geometry_msgs dynamic_reconfigure) 
+find_package(catkin REQUIRED COMPONENTS  mongodb_store message_generation roscpp strands_executive_msgs std_msgs std_srvs strands_navigation_msgs mongodb_store_msgs geometry_msgs dynamic_reconfigure info_task) 
 
 ## Generate messages in the 'msg' folder
 add_message_files(
@@ -22,7 +22,7 @@ generate_dynamic_reconfigure_options(
 
 set ( CMAKE_CXX_FLAGS "-Ofast -march=native -mno-avx -ggdb")
 
-catkin_package(CATKIN_DEPENDS roscpp strands_executive_msgs message_generation std_msgs std_srvs strands_navigation_msgs mongodb_store_msgs geometry_msgs mongodb_store)
+catkin_package(CATKIN_DEPENDS roscpp strands_executive_msgs message_generation std_msgs std_srvs strands_navigation_msgs mongodb_store_msgs geometry_msgs mongodb_store info_task)
 
 include_directories(${catkin_INCLUDE_DIRS}) 
 
