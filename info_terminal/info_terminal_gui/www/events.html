@@ -1,33 +1,52 @@
-$def with (events)
+$def with (blog_events, events)
 
+<div class="row text-center">	
+	<h1>News</h1>
+	<hr>
+</div>
 <div class="row">
-<div class="col-md-4">
-	<div class="row text-center">
-	<a href="/">
-		<img src="static/back-icon.png" class="img-thumbnail img-responsive" 
-			style="border:5px solid black;max-height:300px"><br>
-		<h1>Back to Start</h1>
-	</a>
+	<div class="col-md-6">
+		$for event in blog_events:
+			<div class="row">
+				<!--<div class="col-md-3">-->
+					<!--<img src="$event[0]" style="min-height:150px">	-->
+				<!--</div>-->
+				<div class="col-md-9">
+					$:event
+				</div>
+			</div>
 	</div>
-</div>  
-<div class="col-md-8">
-	<div class="row text-center">	
-		<h1>Events Or What Ever</h1>
-		<hr>
-	</div>
-	<div class="row">
+	<div class="col-md-6">
 		$for event in events:
 			<div class="row">
-				<div class="col-md-3">
-					<img src="$event[0]" style="min-height:150px">	
-				</div>
-				<div class="col-md-9">
+				<!--if event[0] is not None:-->
+					<!--<div class="col-md-3">-->
+						<!--<img src="$event[0]" style="max-height:150px">-->
+					<!--</div>-->
+				<div class="col-md-12">
 					$:event[1]
 				</div>
 			</div>
 	</div>
 </div>
-</div>
 
+<hr>
+<div class="row">
+	<div class="col-md-4">
+		<div class="row text-center">
+		<a href="/">
+			<img src="static/back-icon.png" class="img-thumbnail img-responsive" 
+				style="border:5px solid black;max-height:100px"><br>
+		</a>
+		</div>
+	</div>  
+	<div class="col-md-4">
+		<div class="row text-center">
+		<a href="/">
+			<h1>Back to Start</h1>
+		</a>
+		</div>
+	</div>  
+<div>
 
 
