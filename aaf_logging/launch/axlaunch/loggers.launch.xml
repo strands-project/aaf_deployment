@@ -1,0 +1,21 @@
+<launch>
+    <arg name="bool_stamped_publisher_topic" default="/logging_manager/log_stamped"/>
+
+    <arg name="machine" default="localhost" />
+    <arg name="user" default="" />
+
+    <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="true"/>
+
+    <include file="$(find vision_people_logging)/launch/logging_ubd.launch">
+        <arg name="machine" value="$(arg machine)"/>
+        <arg name="user" value="$(arg user)"/>
+        <arg name="manager_topic" value="$(arg bool_stamped_publisher_topic)"/>
+    </include>
+
+    <include file="$(find bayes_people_tracker_logging)/launch/logging.launch">
+        <arg name="machine" value="$(arg machine)"/>
+        <arg name="user" value="$(arg user)"/>
+        <arg name="manager_topic" value=""/>
+    </include>
+
+</launch>
