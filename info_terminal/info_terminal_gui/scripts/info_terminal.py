@@ -13,12 +13,12 @@ from std_msgs.msg import Int32
 from threading import Lock
 import pygame
 import xmltodict
+import signal
 
 from mongodb_media_server import MediaClient
 
 #WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q=Vienna,Austria"
 WEATHER_URL = "http://api.worldweatheronline.com/free/v2/weather.ashx?key=c2db94527204450837f1cf7b7772b&q=Vienna,Austria&num_of_days=2&tp=3&format=json"
-
 NEWS_URL = "http://feeds.bbci.co.uk/news/world/rss.xml"
 
 ### Templates
@@ -44,57 +44,70 @@ class TranslatedStrings(object):
             rospy.logwarn("String '%s' not translatable" % string)
             return string
         return self.translations[string]
-        
-strings =  TranslatedStrings(rospy.get_param("language", default="EN"))
-
-urls = (
-    '/', 'MasterPage', 
-    '/menu',  'Menu', 
-    '/weather', 'Weather',
-    '/events', 'Events',
-    '/go_away', 'GoAway', 
-    '/photo_album/(.*)',  'PhotoAlbum', 
-)
-
     
-# A ROS publisher for click-feedback
-active_screen_pub =  rospy.Publisher("/info_terminal/active_screen", Int32, queue_size=1)
+class InfoTerminalGUI(web.application):
+    def __init__(self):
+        self.urls = (
+            '/', 'MasterPage', 
+            '/menu',  'Menu', 
+            '/weather', 'Weather',
+            '/events', 'Events',
+            '/go_away', 'GoAway', 
+            '/photo_album/(.*)',  'PhotoAlbum', 
+        )
+        web.application.__init__(self, self.urls, globals())
+        signal.signal(signal.SIGINT, self._signal_handler)
     
-
-app = web.application(urls, globals())
-
-def mongo_client():
-    mongo = pymongo.MongoClient(rospy.get_param("mongodb_host"),
+        # A ROS publisher for click-feedback
+        self._active_screen_pub =  rospy.Publisher("/info_terminal/active_screen",
+                                                   Int32, queue_size=1)
+        self.string = None
+        self.port = 8080
+        mongo = pymongo.MongoClient(rospy.get_param("mongodb_host"),
                             rospy.get_param("mongodb_port"))
-    return mongo.info_terminal
-def get_image_count():
-    return mongo_client().photos.find().count()
+        self.mongo_db =  mongo.info_terminal
+                
+    def run(self, port, language, *middleware):
+        self.strings =  TranslatedStrings(language)
+        self.port =  port
+        
+        func = self.wsgifunc(*middleware)
+        return web.httpserver.runsimple(func, ('0.0.0.0', self.port))
+    
 
+    def _signal_handler(self, signum, frame):
+        self.stop()
+        print "InfoTerminal GUI stopped."
+        
+    def publish_feedback(self, page_id):
+        self._active_screen_pub.publish(page_id)
+        
+app =  InfoTerminalGUI()
 
 class MasterPage(object):        
     def GET(self):
-        active_screen_pub.publish(MasterPage.id)
-        return render.index(strings, datetime)
+        app.publish_feedback(MasterPage.id)
+        return render.index(app.strings, datetime)
 
 class Menu(object):
     def GET(self):
-        active_screen_pub.publish(Menu.id)
-        menu =  mongo_client().menu.find_one()
+        app.publish_feedback(Menu.id)
+        menu =  app.mongo_db.menu.find_one()
         
         return render.menu(menu)
 
 class Weather(object):
     def GET(self):
-        active_screen_pub.publish(Weather.id)
+        app.publish_feedback(Weather.id)
         try:
             weather =  json.loads(requests.get(WEATHER_URL).text)
         except:
-            return render.index(strings, datetime)
+            return render.index(app.strings, datetime)
         return render.weather(weather)
 
 class Events(object):
     def GET(self):
-        active_screen_pub.publish(Events.id)
+        app.publish_feedback(Events.id)
         news =  xmltodict.parse(requests.get(NEWS_URL).text)
         events =  []
         for n in news['rss']['channel']['item']:
@@ -104,7 +117,7 @@ class Events(object):
 
 class GoAway(object):
     def GET(self):
-        active_screen_pub.publish(GoAway.id)
+        app.publish_feedback(GoAway.id)
         return "ok"
     
 class PhotoAlbum(object):
@@ -116,7 +129,7 @@ class PhotoAlbum(object):
             mc =  MediaClient(rospy.get_param('mongodb_host'),
                               rospy.get_param('mongodb_port'))
             PhotoAlbum.photos = mc.get_set(set_type_name="Photo/info-terminal")
-        active_screen_pub.publish(PhotoAlbum.id)
+        app.publish_feedback(PhotoAlbum.id)
         if image_id == "":
             image_id = 0
         image_id = int(image_id)
@@ -134,7 +147,7 @@ class PhotoAlbum(object):
     
 # Give each URL a unique number so that we can feedback which screen is active
 # as a ROS message
-for i, u in enumerate(urls):
+for i, u in enumerate(app.urls):
     if u.startswith("/"):
         continue
     globals()[u].id = i
@@ -142,5 +155,7 @@ for i, u in enumerate(urls):
 if __name__ == "__main__":
     print "Init ROS node."
     rospy.init_node("infoterminal_gui")
-    print "Web server starting.."
-    app.run()
+    print "InfoTerminal GUI Web server starting.."
+    port =  rospy.get_param("~port", 8080)
+    language =  rospy.get_param("~language", "EN")
+    app.run(port, language)
