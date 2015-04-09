@@ -76,6 +76,8 @@ class LoggingServer(AbstractTaskServer):
             task.end_node_id = task.start_node_id
         if task.max_duration.secs == 0:
             task.max_duration.secs = 60 # Default execution time: 1min
+        if task.priority == 0:
+            task.priority = 5 # Always start and stop loggin with high priority.
         return task
 
 if __name__ == "__main__":
