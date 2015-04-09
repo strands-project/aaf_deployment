@@ -9,8 +9,8 @@
     <arg name="bool_publisher_topic" default="/logging_manager/log"/>
     <arg name="bool_stamped_publisher_topic" default="/logging_manager/log_stamped"/>
 
-    <arg name="machine" default="right-cortex" />
-    <arg name="user" default="strands" />
+    <arg name="machine" default="localhost" />
+    <arg name="user" default="" />
 
     <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="false"/>
 
