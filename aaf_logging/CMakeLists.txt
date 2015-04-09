@@ -5,12 +5,29 @@ project(aaf_logging)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  actionlib
+  actionlib_msgs
+  message_generation
+  std_msgs
   topological_logging_manager
 )
 
 ################################################
 ## Declare ROS messages, services and actions ##
 ################################################
+
+add_action_files(
+  DIRECTORY action
+  FILES
+  Empty.action
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+  actionlib
+  actionlib_msgs
+)
 
 ###################################
 ## catkin specific configuration ##
