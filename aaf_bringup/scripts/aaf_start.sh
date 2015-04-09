@@ -41,7 +41,7 @@ tmux select-window -t $SESSION:4
 tmux send-keys "DISPLAY=:0 roslaunch strands_bringup strands_ui.launch mary_machine:=right-cortex mary_machine_user:=strands"
 
 tmux select-window -t $SESSION:5
-tmux send-keys "DISPLAY=:0 roslaunch strands_bringup strands_navigation.launch map:=/opt/strands/maps/WW_GF_2015_02_22-cropped.yaml with_no_go_map:=false topological_map:=WW_GF_2015_02_22 no_go_map:=/opt/strands/maps/WW_GF_2015_02_22-cropped.yaml with_human_aware:=true with_chest_xtion:=true"
+tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_navigation.launch map:=/opt/strands/maps/WW_GF_2015_02_22-cropped.yaml topological_map:=WW_GF_2015_02_22"
 
 tmux select-window -t $SESSION:6
 tmux send-keys "DISPLAY=:0 roslaunch perception_people_launch people_tracker_robot.launch machine:=left-cortex user:=strands"
