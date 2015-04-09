@@ -1,6 +1,6 @@
 <launch>
-  <arg name="head_machine" default="left-cortex"/>
-  <arg name="head_user" default="strands"/>
+  <arg name="head_machine" default="localhost"/>
+  <arg name="head_user" default=""/>
   <arg name="waypoint_set" default="aaf_waypoints"/>
   <arg name="meta_name" default="waypoint_set"/>
   <arg name="collection_name" default="aaf_walking_group"/>
