@@ -19,7 +19,9 @@ from mongodb_media_server import MediaClient
 
 #WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q=Vienna,Austria"
 WEATHER_URL = "http://api.worldweatheronline.com/free/v2/weather.ashx?key=c2db94527204450837f1cf7b7772b&q=Vienna,Austria&num_of_days=2&tp=3&format=json"
-NEWS_URL = "http://feeds.bbci.co.uk/news/world/rss.xml"
+BBC_NEWS_URL = "http://feeds.bbci.co.uk/news/world/rss.xml"
+HENRY_BLOG_URL = "https://henrystrands.wordpress.com/feed/"
+NEWS_URL = "http://rss.orf.at/wien.xml"
 
 ### Templates
 TEMPLATE_DIR = roslib.packages.get_pkg_dir('info_terminal_gui') + '/www'
@@ -108,12 +110,17 @@ class Weather(object):
 class Events(object):
     def GET(self):
         app.publish_feedback(Events.id)
+        blog = xmltodict.parse(requests.get(HENRY_BLOG_URL).text)
+        blog_events = []
+        for n in blog['rss']['channel']['item']:
+            blog_events.append(n["content:encoded"])
+            
         news =  xmltodict.parse(requests.get(NEWS_URL).text)
         events =  []
-        for n in news['rss']['channel']['item']:
-            events.append((n["media:thumbnail"][0]["@url"],
+        for n in news['rdf:RDF']['item']:
+            events.append((None, 
                            "<h3>"+n["title"]+"</h3><h4>"+n["description"] +"</h4>"))
-        return render.events(events[:3])
+        return render.events(blog_events, events[:3])
 
 class GoAway(object):
     def GET(self):
