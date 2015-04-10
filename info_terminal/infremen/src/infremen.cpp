@@ -101,6 +101,8 @@ void reconfigureCallback(infremen::infremenConfig &config, uint32_t level)
 	interactionTimeout = config.interactionTimeout;
 	maxTaskNumber = config.maxTaskNumber;
 	taskDuration = config.taskDuration;
+	taskPriority = config.taskPriority;
+	debug = config.verbose;
 }
 
 //listen to battery and set forced charging if necessary
