@@ -108,7 +108,7 @@ class Events(object):
         app.publish_feedback(Events.id)
         blog = xmltodict.parse(requests.get(HENRY_BLOG_URL).text)
         blog_events = []
-	items = blog['rss']['channel']['item']
+        items = blog['rss']['channel']['item']
         if not type(items) is list:
             items = [items]		
         for n in items:
