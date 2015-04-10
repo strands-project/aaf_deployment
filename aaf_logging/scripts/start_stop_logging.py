@@ -19,14 +19,16 @@ class Logger():
 
     def start_logging(self):
         if not self.is_running():
+            rospy.loginfo("Starting logging nodes")
             self.running = False
             lg = launchGoal()
             lg.pkg = "aaf_logging"
             lg.launch_file = "loggers.launch.xml"
-            lg.monitored_topics.append("/logging_manager/log_stamped")
             self.launch_client.send_goal(lg, feedback_cb=self.feedback_cb)
-            while not self.is_running():
+            rospy.loginfo("Waiting...")
+            while not self.is_running() and not rospy.is_shutdown():
                 rospy.sleep(0.1)
+            rospy.loginfo(" ... started")
 
     def stop_logging(self):
         rospy.loginfo("Logging preemption requested")
