@@ -109,7 +109,7 @@ class Events(object):
         blog = xmltodict.parse(requests.get(HENRY_BLOG_URL).text)
         blog_events = []
         for n in blog['rss']['channel']['item']:
-            blog_events.append(n["content:encoded"])
+            blog_events.append("<h3>"+n["title"]+"</h3><h4>"+n["description"] +"</h4>")
 
         news = xmltodict.parse(requests.get(NEWS_URL).text)
         events = []
