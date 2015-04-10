@@ -56,7 +56,7 @@ tmux select-window -t $SESSION:9
 tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_routine.launch calendar:=henry.strands%40hanheide.net machine:=right-cortex user:=strands"
 
 tmux select-window -t $SESSION:10
-tmux send-keys "DISPLAY=:0 rosrun aaf_logging start_stop_logging.py"
+tmux send-keys "DISPLAY=:0 roslaunch aaf_logging logging.launch"
 
 tmux select-window -t $SESSION:11
 tmux send-keys "DISPLAY=:0  roslaunch info_terminal info_terminal.launch"
