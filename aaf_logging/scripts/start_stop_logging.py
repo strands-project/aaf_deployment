@@ -22,7 +22,7 @@ class Logger():
             self.running = False
             lg = launchGoal()
             lg.pkg = "aaf_logging"
-            lg.launch_file = "logging.launch"
+            lg.launch_file = "loggers.launch.xml"
             lg.monitored_topics.append("/logging_manager/log_stamped")
             self.launch_client.send_goal(lg, feedback_cb=self.feedback_cb)
             while not self.is_running():

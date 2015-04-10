@@ -53,7 +53,7 @@ tmux select-window -t $SESSION:8
 tmux send-keys "DISPLAY=:0 rosrun roslaunch_axserver roslaunch_server.py"
 
 tmux select-window -t $SESSION:9
-tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_routine.launch calendar:=henry.strands%40hanheide.net topological_map:=aaf"
+tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_routine.launch calendar:=henry.strands%40hanheide.net machine:=right-cortex user:=strands"
 
 tmux select-window -t $SESSION:10
 tmux send-keys "DISPLAY=:0 rosrun aaf_logging start_stop_logging.py"

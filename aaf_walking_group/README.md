@@ -98,6 +98,8 @@ walking_group:
 
 `walking_group_slow` and `walking_group_fast` is used to create two action servers with the corresponding name, therefore these names have to be unique. The number of action servers is dynamic and can be changed by adding another entry to this file. `group` is used to identify the specific set of waypoints from the datacentre (see above); `slow` or `fast` in our case. `start_location` is the waypoint to which the scheduler sends the robot at the beginning of the task and should be the same as the first waypoint in the list above; `WayPoint34` in our case. The `max_duration` is another argument for the schaduler which tells it how long the group task lasts in the worst case. If this time is reached it will assume that the task failed and preempt it. The `parameters` and `values` fields are used together to create the start-up parameters for the internally used launch file:
 
+ * `head_machine` _default="localhost"_: The machine to which the head_camera is connected. The social card reader and position of card will be started there.
+ * `head_user` _default=""_: The user of the machine to which the head_camera is connected. The social card reader and position of card will be started there.
  * `waypoint_set` _default="aaf_waypoints"_: The `dataset_name` used when inserting the yaml file using `insert_yaml.py`
  * `meta_name` _default="waypoint_set"_: The `meta_name` used when inserting the yaml file using `insert_yaml.py`
  * `collection_name` _default="aaf_walking_group"_: The `collection_name` used when inserting the yaml file using `insert_yaml.py`
