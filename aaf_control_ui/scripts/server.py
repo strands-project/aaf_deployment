@@ -7,6 +7,7 @@ import web
 import signal
 from os import chdir
 from os.path import join
+from strands_webserver.srv import CallButton
 
 ### Templates
 TEMPLATE_DIR = roslib.packages.get_pkg_dir('aaf_control_ui') + '/www'
@@ -27,6 +28,14 @@ class ControlServer(web.application):
         )
         web.application.__init__(self, urls, globals())
         signal.signal(signal.SIGINT, self.signal_handler)
+        self.demand_task_srv = rospy.Service('demand_task',
+                                             CallButton,
+                                             self.demand_task)
+
+    def demands_task(self, req):
+        arg = req.name
+        rospy.loginfo("button clicked: " + arg)
+        return
 
     def run(self, port=8027, *middleware):
         func = self.wsgifunc(*middleware)
