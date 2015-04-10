@@ -44,7 +44,8 @@ class StartBellbot(AbstractTaskServer):
         "{'second': '"+str(self.text)+"'}]}"
         task = super(StartBellbot, self).create(req)
         if task.start_node_id == '':
-            task.start_node_id = 'Rezeption'
+            task.start_node_id = str(self.start)
+            task.end_node_id = task.start_node_id
         if task.max_duration.secs == 0.0:
             task.max_duration.secs = 3600
         if task.priority == 0:
