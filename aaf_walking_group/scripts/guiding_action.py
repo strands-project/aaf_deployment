@@ -8,6 +8,7 @@ from aaf_walking_group.msg import EmptyAction, EmptyActionGoal
 import topological_navigation.msg
 from std_msgs.msg import String
 from strands_navigation_msgs.srv import PauseResumeNav
+from sound_player_server.srv import PlaySoundService
 from nav_msgs.msg import Odometry
 
 
@@ -60,12 +61,8 @@ class GuidingServer():
         self.pause = 0
         self.begin = 0
         self.counter = 0
+        self.distance = 5.0
 
-        self.client_walking_interface = actionlib.SimpleActionClient(
-            'walking_interface_server',
-            EmptyAction
-        )
-        self.client_walking_interface.wait_for_server()
         rospy.loginfo(" ... starting "+name)
         self.server.start()
         rospy.loginfo(" ... started "+name)
@@ -73,16 +70,18 @@ class GuidingServer():
     def execute(self, goal):
         self.begin = 0
         self.pause = 0
+        self.distance = goal.distance
         self.client_walking_interface.send_goal(EmptyActionGoal())
         navgoal = topological_navigation.msg.GotoNodeGoal()
         navgoal.target = goal.waypoint
         self.client.send_goal(navgoal)
 
         self.client.wait_for_result()
-        ps = self.client.get_result()
-        print ps
         self.client_walking_interface.cancel_goal()
-        self.server.set_succeeded()
+        if not self.server.is_preempt_requested():
+            self.server.set_succeeded()
+        else:
+            self.server.set_preempted()
 
 
     def preempt_callback(self):
@@ -107,6 +106,7 @@ class GuidingServer():
             if data.data == 'near':
                 self.odom_subscriber = None
                 self.client_walking_interface.cancel_goal()
+                rospy.loginfo("Therapist is close enough. Show continue button")
                 self.empty_client.send_goal_and_wait(EmptyActionGoal())
                 try:
                     pause_service = rospy.ServiceProxy(
@@ -115,9 +115,11 @@ class GuidingServer():
                     )
                     pause_service(0)
                     self.pause = 0
-                    print "the guy is near, fear him"
+                    s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+                    s.wait_for_service()
+                    s("jingle_patient_continue.mp3")
                 except rospy.ServiceException, e:
-                    print "Service call failed: %s" % e
+                    rospy.logwarn("Service call failed: %s" % e)
                 self.client_walking_interface.send_goal(EmptyActionGoal())
                 self.odom_subscriber = rospy.Subscriber("odom", Odometry,
                                                         self.odom_callback)
@@ -132,9 +134,9 @@ class GuidingServer():
 
                 lenght = numpy.sqrt(x*x + y*y)
 
-                if lenght >= 5.0:
+                if lenght >= self.distance:
                     # self.odom_subscriber.unregister()
-                    print "reached 2.0 meters"
+                    rospy.loginfo("Reached %f meters" % self.distance)
                     try:
                         pause_service = rospy.ServiceProxy(
                             '/monitored_navigation/pause_nav',
@@ -143,9 +145,12 @@ class GuidingServer():
                         pause_service(1)
                         self.pause = 1
                         self.begin = 1
-                        print "pause"
+                        rospy.loginfo("Navigation paused")
+                        s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+                        s.wait_for_service()
+                        s("jingle_stop.mp3")
                     except rospy.ServiceException, e:
-                        print "Service call failed: %s" % e
+                        rospy.logwarn("Service call failed: %s" % e)
                     # self.odom_subscriber = rospy.Subscriber("odom", Odometry, self.odom_callback)
                 self.counter = 0
         else:
@@ -154,8 +159,8 @@ class GuidingServer():
             self.begin = 0
 
         self.counter += 1
-        
-        
+
+
 
 if __name__ == '__main__':
     rospy.init_node('guiding_server')

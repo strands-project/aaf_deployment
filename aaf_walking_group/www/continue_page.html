@@ -4,23 +4,13 @@
     <meta content="text/html; charset=windows-1252" http-equiv="content-type">
     <link rel="stylesheet" type="text/css" href="walking_group.css">
     <title></title>
-    <script src="js/jquery.js"></script>
-      <script src="js/display.js"></script>
-      <script type="text/javascript" src="js/jquery-ui.js"></script>
-      <script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
-      <script src="roslibjs/build/roslib.js"></script>
-      <script src="ros2djs/include/EaselJS/easeljs.js"></script>
-      <script src="ros2djs/build/ros2d.js"></script>
-      <script src="ros3djs/include/threejs/three.js"></script>
-      <script src="ros3djs/include/ColladaAnimationCompress/ColladaLoader2.js"></script>
-      <script src="ros3djs/build/ros3d.min.js"></script>
-      <script src="nav2djs/build/nav2d.js"></script>
-      <script src="bootstrap/dist/js/bootstrap.js"></script>
+    <script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
+    <script src="roslibjs/build/roslib.js"></script>
   </head>
-  <body style="background-image:url(img/strandsbg.png); width: 1024px; height: 768px; background-repeat:no-repeat;">
+  <body style="width: 1000px; height: 750px; background-repeat:no-repeat;">
   
-    <button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/wait_for_participant/button', serviceType : 'std_srvs/Empty'}); var request_button = new ROSLIB.ServiceRequest({});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')" class="button-style start-button"
-            style="position: absolute; left: 50px; top: 50px; width: 924px; height: 668px;"></button>
+    <button type="button" onclick="javascript:cont()" class="button-style weiter-up-button"
+            style="position: absolute; left: 0px; top: 0px; width: 1000px; height: 750px;"></button>
     
     <script type="text/javascript">
                     
@@ -31,6 +21,16 @@
               // url : '<dynamic>bridge_server</dynamic>'
               url : 'ws://'+hostname+':9090'
           });
+          
+          function cont() {
+				console.log('Called cont')
+				var service_button = new ROSLIB.Service({
+        			ros : ros, name : '/wait_for_participant/button', serviceType : 'std_srvs/Empty'
+        		}); 
+        		var request_button = new ROSLIB.ServiceRequest({});  
+        		service_button.callService(
+        			request_button, function(result) {});          
+        } 
 
     </script>    
   </body>

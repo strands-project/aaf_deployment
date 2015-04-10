@@ -2,22 +2,34 @@ cmake_minimum_required(VERSION 2.8.3)
 project(aaf_walking_group)
 
 find_package(catkin REQUIRED COMPONENTS
+  aaf_waypoint_sounds
   actionlib
   actionlib_msgs
-  music_player
+  dynamic_reconfigure
+  flir_pantilt_d46
   geometry_msgs
   message_generation
+  message_filters
+  mongodb_media_server
   mongodb_store
+  move_base_msgs
+  music_player
   nav_msgs
   roscpp
+  roslaunch_axserver
   roslib
   rospy
   smach
   smach_ros
+  sensor_msgs
+  sound_player_server
   std_msgs
   std_srvs
+  strands_executive_msgs
+  strands_gazing
   strands_navigation_msgs
   strands_webserver
+  tf
   topological_navigation
 )
 
@@ -27,6 +39,11 @@ catkin_python_setup()
 ## Declare ROS messages, services and actions ##
 ################################################
 
+add_service_files(
+  FILES
+  GetMediaId.srv
+)
+
 add_action_files(
   DIRECTORY action
   FILES
@@ -34,6 +51,7 @@ add_action_files(
   Empty.action
   Guiding.action
   StateMachine.action
+  WalkingGroup.action
 )
 
 generate_messages(
@@ -61,7 +79,9 @@ install(PROGRAMS
   scripts/insert_yaml.py
   scripts/interface_demo.py
   scripts/interface_server.py
+  scripts/media_server.py
   scripts/positionOfCard.py
+  scripts/start_walking_group.py
   scripts/wait_for_participant.py
   scripts/walking_gui_demo.py
   scripts/walking_gui_server.py
@@ -73,6 +93,10 @@ install(DIRECTORY launch
 )
 
 install(DIRECTORY conf
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+install(DIRECTORY etc
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 

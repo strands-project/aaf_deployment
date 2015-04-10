@@ -3,15 +3,18 @@
 	<arg name="user" default="" />
 
 	<arg name="calendar" default="henry.strands%40hanheide.net" />
+	<arg name="topological_map"/>
 
 
     <!-- NOW when launching in a remote mode it will need the ROS_ENV_LOADER set if not it will leave it empty -->
     <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="true" />
 
-    <include file="$(find task_executor)/task-scheduler.launch" />
+    <include file="$(find task_executor)/task-scheduler-mdp.launch">
+        <arg name="topological_map" value="$(arg topological_map)"/>
+    </include>
 
 	<node pkg="gcal_routine" type="gcal_routine_node.py" name="gcal_routine" output="screen">
-		<param name="calendar" value="$(arg calendar)" />
+		<param name="calendar" value="$(arg calendar)" type="string"/>
 	</node>
 
 </launch>

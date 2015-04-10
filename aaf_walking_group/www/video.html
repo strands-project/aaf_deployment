@@ -1,47 +1,121 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
-    <title></title>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Christian Dondrup" >
+	 <link rel="stylesheet" type="text/css" href="walking_group.css">
+    <title>Images</title>
+    <script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
+    <script src="roslibjs/build/roslib.js"></script>
   </head>
-  <body style="background-image:url(img/strandsbg.png); width: 1024px; height: 768px; background-repeat:no-repeat;">
+  <body onload="setVideo(0)" style="width: 1000px; height: 750px; background-repeat:no-repeat;">
   
   <!-- Go back to the main page -->
-  <a href="entertainment.html"><img style="position: absolute; left: 916px; top: 661px; width: 100px; height: 85px;"
-        title="Auswahl" alt="Auswahl" src="img/button_liste_notext.png"></a>
+  <a class="button-style liste-button" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
   
   <div id="videoDiv" style="position: absolute; left: 156px; top: 40px; width:711px; height: 400px;">
-  <video id="videoplayer" width="711px" height="400px">
-    <source src="mov/bbb.ogg" type="video/ogg">
-    Your browser does not support HTML5 video.
-  </video>
+	   <video id="videoplayer" width="640" height="480" >
+			<source id="mp4" src="" />
+			<source id="ogg" src="" />
+			<source id="webm" src="" />
+			<em>Sorry, your browser doesn't support HTML5 video.</em>
+		</video>
   </div>
   
-  <div id="playDiv">
-    <img style="position: absolute; left: 362px; top: 473px; width: 300px; height: 255px;"
-        title="Musik" alt="Musik" src="img/button_stopp.png" onclick="javascript:playPause()">
-  </div>
-  <div id="pauseDiv">
-    <img style="position: absolute; left: 362px; top: 473px; width: 300px; height: 255px;"
-        title="Musik" alt="Musik" src="img/button_start.png" onclick="javascript:playPause()">
-  </div>
-  
-	<script> 
-	var myVideo = document.getElementById("videoplayer"); 
-	var playDiv = document.getElementById("playDiv"); 
-	var pauseDiv = document.getElementById("pauseDiv"); 
+  <div id="prevDiv">
+		<button type="button" onclick="javascript:prev()"
+            class="button-style back-button" style="position: absolute; left: 80px; top: 480px; width: 300px; height: 255px;"></button>
+	</div>
 
-	function playPause() { 
-		if (myVideo.paused) {
-		    myVideo.play(); 
-		    playDiv.style.display = 'block';
-		    pauseDiv.style.display = 'none';
-		} else {
-		    myVideo.pause(); 
-		    playDiv.style.display = 'none';
-		    pauseDiv.style.display = 'block';
+	<div id="pauseDiv">
+      <button type="button" onclick="javascript:playPause()"
+            class="button-style stopp-button" style="position: absolute; left: 350px; top: 480px; width: 300px; height: 255px;"></button>
+	</div>
+	<div id="playDiv">
+      <button type="button" onclick="javascript:playPause()"
+            class="button-style start-button" style="position: absolute; left: 350px; top: 480px; width: 300px; height: 255px;"></button>
+	</div>
+
+	<div id="nextDiv">
+      <button type="button" onclick="javascript:next()"
+            class="button-style next-button" style="position: absolute; left: 620px; top: 480px; width: 300px; height: 255px;"></button>
+	</div>
+
+  <script>
+		var hostname = location.hostname;
+		var myVideo = document.getElementById("videoplayer"); 
+		var playDiv = document.getElementById("playDiv"); 
+		var pauseDiv = document.getElementById("pauseDiv"); 
+		
+      var ros = new ROSLIB.Ros({
+		  url : 'ws://'+hostname+':9090'
+		});
+	
+		var playDiv = document.getElementById("playDiv"); 
+		var pauseDiv = document.getElementById("pauseDiv");
+		var playing = false;
+      showHideButtons();
+      
+      function showHideButtons() {
+      	if (playing == true) {
+				playDiv.style.display = 'none';
+				pauseDiv.style.display = 'block';
+
+			} else {
+				playDiv.style.display = 'block';
+				pauseDiv.style.display = 'none';
+			}
+      }
+
+		function prev() {
+			myVideo.pause();
+			playing = false;
+			setVideo(2);
+			playPause()
+         showHideButtons();
+
+			console.log('prev() called');
+		} 
+
+		function next() {
+			myVideo.pause();
+			playing = false;
+			setVideo(1);
+			playPause()
+         showHideButtons();
+            
+			console.log('next() called');
 		}
-	}
+
+		function setVideo(actionId) {
+				console.log('Set image called')
+				var service_button = new ROSLIB.Service({
+        			ros : ros, name : '/aaf_walking_group/video_server/get_id', serviceType : 'aaf_walking_group/GetMediaId'
+        		}); 
+        		var request_button = new ROSLIB.ServiceRequest({action : actionId});  
+        		service_button.callService(
+        			request_button, function(result) {
+						document.getElementById('mp4').src=("http://"+hostname+":8027/get_media_by_name/"+result.id);
+						document.getElementById('ogg').src=("http://"+hostname+":8027/get_media_by_name/"+result.id);
+						document.getElementById('webm').src=("http://"+hostname+":8027/get_media_by_name/"+result.id);
+						document.getElementById("videoplayer").load();
+        				console.log(result.id); 
+        			});            
+        }  
+		
+		function playPause() { 
+			if (myVideo.paused) {
+			    myVideo.play(); 
+			    playing = true;
+	          showHideButtons();
+			} else {
+			    myVideo.pause(); 
+			    playing = false;
+	          showHideButtons();
+			}
+		}
 	</script> 
   </body>
 </html>

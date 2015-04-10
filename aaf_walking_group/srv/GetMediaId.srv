@@ -1,0 +1,6 @@
+uint8 CURRENT=0
+uint8 NEXT=1
+uint8 PREVIOUS=2
+uint8 action
+---
+string id

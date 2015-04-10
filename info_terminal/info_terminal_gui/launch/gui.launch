@@ -1,0 +1,7 @@
+<launch>
+  <node name="info_terminal_gui" pkg="info_terminal_gui" 
+		type="info_terminal.py" output="screen">
+	<param name="language" type="string" value="DE"/>
+	<param name="port" type="int" value="8042"/>
+  </node>
+</launch>

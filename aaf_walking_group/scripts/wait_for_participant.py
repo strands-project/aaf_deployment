@@ -26,19 +26,17 @@ class WaitForParticipant(object):
         rospy.loginfo(" ... started " + name)
 
     def execute(self, goal):
-        print "Called"
         self.pressed = False
         strands_webserver.client_utils.display_relative_page(self.display_no, "continue_page.html")
         while not self.pressed and not rospy.is_shutdown() and not self._as.is_preempt_requested():
-            pass
-        print "Leave"
+            rospy.sleep(0.1)
         if not self._as.is_preempt_requested():
             self._as.set_succeeded()
         else:
             self._as.set_preempted()
 
     def button(self, req):
-        print "Pressed"
+        rospy.loginfo("Continue button pressed")
         self.pressed = True
         return EmptyResponse()
 

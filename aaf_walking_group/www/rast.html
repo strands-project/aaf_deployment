@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <link rel="stylesheet" type="text/css" href="walking_group.css">
+    <title></title>
+    <script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
+    <script src="roslibjs/build/roslib.js"></script>
+  </head>
+  <body style="width: 1000px; height: 750px; background-repeat:no-repeat;">
+  
+    <button type="button" onclick="javascript:cont()" 
+    			class="button-style weiter-up-button"
+            style="position: absolute; left: 0px; top: 187px; width: 500px; height: 375px;"></button>
+    <button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/aaf_walking_group/rest/stay', serviceType : 'std_srvs/Empty'}); var request_button = new ROSLIB.ServiceRequest({});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')" 
+    			class="button-style rast-button"
+            style="position: absolute; left: 500px; top: 187px; width: 500px; height: 375px;"></button>
+    
+    <script type="text/javascript">
+                    
+          var hostname = location.hostname;
+
+          var ros = new ROSLIB.Ros({
+             // this is filled by the ros node when writing this page to the web server, but doesn't currently work
+              // url : '<dynamic>bridge_server</dynamic>'
+              url : 'ws://'+hostname+':9090'
+          });
+          
+          function cont() {
+				console.log('Called cont')
+				var service_button = new ROSLIB.Service({
+        			ros : ros, name : '/aaf_walking_group/rest/cont', serviceType : 'std_srvs/Empty'
+        		}); 
+        		var request_button = new ROSLIB.ServiceRequest({});  
+        		service_button.callService(
+        			request_button, function(result) {});       
+        } 
+
+    </script>    
+  </body>
+</html>

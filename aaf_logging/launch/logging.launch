@@ -1,0 +1,37 @@
+<launch>
+    <arg name="white_list_file" default="$(find aaf_logging)/config/white_list_aaf.yaml" />
+    <arg name="current_node_topic" default="/current_node"/>
+    <arg name="closest_node_topic" default="/closest_node"/>
+    <arg name="use_closest_node" default="true"/>
+    <arg name="edge_topic" default="/current_edge"/>
+    <arg name="check_topic_rate" default="1"/>
+    <arg name="publishing_rate" default="30"/>
+    <arg name="bool_publisher_topic" default="/logging_manager/log"/>
+    <arg name="bool_stamped_publisher_topic" default="/logging_manager/log_stamped"/>
+
+    <arg name="machine" default="localhost" />
+    <arg name="user" default="" />
+
+    <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="true"/>
+
+    <include file="$(find topological_logging_manager)/launch/manager.launch">
+        <arg name="white_list_file" value="$(arg white_list_file)"/>
+        <arg name="current_node_topic" value="$(arg current_node_topic)"/>
+        <arg name="closest_node_topic" value="$(arg closest_node_topic)"/>
+        <arg name="use_closest_node" value="$(arg use_closest_node)"/>
+        <arg name="edge_topic" value="$(arg edge_topic)"/>
+        <arg name="check_topic_rate" value="$(arg check_topic_rate)" />
+        <arg name="publishing_rate" value="$(arg publishing_rate)"/>
+        <arg name="bool_publisher_topic" value="$(arg bool_publisher_topic)"/>
+        <arg name="bool_stamped_publisher_topic" value="$(arg bool_stamped_publisher_topic)"/>
+    </include>
+
+    <include file="$(find vision_people_logging)/launch/logging_ubd.launch">
+        <arg name="manager" value="$(arg bool_stamped_publisher_topic)"/>
+    </include>
+
+    <include file="$(find bayes_people_tracker_logging)/launch/logging.launch">
+        <arg name="manager_topic" value=""/>
+    </include>
+
+</launch>
