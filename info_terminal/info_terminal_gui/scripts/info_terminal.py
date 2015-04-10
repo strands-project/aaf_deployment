@@ -108,15 +108,21 @@ class Events(object):
         app.publish_feedback(Events.id)
         blog = xmltodict.parse(requests.get(HENRY_BLOG_URL).text)
         blog_events = []
-        for n in blog['rss']['channel']['item']:
+	items = blog['rss']['channel']['item']
+        if not type(items) is list:
+            items = [items]		
+        for n in items:
             blog_events.append("<h3>"+n["title"]+"</h3><h4>"+n["description"] +"</h4>")
 
         news = xmltodict.parse(requests.get(NEWS_URL).text)
         events = []
-        for n in news['rdf:RDF']['item']:
+        items = news['rdf:RDF']['item']
+        if not type(items) is list:
+            items = [items]
+        for n in items:
             events.append((None,
                            "<h3>"+n["title"]+"</h3><h4>"+n["description"] +"</h4>"))
-        return render.events(blog_events, events[:3])
+        return render.events(blog_events[:3], events[:3])
 
 
 class GoAway(object):
