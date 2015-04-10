@@ -9,13 +9,17 @@ from actionlib_msgs.msg import GoalStatus
 import bellbot_action_server.msg
 from roslaunch_axserver.msg import launchAction, launchGoal
 from strands_executive_msgs.abstract_task_server import AbstractTaskServer
-#from std_msgs.msg import Bool
+
 
 class StartBellbot(AbstractTaskServer):
     TOPIC = "/bellbot_action_server/status"
     def __init__(self, name):
         rospy.loginfo("Starting node: %s" % name)
         self.started = False
+        self.mode = rospy.get_param("~mode", 1)
+        self.start = rospy.get_param("~start_waypoint", "Rezeption")
+        self.end = rospy.get_param("~goal", "Rezeption")
+        self.text = rospy.get_param("~text", "Henry im Haus der Barmherzigkeit")
 
         rospy.loginfo("Creating launch client...")
         self.launch_client = actionlib.SimpleActionClient("/launchServer", launchAction)
@@ -34,22 +38,18 @@ class StartBellbot(AbstractTaskServer):
         self.instance_running = msg.data
 
     def create(self, req):
+        req.yaml = "{arguments: [{'first': '____int____', 'second': '"+str(self.mode)+"'}, "+\
+        "{'second': '"+str(self.start)+"'}, "+\
+        "{'second': '"+str(self.end)+"'}, "+\
+        "{'second': '"+str(self.text)+"'}]}"
         task = super(StartBellbot, self).create(req)
         if task.start_node_id == '':
             task.start_node_id = 'Rezeption'
-        task.starting_waypoint_name = task.start_node_id
         if task.max_duration.secs == 0.0:
             task.max_duration.secs = 3600
         if task.priority == 0:
             task.priority = 2
-        if task.mode == 0 :
-            task.mode = 1
-        if task.preselected_goal == '':
-            task.preselected_goal = task.start_node_id
-        task.end_node_id = task.preselected_goal
-        if task.text == '':
-            task.text = 'Henry im Haus der Barmherzigkeit'
-        
+
         return task
 
     def execute(self, goal):
@@ -57,7 +57,7 @@ class StartBellbot(AbstractTaskServer):
         lg = launchGoal()
         lg.pkg = "aaf_bellbot"
         lg.launch_file = "aaf_bellbot.launch"
-        
+
         lg.monitored_topics.append(self.TOPIC)
         self.launch_client.send_goal(lg, feedback_cb=self.feedback_cb)
         rospy.loginfo("Wait for launch file to start ...")
@@ -75,8 +75,8 @@ class StartBellbot(AbstractTaskServer):
             self.bellbot_client.wait_for_server()
             rospy.loginfo(" ... done")
             #sg = bellbot_action_server.msg.bellbotGoal()
-            #sg         
-            
+            #sg
+
             rospy.loginfo("Starting bellbot...")
             self.bellbot_client.send_goal(goal)
             while self.bellbot_client.get_state() == GoalStatus.PENDING and not self.server.is_preempt_requested() and not rospy.is_shutdown():
@@ -86,7 +86,7 @@ class StartBellbot(AbstractTaskServer):
             state = self.bellbot_client.get_state()
 
         rospy.loginfo("Bellbot finished")
-        
+
         if state == GoalStatus.SUCCEEDED:
             self.launch_client.cancel_goal()
             self.server.set_succeeded()
@@ -103,10 +103,10 @@ class StartBellbot(AbstractTaskServer):
         rospy.loginfo(" ... stopping Bellbot")
         if self.bellbot_client:
             self.bellbot_client.cancel_all_goals()
-            rospy.loginfo(" ... waiting for Bellbot to die")
-            # Wait until state machine is dead, so everything is reset bevore killing the components.
-            while not self.bellbot_client.get_state() == GoalStatus.PREEMPTED and not rospy.is_shutdown():
-                rospy.sleep(0.1)
+            # Making the bellbot "preemptable"
+            # rospy.loginfo(" ... waiting for Bellbot to die")
+            # while not self.bellbot_client.get_state() == GoalStatus.PREEMPTED and not rospy.is_shutdown():
+                # rospy.sleep(0.1)
         rospy.loginfo(" ... stopping launch server")
         self.launch_client.cancel_goal()
         rospy.loginfo(" ... preempted")
