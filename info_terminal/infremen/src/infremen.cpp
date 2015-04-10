@@ -36,7 +36,6 @@ using namespace std;
 //FIXED parameters
 int windowDuration = 300;
 int rescheduleInterval = 86400;
-bool debug = true;
 
 //standard parameters
 string collectionName;
@@ -49,6 +48,8 @@ int32_t   minimalBatteryLevelTime = 0;
 int interactionTimeout = 30;
 int maxTaskNumber = 5;
 int taskDuration = 180;	
+int taskPriority = 1;	
+bool debug = false;
 
 //ROS communication
 ros::NodeHandle *n;
@@ -126,7 +127,7 @@ void interacted(const std_msgs::Int32::ConstPtr& msg)
 
 	time_t timeInfo = currentTime.sec;
 	strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
-	ROS_INFO("Infremen: Screen %i clicked at %s close to %s on %s.",msg->data,nodeName.c_str(),closestNode.c_str(),testTime);
+	if (debug) ROS_INFO("Infremen: Screen %i clicked at %s close to %s on %s.",msg->data,nodeName.c_str(),closestNode.c_str(),testTime);
 
 	infremen::AtomicInteraction lastInteraction;
 
@@ -187,7 +188,7 @@ void getClosestNode()
 	if (nodeListClient.call(srv))
 	{
 		if (srv.response.nodes.size() > 0 ) nodeName = srv.response.nodes[0];
-		ROS_INFO("The closest InfoTerminal node is %s.",nodeName.c_str());
+		if (debug) ROS_INFO("The closest InfoTerminal node is %s.",nodeName.c_str());
 	}
 	else
 	{
@@ -384,6 +385,7 @@ int createTask(int slot)
 		strands_executive_msgs::Task task=srv.response.task;
 		task.start_node_id = frelementSet.frelements[nodes[slot]]->id;
 		task.end_node_id = frelementSet.frelements[nodes[slot]]->id;
+		task.priority = taskPriority;
 
   		task.start_after =  ros::Time(timeSlots[slot]+5,0);
 		task.end_before = ros::Time(timeSlots[slot]+windowDuration - 2,0);
@@ -488,7 +490,7 @@ int main(int argc,char* argv[])
 	//determine ROS time to local dignight offset - used to replan at midnight
 	tzset();
 	timeOffset = timezone+daylight*3600;
-	ROS_DEBUG("Local time offset %i",timeOffset);
+	if (debug) ROS_DEBUG("Local time offset %i",timeOffset);
 
 	//initialize ros and datacentre
 	ros::init(argc, argv, "infremen");
@@ -497,6 +499,8 @@ int main(int argc,char* argv[])
 	//load parameters
 	n->param<std::string>("/infremen/collectionName", collectionName, "WharfTest2");
 	n->param<std::string>("/infremen/scheduleDirectory", scheduleDirectory, "/localhome/strands/schedules");
+	n->param("/infremen/taskPriority", taskPriority,1);
+	n->param("/infremen/verbose", debug,false);
 	//debug prints
 	printAllInteractions(-1);
 
@@ -554,7 +558,7 @@ int main(int argc,char* argv[])
 	{
 		ros::spinOnce();
 		sleep(1);
-		ROS_INFO("Infremen tasks: %i %i",numCurrentTasks,maxTaskNumber);
+		if (debug) ROS_INFO("Infremen tasks: %i %i",numCurrentTasks,maxTaskNumber);
 		currentTimeSlot = getNextTimeSlot(0);
 		if (currentTimeSlot!=lastTimeSlot){
 			modifyNextTask(currentTimeSlot);
