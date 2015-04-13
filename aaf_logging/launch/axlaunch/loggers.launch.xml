@@ -1,8 +1,11 @@
 <launch>
     <arg name="bool_stamped_publisher_topic" default="/logging_manager/log_stamped"/>
-
     <arg name="machine" default="localhost" />
     <arg name="user" default="" />
+    <!-- the logging directory to put the videos in -->
+    <arg name="logging_dir" default="/tmp" />
+    <!-- the logging tag used to identified different logging files -->
+    <arg name="logging_tag" default="logging" />
 
     <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="true"/>
 
@@ -17,5 +20,52 @@
         <arg name="user" value="$(arg user)"/>
         <arg name="manager_topic" value=""/>
     </include>
+
+    <!-- record the interaction camera -->
+    <group ns="interaction_camera">
+        <node name="interaction_camera" pkg="usb_cam" type="usb_cam_node">
+            <param name="camera_frame_id" value="interaction_camera" />
+        </node>
+        <node name="throttle_image" 
+            pkg="topic_tools" type="throttle" 
+            args="messages interaction_camera/image 1 throttled/image" />
+        <node name="throttle_camera_info"
+            pkg="topic_tools" type="throttle"
+            args="messages camera_info 1 throttled/camera_info" />
+        <node name="image_superimposer"
+            pkg="image_branding" type="image_superimposer.py">
+            <remap from="image" to="throttled/image_annotated" />
+            <remap from="/head_xtion/rgb/image_color" to="throttled/image" />
+        </node>
+        <node name="video_recorder" pkg="image_view" type="video_recorder"> 
+            <remap from="image" to="throttled/image_annotated" />
+            <remap from="camera_info" to="throttled/camera_info" />
+            <param name="fps" value="1" />
+            <param name="codec" value="fmp4" />
+            <param name="filename" value="$(arg logging_dir)/interaction_camera_$(arg logging_tag).avi" />
+        </node>
+    </group>
+
+    <group ns="head_camera">
+        <node name="throttle_image" 
+            pkg="topic_tools" type="throttle" 
+            args="messages /head_xtion/rgb/image_color 1 throttled/image" />
+        <node name="throttle_camera_info"
+            pkg="topic_tools" type="throttle"
+            args="messages camera_info 1 throttled/camera_info" />
+        <node name="image_superimposer"
+            pkg="image_branding" type="image_superimposer.py">
+            <remap from="image" to="throttled/image_annotated" />
+            <remap from="/head_xtion/rgb/image_color" to="throttled/image" />
+        </node>
+        <node name="video_recorder" pkg="image_view" type="video_recorder"> 
+            <remap from="image" to="throttled/image_annotated" />
+            <remap from="camera_info" to="throttled/camera_info" />
+            <param name="fps" value="1" />
+            <param name="codec" value="fmp4" />
+            <param name="filename" value="$(arg logging_dir)/head_camera_$(arg logging_tag).avi" />
+        </node>
+    </group>
+
 
 </launch>
