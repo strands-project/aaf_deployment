@@ -552,9 +552,9 @@ int main(int argc,char* argv[])
 	taskStart = n->serviceClient<strands_executive_msgs::SetExecutionStatus>("/task_executor/set_execution_status");
 
 	//TODO for testing only - remove later 
-	strands_executive_msgs::SetExecutionStatus runExec;
+	/*strands_executive_msgs::SetExecutionStatus runExec;
 	runExec.request.status = true;
-	if (taskStart.call(runExec)) ROS_INFO("Task execution enabled.");
+	if (taskStart.call(runExec)) ROS_INFO("Task execution enabled.");*/
 
 	while (ros::ok())
 	{
