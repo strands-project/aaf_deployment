@@ -8,6 +8,7 @@
     <arg name="publishing_rate" default="30"/>
     <arg name="bool_publisher_topic" default="/logging_manager/log"/>
     <arg name="bool_stamped_publisher_topic" default="/logging_manager/log_stamped"/>
+    <rosparam command="load" file="$(find aaf_logging)/config/logged_topics.yaml"/>
 
     <arg name="machine" default="localhost" />
     <arg name="user" default="" />
@@ -29,5 +30,11 @@
         <arg name="bool_publisher_topic" value="$(arg bool_publisher_topic)"/>
         <arg name="bool_stamped_publisher_topic" value="$(arg bool_stamped_publisher_topic)"/>
     </include>
+
+    <node pkg="aaf_logging" type="filter_rosout.py" name="filter_rosout" output="screen" respawn="true"/>
+
+    <node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger" output="screen" respawn="true" args="--nodename-prefix=aaf_logger $(arg logged_topics)">
+        <arg name="machine" value="$(arg machine)"/>
+    </node>
 
 </launch>
