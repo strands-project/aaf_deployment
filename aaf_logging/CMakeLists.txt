@@ -38,6 +38,12 @@ catkin_package()
 ## Install ##
 #############
 
+install(PROGRAMS
+  scripts/start_stop_logging.py
+  scripts/filter_rosout.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
 install(DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
