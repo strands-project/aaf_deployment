@@ -2,10 +2,12 @@
 <launch>
   <arg name="with_chest_xtion" default="true"/>
   <arg name="chest_xtion_name" default="chest_xtion"/>
-  <arg name="chest_xtion_machine" default="right-cortex"/>
+  <arg name="chest_xtion_machine" default="werner-right-cortex"/>
   <arg name="chest_xtion_user" default="strands"/>
+  <arg name="head_xtion_machine" default="werner-left-cortex"/>
+  <arg name="head_xtion_user" default="strands"/>
 
-  <arg name="topo_nav_machine" default="right-cortex"/>
+  <arg name="topo_nav_machine" default="werner-right-cortex"/>
   <arg name="topo_nav_user" default="strands"/>
 
   <arg name="map"/>
@@ -16,7 +18,7 @@
   <arg name="mon_nav_config_file" default="$(find strands_recovery_behaviours)/config/monitored_nav_config.yaml"/>
   <arg name="z_stair_threshold" default="0.12"/>
   <arg name="z_obstacle_threshold" default="0.15"/>
-  <arg name="with_head_xtion" default="false"/>
+  <arg name="with_head_xtion" default="true"/>
   <arg name="with_human_aware" default="true"/>
 
   <arg name="with_site_movebase_params" default="false"/>
@@ -45,6 +47,9 @@
     <arg name="chest_xtion_machine" value="$(arg chest_xtion_machine)"/>
     <arg name="chest_xtion_user" value="$(arg chest_xtion_user)"/>
 
+    <arg name="head_xtion_machine" value="$(arg head_xtion_machine)"/>
+    <arg name="head_xtion_user" value="$(arg head_xtion_user)"/>
+    
     <arg name="map" value="$(arg map)"/>
     <arg name="with_no_go_map" value="$(arg with_no_go_map)"/>
     <arg name="with_mux" value="$(arg with_mux)"/>
