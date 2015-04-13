@@ -10,7 +10,7 @@ class RosoutFilter():
         rospy.loginfo("Starting aaf logging launcher")
 
         # set level below which we filter
-        self.level = rospy.get_param('~level', 3)
+        self.level = rospy.get_param('~level', 4) # Log.WARN = 4
 
         # register republish topic
         self.logger_pub = rospy.Publisher("/rosout_filtered", Log, queue_size=100)
@@ -20,7 +20,7 @@ class RosoutFilter():
 
     def logger_cb(self, logmsg):
         # if below level, don't log
-        if logmsg.level < level:
+        if logmsg.level < self.level:
             return
         # otherwise, republish into /rosout_filtered
         self.logger_pub.publish(logmsg)
