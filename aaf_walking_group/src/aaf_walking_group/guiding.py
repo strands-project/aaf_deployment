@@ -108,24 +108,29 @@ class Guiding(smach.State):
             userdata.current_waypoint = self.previous_waypoint
             return 'key_card'
         else:
-            try:
-                s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
-                s.wait_for_service()
-                s("jingle_waypoint_reached.mp3")
-            except rospy.ServiceException, e:
-                rospy.logwarn("Service call failed: %s" % e)
-
             if state == GoalStatus.SUCCEEDED and not goal.waypoint == self.last_waypoint:
                 userdata.current_waypoint = deepcopy(userdata.waypoint)
                 if not userdata.waypoint in self.resting_points and not next_waypoint == "":
                     userdata.waypoint = next_waypoint
                     return 'continue'
                 elif userdata.waypoint in self.resting_points:
+                    try:
+                        s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+                        s.wait_for_service()
+                        s("jingle_waypoint_reached.mp3")
+                    except rospy.ServiceException, e:
+                        rospy.logwarn("Service call failed: %s" % e)
                     return 'reached_point'
                 else:
                     rospy.logfatal("Unknown state transition from GUIDING: next waypoint: %s" % next_waypoint)
             elif state == GoalStatus.SUCCEEDED and goal.waypoint == self.last_waypoint:
                 userdata.current_waypoint = deepcopy(userdata.waypoint)
+                try:
+                    s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+                    s.wait_for_service()
+                    s("jingle_waypoint_reached.mp3")
+                except rospy.ServiceException, e:
+                    rospy.logwarn("Service call failed: %s" % e)
                 return 'reached_final_point'
 
     def request_preempt(self):
