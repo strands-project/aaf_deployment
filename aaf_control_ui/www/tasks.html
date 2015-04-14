@@ -1,6 +1,11 @@
 $var title: Aufgaben
-$var jsfiles: webtools/roslibjs/include/EventEmitter2/eventemitter2.js webtools/ros2djs/include/EaselJS/easeljs.js webtools/roslibjs/build/roslib.js
+$var jsfiles: webtools/roslibjs/include/EventEmitter2/eventemitter2.js webtools/ros2djs/include/EaselJS/easeljs.js webtools/roslibjs/build/roslib.js static/tasks.js
 
+<script>
+document.onready = function() {
+ init();
+}
+</script>
 <div class="section">
     <div class="container">
         <div class="row">
@@ -19,12 +24,13 @@ $var jsfiles: webtools/roslibjs/include/EventEmitter2/eventemitter2.js webtools/
                                     <th>Erwarteter Beginn</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr data-toggle="modal" data-target="#deletetask" data-whatever="3">
+                            <tbody id="tasktext">
+<!--                                <tr data-toggle="modal" data-target="#deletetask" data-whatever="3">
                                     <td>3</td>
                                     <td>wait</td>
                                     <td>Rezeption</td>
                                     <td>12:34</td>
+-->
                                 </tr>
                             </tbody>
                         </table>
@@ -42,16 +48,10 @@ $var jsfiles: webtools/roslibjs/include/EventEmitter2/eventemitter2.js webtools/
                             <div class="col-md-12">
                                 <div class="btn-toolbar" role="toolbar">
                                     <div class="btn-group btn-group-vertical">
-                                        <a type="button" class="btn btn-default">Bellbot Rezeption</a>
-                                        <a type="button" class="btn btn-default">Nordic Walking Gruppe</a>
-                                        <a type="button" class="btn btn-default">Wartung im Büro</a>
-                                        <a type="button" class="btn btn-default">1 Stunde Pause</a>
-                                    </div>
-                                    <div class="btn-group btn-group-vertical">
-                                        <a href="#" class="btn btn-default">Left</a>
-                                        <a class="btn btn-default" href="#">Middle</a>
-                                        <a href="#" class="btn btn-default">Right</a>
-                                        <a class="btn btn-default">Click me</a>
+                                        <a type="button" class="btn btn-default" onclick="demand_task('bellbot', 'Rezeption');">Bellbot</a>
+                                        <a type="button" class="btn btn-default" onclick="demand_task('walking_group_slow', 'WayPoint3');">Nordic Walking Gruppe (langsam)</a>
+                                        <a type="button" class="btn btn-default" onclick="demand_task('walking_group_fast', 'WayPoint45');">Nordic Walking Gruppe (schnell)</a>
+                                        <a type="button" class="btn btn-default" onclick="demand_task('wait_node', 'WayPoint33');">Wartung</a>
                                     </div>
                                 </div>
                             </div>
