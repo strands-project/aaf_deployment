@@ -1,31 +1,46 @@
-$def with (weather)
+$def with (weather, strings)
 
 
+<div class="col-md-12">
+  <table class="table" style="font-size:400%">
+      <tr align="center">
+        <td>&nbsp;</td>
+        <td align="center"><b>$strings["today"]</b></td>
+        <td align="center"><b>$strings["tomorrow"]</b></td>
+        <td align="center"><b>$strings["day after tomorrow"]</b></td>
+      </tr>
+      <tr>
+          <td>&nbsp;</td>
+          <td align="center"><img width="180" height="180" src="$weather['data']['weather'][0]['hourly'][4]['weatherIconUrl'][0]['value']"></td>
+          <td align="center"><img width="180" height="180" src="$weather['data']['weather'][1]['hourly'][4]['weatherIconUrl'][0]['value']"></td>
+          <td align="center"><img width="180" height="180" src="$weather['data']['weather'][2]['hourly'][4]['weatherIconUrl'][0]['value']"></td>
+      </tr>
+      <tr>
+          <th>min. Temp.</th>
+          <td align="center">$weather['data']['weather'][0]['mintempC']&deg; C</td>
+          <td align="center">$weather['data']['weather'][1]['mintempC']&deg; C</td>
+          <td align="center">$weather['data']['weather'][2]['mintempC']&deg; C</td>
+      </tr>
+      <tr>
+          <th>max. Temp.</th>
+          <td align="center">$weather['data']['weather'][0]['maxtempC']&deg; C</td>
+          <td align="center">$weather['data']['weather'][1]['maxtempC']&deg; C</td>
+          <td align="center">$weather['data']['weather'][2]['maxtempC']&deg; C</td>
+      </tr>
+  </table>
+</div>
 
+<br>
+<hr>
 <div class="row">
-  <div class="col-md-4">
-    <div class="row text-center">
-      <a href="/">
-        <img src="static/back-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
-        <h1>Back to Menu</h1>
-      </a>
+	<div class="col-md-12">
+        <div class="col-md-2">
+            <div class="row text-center">
+            <a href="/">
+                <img src="static/back-icon.png" class="img-thumbnail img-responsive"
+                    style="border:5px solid black;max-height:100px"><h1>$strings["back to menu"]</h1>
+            </a>
+            </div>
+        </div>
     </div>
-  </div>  
-  <div class="col-md-8">
-    <div class="row text-center">
-      <h1> Current Weather </h1>
-      <hr>
-    </div>
-    <div class="row text-center">
-
-      <img width="500" height="500" src="$weather['data']['current_condition'][-1]['weatherIconUrl'][-1]['value']">
-    </div>
-    <div class="row text-center">
-
-      <h1>$weather['data']['current_condition'][-1]['temp_C'] Celcius</h1>
-    </div>
-    <div class="row text-center">
-      <h1>$weather['data']['current_condition'][-1]['weatherDesc'][0]['value']</h1>
-    </div>
-  </div>
 </div>

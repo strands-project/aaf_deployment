@@ -1,4 +1,4 @@
-$def with (image_count)
+$def with (strings, image_count)
 
 <div class="row">
 <div class="col-md-12">
@@ -10,7 +10,7 @@ $def with (image_count)
 		to add images to the collection. Images should be in JPEG format.
 	</div>
 	<div class="row text-center">
-		<h3>Upload a new image:</h3><br/>
+		<h3>"$strings["upload image"]</h3><br/>
 	</div>	
 	<div class="row">
 		<div class="col-md-3"></div>
@@ -26,7 +26,7 @@ $def with (image_count)
 	</div>
 
 	<div class="row text-center">
-		<h3>Remove existing images:</h3><br/>
+		<h3>$strings["remove existing images"]</h3><br/>
 	</div>	
 
 	$for img in range(image_count):
@@ -35,7 +35,7 @@ $def with (image_count)
 			<img src="/get_photo/$img" style="max-height:200px;max-width:200px">
 			</div>
 			<div class="col-md-4 text-left">
-			<a href="/photo_album_manager/delete/$img"><h3>Delete this image.</h3></a>
+			<a href="/photo_album_manager/delete/$img"><h3>$strings["delete image"]</h3></a>
 			</div>
 
 		</div>

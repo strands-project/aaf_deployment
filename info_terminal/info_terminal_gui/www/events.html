@@ -1,11 +1,9 @@
-$def with (blog_events, events)
-
-<div class="row text-center">	
-	<h1>News</h1>
-	<hr>
-</div>
+$def with (blog_events, strings, events)
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-1">&nbsp;</div>
+	<div class="col-md-5">
+        <h1><font color="#00CC00">NEUES AM HdB</font></h1>
+        <hr>
 		$for event in blog_events:
 			<div class="row">
 				<!--<div class="col-md-3">-->
@@ -16,7 +14,9 @@ $def with (blog_events, events)
 				</div>
 			</div>
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-5">
+        <H1><font color="#00CC00">WIEN AKTUELL</font></H1>
+        <hr>
 		$for event in events:
 			<div class="row">
 				<!--if event[0] is not None:-->
@@ -28,25 +28,20 @@ $def with (blog_events, events)
 				</div>
 			</div>
 	</div>
+	<div class="col-md-1">&nbsp;</div>
 </div>
 
+<br>
 <hr>
 <div class="row">
-	<div class="col-md-4">
-		<div class="row text-center">
-		<a href="/">
-			<img src="static/back-icon.png" class="img-thumbnail img-responsive" 
-				style="border:5px solid black;max-height:100px"><br>
-		</a>
-		</div>
-	</div>  
-	<div class="col-md-4">
-		<div class="row text-center">
-		<a href="/">
-			<h1>Back to Start</h1>
-		</a>
-		</div>
-	</div>  
-<div>
-
-
+	<div class="col-md-12">
+        <div class="col-md-2">
+            <div class="row text-center">
+            <a href="/">
+                <img src="static/back-icon.png" class="img-thumbnail img-responsive"
+                    style="border:5px solid black;max-height:100px"><h1>$strings["back to menu"]</h1>
+            </a>
+            </div>
+        </div>
+    </div>
+</div>
