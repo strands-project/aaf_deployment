@@ -38,7 +38,8 @@ class StoreLogsServer(AbstractTaskServer):
         time_ago = rospy.Duration(60 * 60 * hours)
         g.move_before = time_ago
         
-        self.client.send_goal_and_wait(g)
+        r = self.client.send_goal_and_wait(g)
+        print r
         self.server.set_succeeded()
 
     def create(self, req):
