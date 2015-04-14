@@ -10,6 +10,7 @@ import datetime
 from std_msgs.msg import Int32
 import xmltodict
 import signal
+import locale
 
 from mongodb_media_server import MediaClient
 
@@ -85,7 +86,7 @@ app =  InfoTerminalGUI()
 class MasterPage(object):
     def GET(self):
         app.publish_feedback(MasterPage.id)
-        return render.index(app.strings, datetime)
+        return render.index(language, app.strings, datetime)
 
 
 class Menu(object):
@@ -174,4 +175,7 @@ if __name__ == "__main__":
     port = rospy.get_param("~port", 8080)
     language = rospy.get_param("~language", "EN")
     print 'LANGUAGE = ' + language
+    if language in ['DE']:
+         locale.setlocale(locale.LC_ALL, 'de_AT.utf8')    
+        #locale.setlocale(locale.LC_TIME, "de_DE") 
     app.run(port, language)

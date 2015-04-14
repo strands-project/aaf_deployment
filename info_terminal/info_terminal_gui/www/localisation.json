@@ -3,12 +3,17 @@
 "Caffateria Menu": {"DE":"Tagesmenü","EN":"Caffateria Menu"},
 "hrs": {"DE":"Uhr","EN":"hrs"},
 "back to menu": {"DE": "Zurück", "EN":"Back to Menu"},
-"coming events": {"DE": "Aktuelle Veranstaltungen", "EN": "Coming Events"},
-"view photo album": {"DE": "Photos anzeigen", "EN":"View Photo Album"},
+"coming events": {"DE": "Veranstaltungen", "EN": "Coming Events"},
+"view photo album": {"DE": "Photos", "EN":"View Photo Album"},
 "weather information" : {"DE":"Wetterinformation", "EN":"Weather Information"},
 "news" : {"DE":"Aktuelles", "EN":"News"},
 "current weather" : {"DE":"Aktuelles Wetter", "EN":"Current Weather"},
 "today" : {"DE":"Heute", "EN":"Today"},
 "tomorrow" : {"DE":"Morgen", "EN":"Tomorrow"},
-"day after tomorrow" : {"DE":"Übermorgen", "EN":"Day After Tomorrow"}
+"day after tomorrow" : {"DE":"Übermorgen", "EN":"Day After Tomorrow"},
+"upload image" : {"DE":"Neues Bild hochladen", "EN":"Upload a new image"},
+"delete image" : {"DE":"Bild löschen", "EN":"Delete this image"},
+"remove existing images" : {"DE":"Bestehendes Bild löschen", "EN":"Remove existing image"},
+"previous photo" : {"DE":"Vorheriges Bild", "EN":"Previous Photo"},
+"next photo" : {"DE": "Nächstes Photo", "EN": "Next Photo"}
 }
