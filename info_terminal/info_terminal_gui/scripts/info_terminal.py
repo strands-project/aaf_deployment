@@ -14,7 +14,8 @@ import signal
 from mongodb_media_server import MediaClient
 
 #WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q=Vienna,Austria"
-WEATHER_URL = "http://api.worldweatheronline.com/free/v2/weather.ashx?key=c2db94527204450837f1cf7b7772b&q=Vienna,Austria&num_of_days=2&tp=3&format=json"
+WEATHER_URL = "http://api.worldweatheronline.com/free/v2/weather.ashx?key=c2db94527204450837f1cf7b7772b&q=Vienna,Austria&num_of_days=3&tp=3&format=json"
+WEATHER_URL_DE = WEATHER_URL + "&lang=de"
 BBC_NEWS_URL = "http://feeds.bbci.co.uk/news/world/rss.xml"
 HENRY_BLOG_URL = "https://henrystrands.wordpress.com/feed/"
 NEWS_URL = "http://rss.orf.at/wien.xml"
@@ -90,17 +91,20 @@ class MasterPage(object):
 class Menu(object):
     def GET(self):
         app.publish_feedback(Menu.id)
-        return render.menu({})
+        return render.menu({}, app.strings)
 
 
 class Weather(object):
     def GET(self):
         app.publish_feedback(Weather.id)
         try:
-            weather = json.loads(requests.get(WEATHER_URL).text)
-        except:
+            if language in ['DE', 'de']:
+                weather = json.loads(requests.get(WEATHER_URL_DE).text)
+            else:
+	        weather = json.loads(requests.get(WEATHER_URL).text)
+	except:
             return render.index(app.strings, datetime)
-        return render.weather(weather)
+        return render.weather(weather, app.strings)
 
 
 class Events(object):
@@ -122,7 +126,7 @@ class Events(object):
         for n in items:
             events.append((None,
                            "<h3>"+n["title"]+"</h3><h4>"+n["description"] +"</h4>"))
-        return render.events(blog_events[:3], events[:3])
+        return render.events(blog_events[:3], app.strings, events[:3])
 
 
 class GoAway(object):
@@ -153,7 +157,7 @@ class PhotoAlbum(object):
         prev_image = image_id - 1
         if prev_image < 0:
             prev_image = count - 1
-        return render.photos(PhotoAlbum.photos[current_image][0],
+        return render.photos(app.strings, PhotoAlbum.photos[current_image][0],
                              next_image, prev_image)
 
 # Give each URL a unique number so that we can feedback which screen is active
@@ -169,4 +173,5 @@ if __name__ == "__main__":
     print "InfoTerminal GUI Web server starting.."
     port = rospy.get_param("~port", 8080)
     language = rospy.get_param("~language", "EN")
+    print 'LANGUAGE = ' + language
     app.run(port, language)

@@ -1,5 +1,14 @@
 {
-"Hello": {"DE": "Blah", "EN": "Hello"},
-"Caffateria Menu": {"DE":"akfjsf ","EN":"Caffateria Menu"},
-"hrs": {"DE":"Uhr","EN":"hrs"}
+"Hello": {"DE": "Hallo", "EN": "Hello"},
+"Caffateria Menu": {"DE":"Tagesmenü","EN":"Caffateria Menu"},
+"hrs": {"DE":"Uhr","EN":"hrs"},
+"back to menu": {"DE": "Zurück", "EN":"Back to Menu"},
+"coming events": {"DE": "Aktuelle Veranstaltungen", "EN": "Coming Events"},
+"view photo album": {"DE": "Photos anzeigen", "EN":"View Photo Album"},
+"weather information" : {"DE":"Wetterinformation", "EN":"Weather Information"},
+"news" : {"DE":"Aktuelles", "EN":"News"},
+"current weather" : {"DE":"Aktuelles Wetter", "EN":"Current Weather"},
+"today" : {"DE":"Heute", "EN":"Today"},
+"tomorrow" : {"DE":"Morgen", "EN":"Tomorrow"},
+"day after tomorrow" : {"DE":"Übermorgen", "EN":"Day After Tomorrow"}
 }
