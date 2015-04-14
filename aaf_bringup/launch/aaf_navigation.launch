@@ -89,6 +89,12 @@
     <arg name="map" value="$(arg topological_map)"/>
     <arg name="mon_nav_config_file" value="$(arg mon_nav_config_file)"/>
   </include>
+  
+    <!--- Emergency Behaviours includes strands emails -->
+  <include file="$(find emergency_behaviours)/launch/emergency_behaviours.launch">
+    <arg name="machine"  value="$(arg topo_nav_machine)"/>
+    <arg name="user"  value="$(arg topo_nav_user)"/>
+  </include>
 
   <node name="odometry_mileage" pkg="odometry_mileage" type="odometry_mileage"/>
   <!-- <node name="door_pass_node" pkg="door_pass" type="door_pass.py" output="screen" /> --> <!-- Might still be needed -->
