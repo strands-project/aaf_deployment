@@ -99,7 +99,7 @@ class Weather(object):
     def GET(self):
         app.publish_feedback(Weather.id)
         try:
-            if language in ['DE', 'de']:
+            if language in ["DE", "DE_de", "de", "DE_at"]:
                 weather = json.loads(requests.get(WEATHER_URL_DE).text)
             else:
 	        weather = json.loads(requests.get(WEATHER_URL).text)
@@ -175,7 +175,7 @@ if __name__ == "__main__":
     port = rospy.get_param("~port", 8080)
     language = rospy.get_param("~language", "EN")
     print 'LANGUAGE = ' + language
-    if language in ['DE']:
+    if language in ["DE", "DE_de", "de", "DE_at"]:
          locale.setlocale(locale.LC_ALL, 'de_AT.utf8')    
         #locale.setlocale(locale.LC_TIME, "de_DE") 
     app.run(port, language)
