@@ -8,7 +8,6 @@
     <arg name="publishing_rate" default="30"/>
     <arg name="bool_publisher_topic" default="/logging_manager/log"/>
     <arg name="bool_stamped_publisher_topic" default="/logging_manager/log_stamped"/>
-    <rosparam command="load" file="$(find aaf_logging)/config/logged_topics.yaml"/>
 
     <arg name="machine" default="localhost" />
     <arg name="user" default="" />
