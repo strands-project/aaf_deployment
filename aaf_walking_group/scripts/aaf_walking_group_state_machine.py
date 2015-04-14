@@ -22,6 +22,7 @@ from aaf_walking_group.utils import PTU, Gaze, RecoveryReconfigure
 from music_player.srv import MusicPlayerService
 from sound_player_server.srv import PlaySoundService
 from walking_group_recovery.srv import ToggleWalkingGroupRecovery
+from strands_navigation_msgs.srv import GetTaggedNodes, GetTaggedNodesRequest, GetTaggedNodesResponse
 import actionlib
 import json
 import pprint
@@ -108,6 +109,21 @@ class WalkingGroupStateMachine(object):
     def execute(self, goal):
         rospy.loginfo("Starting state machine")
 
+        resting_points = []
+        try:
+            rospy.loginfo("Creating get tagged nodes service proxy and waiting ...")
+            s = rospy.ServiceProxy('/topological_map_manager/get_tagged_nodes', GetTaggedNodes)
+            s.wait_for_service()
+            rospy.loginfo(" ... calling get tagged nodes service")
+            req = GetTaggedNodesRequest(tag='walking_group_resting_point')
+            res = s(req)
+            resting_points = res.nodes
+            rospy.loginfo(" ... called get tagged nodes recovery")
+        except (rospy.ServiceException, rospy.ROSInterruptException) as e:
+            rospy.logfatal("get tagged nodes service call failed: %s" % e)
+            self._as.set_aborted()
+            return
+
         try:
             rospy.loginfo("Creating recovery toggle service proxy and waiting ...")
             self.rec_srv.wait_for_service()
@@ -129,7 +145,7 @@ class WalkingGroupStateMachine(object):
         dyn_param = {
             'timeout': 0.0,
             'gaze_type': 1,
-            'detection_angle': 80.0
+            'detection_angle': 20.0
         }
         try:
             self.dyn_client.update_configuration(dyn_param)
@@ -184,10 +200,11 @@ class WalkingGroupStateMachine(object):
             )
             smach.StateMachine.add(
                 'GUIDING',
-                Guiding(waypoints=self.waypointset[goal.group]["waypoints"], distance=self.waypointset[goal.group]["stopping_distance"]),
+                Guiding(waypoints=self.waypointset[goal.group]["waypoints"], distance=self.waypointset[goal.group]["stopping_distance"], resting_points=resting_points),
                 transitions={
                     'reached_point': 'RESTING_CONT',
                     'reached_final_point': 'succeeded',
+                    'continue': 'GUIDING',
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
