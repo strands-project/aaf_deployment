@@ -1,0 +1,36 @@
+slow:
+    stopping_distance: 3.0
+    waypoints:
+        1: "WayPoint33"
+        2: "WayPoint20"
+        3: "WayPoint79"
+        4: "WayPoint78"
+        5: "WayPoint77"
+        6: "WayPoint75"
+        7: "WayPoint82"
+        8: "WayPoint83"
+        9: "WayPoint84"
+        10: "WayPoint28"
+        11: "WayPoint7"
+        12: "WayPoint78"
+        13: "WayPoint79"
+        14: "WayPoint11"
+        15: "WayPoint33"
+fast:
+    stopping_distance: 5.0
+    waypoints:
+        1: "WayPoint33"
+        2: "WayPoint20"
+        3: "WayPoint79"
+        4: "WayPoint78"
+        5: "WayPoint77"
+        6: "WayPoint75"
+        7: "WayPoint82"
+        8: "WayPoint83"
+        9: "WayPoint84"
+        10: "WayPoint28"
+        11: "WayPoint7"
+        12: "WayPoint78"
+        13: "WayPoint79"
+        14: "WayPoint11"
+        15: "WayPoint33"
