@@ -16,7 +16,7 @@ class Guiding(smach.State):
     def __init__(self, waypoints, distance, resting_points):
         smach.State.__init__(
             self,
-            outcomes=['reached_point', 'reached_final_point', 'key_card', 'killall'],
+            outcomes=['reached_point', 'reached_final_point', 'continue', 'key_card', 'killall'],
             input_keys=['waypoint', 'play_music'],
             output_keys=['current_waypoint', 'waypoint', 'play_music']
         )
