@@ -155,6 +155,7 @@ class WalkingGroupStateMachine(object):
         self.preempt_srv = rospy.Service('/walking_group/cancel', Empty, self.preempt_srv_cb)
         self.waypointset = self.loadConfig(self.waypointset_name, collection_name=self.waypointset_collection, meta_name=self.waypointset_meta)
         pprint.pprint(self.waypointset)
+        resting_points_dict = {k: i for k,i in self.waypointset[goal.group]["waypoints"].iteritems() if i in resting_points}
 
         try:
             rospy.loginfo("Creating waypoint sound service proxy and waiting ...")
@@ -190,7 +191,7 @@ class WalkingGroupStateMachine(object):
             )
             smach.StateMachine.add(
                 'GUIDE_INTERFACE',
-                GuideInterface(self.waypointset[goal.group]["waypoints"]),
+                GuideInterface(resting_points_dict),
                 transitions={
                     'move_to_point': 'GUIDING',
                     'aborted': 'ENTERTAIN',
