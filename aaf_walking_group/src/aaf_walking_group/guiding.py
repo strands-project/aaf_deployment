@@ -17,7 +17,7 @@ class Guiding(smach.State):
         smach.State.__init__(
             self,
             outcomes=['reached_point', 'reached_final_point', 'continue', 'key_card', 'killall'],
-            input_keys=['waypoint', 'play_music'],
+            input_keys=['current_waypoint', 'waypoint', 'play_music'],
             output_keys=['current_waypoint', 'waypoint', 'play_music']
         )
         self.waypoints = waypoints
@@ -68,9 +68,11 @@ class Guiding(smach.State):
                 self.previous_waypoint = self.waypoints[key]
         # Finding next waypoint
         next_waypoint = ""
-        for elem in self.waypoints.items():
-            if elem[1] == userdata.current_waypoint:
-                key = str(int(elem[0])+1)
+        way_idx = sorted(map(int, self.waypoints.keys()))
+        for idx in way_idx:
+            if self.waypoints[str(idx)] == userdata.current_waypoint:
+                key = str(way_idx[way_idx.index(idx)+1])
+                print key
                 if not key in self.waypoints.keys():
                     rospy.logfatal("No next waypoint found")
                 next_waypoint = self.waypoints[key]
