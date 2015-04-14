@@ -49,7 +49,7 @@ class Guiding(smach.State):
         rospy.loginfo("Guiding group")
         self.recall_preempt()
         try:
-            s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+            s = rospy.ServiceProxy('/sound_player_server/sound_player_service', PlaySoundService)
             s.wait_for_service()
             s("jingle_therapist_continue.mp3")
         except rospy.ServiceException, e:
@@ -99,7 +99,7 @@ class Guiding(smach.State):
             return 'key_card'
         else:
             try:
-                s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+                s = rospy.ServiceProxy('/sound_player_server/sound_player_service', PlaySoundService)
                 s.wait_for_service()
                 s("jingle_waypoint_reached.mp3")
             except rospy.ServiceException, e:

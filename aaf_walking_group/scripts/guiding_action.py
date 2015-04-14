@@ -115,7 +115,7 @@ class GuidingServer():
                     )
                     pause_service(0)
                     self.pause = 0
-                    s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+                    s = rospy.ServiceProxy('/sound_player_server/sound_player_service', PlaySoundService)
                     s.wait_for_service()
                     s("jingle_patient_continue.mp3")
                 except rospy.ServiceException, e:
@@ -146,7 +146,7 @@ class GuidingServer():
                         self.pause = 1
                         self.begin = 1
                         rospy.loginfo("Navigation paused")
-                        s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+                        s = rospy.ServiceProxy('/sound_player_server/sound_player_service', PlaySoundService)
                         s.wait_for_service()
                         s("jingle_stop.mp3")
                     except rospy.ServiceException, e:
