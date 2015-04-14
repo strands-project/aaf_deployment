@@ -92,7 +92,7 @@ class InterfaceServer(object):
             self._as.set_succeeded(result)
 
     def listWaypointPage(self, possible_points):
-        notice = 'W&auml;hlen Sie das n&auml;chste Ziel.'
+        notice = 'Wählen Sie das nächste Ziel.'
         buttons = []
         three_buttons = []
         for i in range(len(possible_points)):
