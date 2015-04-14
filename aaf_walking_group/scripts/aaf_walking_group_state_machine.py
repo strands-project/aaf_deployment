@@ -156,7 +156,8 @@ class WalkingGroupStateMachine(object):
         self.waypointset = self.loadConfig(self.waypointset_name, collection_name=self.waypointset_collection, meta_name=self.waypointset_meta)
         pprint.pprint(self.waypointset)
         resting_points_dict = {k: i for k,i in self.waypointset[goal.group]["waypoints"].iteritems() if i in resting_points}
-
+        pprint.pprint(resting_points)
+        pprint.pprint(resting_points_dict)
         try:
             rospy.loginfo("Creating waypoint sound service proxy and waiting ...")
             s = rospy.ServiceProxy('aaf_waypoint_sounds_service', WaypointSoundsService)
