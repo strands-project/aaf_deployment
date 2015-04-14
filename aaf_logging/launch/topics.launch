@@ -29,10 +29,6 @@
     /current_node
     /current_edge
     /closest_node
-    /monitored_navigation/monitored_nav_event
-    /monitored_navigation/srv_pause_requested
-    /monitored_navigation/stuck_on_carpet
-    /monitored_navigation/pause_requested
     /do_backtrack/goal
     /speak/goal
     /mary_tts/speak
@@ -60,6 +56,10 @@
 "/>
 
 <!-- Excluded topics (due to already being logged)
+    /monitored_navigation/monitored_nav_event
+    /monitored_navigation/srv_pause_requested
+    /monitored_navigation/stuck_on_carpet
+    /monitored_navigation/pause_requested
     /execute_policy_mode/Statistics
     /task_executor/events
     /current_schedule
