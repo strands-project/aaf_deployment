@@ -33,8 +33,9 @@
 
     <node pkg="aaf_logging" type="filter_rosout.py" name="filter_rosout" output="screen" respawn="true"/>
 
-    <node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger" output="screen" respawn="true" args="--nodename-prefix=aaf_logger $(arg logged_topics)">
+    <include file="$(find aaf_logging)/launch/topics.launch">
         <arg name="machine" value="$(arg machine)"/>
-    </node>
+        <arg name="user" value="$(arg user)"/>
+    </include>
 
 </launch>
