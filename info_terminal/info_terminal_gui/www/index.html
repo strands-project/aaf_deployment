@@ -55,7 +55,7 @@ $def with (language, strings, datetime)
     <script type="text/javascript">startTime();</script>
     <br><br>
     <h1><b>$datetime.date.strftime(datetime.date.today(),"%A")</b></h1>
-    $if language in ["DE"]:
+    $if language in ["DE", "DE_de", "de", "DE_at"]:
         <h1><b>$datetime.date.strftime(datetime.date.today(),"%d. %B")</b></h1>
     $else:
         <h1><b>$datetime.date.strftime(datetime.date.today(),"%d %B")</b></h1>
