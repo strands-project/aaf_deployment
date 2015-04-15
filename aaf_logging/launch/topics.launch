@@ -3,6 +3,7 @@
 <arg name="machine" default="localhost"/>
 <arg name="user" default="" />
 
+<!--
 <arg name="logged_topics" value="
     /rosout_filtered
     /tf
@@ -54,6 +55,77 @@
     /wait_node/result
     /wait_node/cancel
 "/>
+-->
+
+<arg name="logged_topics0" value="
+    /rosout_filtered
+    /tf
+    /robot_pose
+    /cmd_vel
+    /goal
+"/>
+<arg name="logged_topics1" value="
+    /mileage
+    /motor_status
+    /head/actual_state
+    /head/cmd_light_state
+    /head/commanded_state
+"/>
+<arg name="logged_topics2" value="
+    /barrier_status
+    /battery_state
+    /bumper
+    /charger_status
+    /rfid
+"/>
+<arg name="logged_topics3" value="
+    /diagnostics
+    /SetPTUState/goal
+    /ResetPtu/goal
+    /EBC/parameter_updates
+    /Charger/parameter_updates
+"/>
+<arg name="logged_topics4" value="
+    /topological_navigation/Route
+    /topological_navigation/Statistics
+    /current_node
+    /current_edge
+    /closest_node
+"/>
+<arg name="logged_topics5" value="
+    /do_backtrack/goal
+    /speak/goal
+    /mary_tts/speak
+    /strands_emails/goal
+    /strands_image_tweets/goal
+"/>
+<arg name="logged_topics6" value="
+    /pygame_player_negotiation
+    /chargingServer/goal
+    /chargingServer/result
+    /chargingServer/cancel
+    /docking/goal
+"/>
+<arg name="logged_topics7" value="
+    /docking/result
+    /docking/cancel
+    /undocking/goal
+    /undocking/result
+    /undocking/cancel
+"/>
+<arg name="logged_topics8" value="
+    /map_updates
+    /move_base/NavfnROS/plan
+    /move_base/current_goal
+    /move_base/DWAPlannerROS/global_plan
+    /move_base/DWAPlannerROS/local_plan
+"/>
+<arg name="logged_topics9" value="
+    /move_base/goal
+    /wait_node/goal
+    /wait_node/result
+    /wait_node/cancel
+"/>
 
 <!-- Excluded topics (due to already being logged)
     /monitored_navigation/monitored_nav_event
@@ -67,6 +139,19 @@
 
 <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="true"/>
 
-<node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger" output="screen" respawn="true" args="--nodename-prefix=aaf_logger $(arg logged_topics)"/>
+<!--
+<node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger" output="screen" respawn="true" args="$(arg logged_topics)"/>
+-->
+
+<node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger0" output="screen" respawn="true" args="--nodename-prefix=aaf_logger0 $(arg logged_topics0)"/>
+<node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger1" output="screen" respawn="true" args="--nodename-prefix=aaf_logger1 $(arg logged_topics1)"/>
+<node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger2" output="screen" respawn="true" args="--nodename-prefix=aaf_logger2 $(arg logged_topics2)"/>
+<node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger3" output="screen" respawn="true" args="--nodename-prefix=aaf_logger3 $(arg logged_topics3)"/>
+<node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger4" output="screen" respawn="true" args="--nodename-prefix=aaf_logger4 $(arg logged_topics4)"/>
+<node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger5" output="screen" respawn="true" args="--nodename-prefix=aaf_logger5 $(arg logged_topics5)"/>
+<node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger6" output="screen" respawn="true" args="--nodename-prefix=aaf_logger6 $(arg logged_topics6)"/>
+<node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger7" output="screen" respawn="true" args="--nodename-prefix=aaf_logger7 $(arg logged_topics7)"/>
+<node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger8" output="screen" respawn="true" args="--nodename-prefix=aaf_logger8 $(arg logged_topics8)"/>
+<node pkg="mongodb_log" type="mongodb_log.py" name="aaf_logger9" output="screen" respawn="true" args="--nodename-prefix=aaf_logger9 $(arg logged_topics9)"/>
 
 </launch>
