@@ -3,6 +3,7 @@
 import rospy
 import smach
 import actionlib
+import collections
 from std_msgs.msg import Bool
 from actionlib_msgs.msg import GoalStatus
 from aaf_walking_group.msg import InterfaceAction, InterfaceGoal
@@ -40,9 +41,11 @@ class GuideInterface(smach.State):
         waypoints = self.waypointset
         rospy.loginfo("I am at: " + userdata.current_waypoint)
         next_waypoint = ""
-        for elem in waypoints.items():
-            if elem[1] == userdata.current_waypoint:
-                key = str(int(elem[0])+1)
+        way_idx = sorted(map(int, waypoints.keys()))
+        for idx in way_idx:
+            if waypoints[str(idx)] == userdata.current_waypoint:
+                key = str(way_idx[way_idx.index(idx)+1])
+                print key
                 if not key in waypoints.keys():
                     rospy.logfatal("No next waypoint found")
                 next_waypoint = waypoints[key]
