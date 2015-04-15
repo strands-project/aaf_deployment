@@ -16,7 +16,7 @@ class StoreLogsServer(AbstractTaskServer):
         super(StoreLogsServer, self).__init__(
             name=name,
             action_type=EmptyAction,
-            interruptible=True
+            interruptible=False
         )
         rospy.loginfo(" ... waiting for move_mongodb_entries server")
         self.client = SimpleActionClient("/move_mongodb_entries", MoveEntriesAction)
