@@ -10,6 +10,7 @@
   <arg name="music_set_waypoints" default="aaf_waypoint_sounds"/>
   <arg name="music_set_jingles" default="aaf_jingles"/>
   <arg name="music_set_recovery" default="aaf_walking_group_recovery_sounds"/>
+  <arg name="music_file_recovery" default="nooo.mp3"/>
   <arg name="video_set" default="aaf_walking_group_videos"/>
   <arg name="image_set" default="aaf_walking_group_pictures"/>
 
@@ -33,10 +34,17 @@
     <param name="mongodb_params/waypointset_meta" type="string" value="$(arg meta_name)"/>
     <param name="recovery_whitelist" type="string" value="$(arg recovery_whitelist)"/>
   </node>
+  <!--
   <node pkg="walking_group_recovery" type="toggle_walking_group_recovery_server.py" name="toggle_walking_group_recovery_server" output="screen" respawn="true">
     <param name="music_set" type="string" value="$(arg music_set_recovery)"/>
     <param name="audio_priority" type="double" value="0.9"/>
   </node>
+  -->
+  <include file="$(find walking_group_recovery)/launch/walking_group_recovery.launch">
+    <arg name="music_set" value="$(arg music_set_recovery)"/>
+    <arg name="music_file" value="$(music_file_recovery)"/>
+    <arg name="audio_priority" value="0.9"/>
+  </include>
 
   <include file="$(find aaf_waypoint_sounds)/launch/waypoint_sounds.launch">
     <arg name="music_set" value="$(arg music_set_waypoints)"/>
@@ -50,7 +58,7 @@
     <arg name="music_set" value="$(arg music_set_jingles)"/>
     <arg name="min_volume" value="0.0"/>
   </include>
-  
+
   <node pkg="social_card_reader" type="social_card_reader" name="social_card_reader" output="screen" respawn="true" machine="$(arg head_machine)"/>
   <node pkg="aaf_walking_group" type="positionOfCard.py" name="QSR_generator" output="screen" respawn="true" machine="$(arg head_machine)"/>
 

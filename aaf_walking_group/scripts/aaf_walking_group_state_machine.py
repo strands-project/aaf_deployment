@@ -64,7 +64,7 @@ class WalkingGroupStateMachine(object):
         s = rospy.ServiceProxy('/music_player_service', MusicPlayerService)
         s.wait_for_service()
         rospy.loginfo("  ... jingles")
-        s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+        s = rospy.ServiceProxy('/sound_player_server/sound_player_service', PlaySoundService)
         s.wait_for_service()
         rospy.loginfo("  ... waypoints")
         s = rospy.ServiceProxy('/aaf_waypoint_sounds_service', WaypointSoundsService)
