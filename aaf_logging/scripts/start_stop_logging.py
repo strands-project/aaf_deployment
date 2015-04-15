@@ -6,6 +6,7 @@ import actionlib
 from roslaunch_axserver.msg import launchAction, launchGoal
 from aaf_logging.msg import EmptyAction
 from strands_executive_msgs.abstract_task_server import AbstractTaskServer
+import time
 
 
 class Logger():
@@ -17,13 +18,19 @@ class Logger():
         self.launch_client.wait_for_server()
         rospy.loginfo(" ... done")
 
-    def start_logging(self):
+    def start_logging(self, parameters, values):
         if not self.is_running():
             rospy.loginfo("Starting logging nodes")
             self.running = False
             lg = launchGoal()
             lg.pkg = "aaf_logging"
             lg.launch_file = "loggers.launch.xml"
+            lg.parameters = ['logging_tag']
+            lg.parameters.extend(parameters)
+            lg.values = [
+                time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime(rospy.Time.now().to_sec()))
+            ]
+            lg.values.extend(values)
             self.launch_client.send_goal(lg, feedback_cb=self.feedback_cb)
             rospy.loginfo("Waiting...")
             while not self.is_running() and not rospy.is_shutdown():
@@ -50,6 +57,7 @@ class LoggingServer(AbstractTaskServer):
     def __init__(self, name, llauncher):
         self.name = name
         self.llauncher = llauncher
+        self.log_dir = rospy.get_param("~logging_dir", "/opt/strands/data/")
         rospy.loginfo("Starting node: %s" % name)
         rospy.loginfo(" ... starting " + name)
         super(LoggingServer, self).__init__(
@@ -61,7 +69,10 @@ class LoggingServer(AbstractTaskServer):
 
     def execute(self, goal):
         if "start" in self.name:
-            self.llauncher.start_logging()
+            self.llauncher.start_logging(
+                parameters=['logging_dir'],
+                values=[self.log_dir]
+            )
         elif "stop" in self.name:
             self.llauncher.stop_logging()
 
