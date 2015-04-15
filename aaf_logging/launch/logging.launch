@@ -21,6 +21,7 @@
 	<param name="collections" value="[navstats, scheduling_problems, task_events, monitored_nav_events]" />
 	<param name="past_hours" value="24" />
     </node>
+
     <include file="$(find topological_logging_manager)/launch/manager.launch">
         <arg name="machine" value="$(arg machine)"/>
         <arg name="user" value="$(arg user)"/>
