@@ -1,0 +1,2 @@
+mongodb_store_extras:
+- [192.168.200.20,27017]
