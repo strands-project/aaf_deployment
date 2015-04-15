@@ -36,4 +36,13 @@
         <arg name="bool_stamped_publisher_topic" value="$(arg bool_stamped_publisher_topic)"/>
     </include>
 
+    <node pkg="aaf_logging" type="filter_rosout.py" name="filter_rosout" output="screen" respawn="true"/>
+
+    <!--
+    <include file="$(find aaf_logging)/launch/topics.launch">
+        <arg name="machine" value="$(arg machine)"/>
+        <arg name="user" value="$(arg user)"/>
+    </include>
+    -->
+
 </launch>
