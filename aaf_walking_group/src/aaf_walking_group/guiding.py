@@ -13,15 +13,16 @@ from sound_player_server.srv import PlaySoundService
 
 
 class Guiding(smach.State):
-    def __init__(self, waypoints, distance):
+    def __init__(self, waypoints, distance, resting_points):
         smach.State.__init__(
             self,
-            outcomes=['reached_point', 'reached_final_point', 'key_card', 'killall'],
-            input_keys=['waypoint', 'play_music'],
-            output_keys=['current_waypoint', 'play_music']
+            outcomes=['reached_point', 'reached_final_point', 'continue', 'key_card', 'killall'],
+            input_keys=['current_waypoint', 'waypoint', 'play_music'],
+            output_keys=['current_waypoint', 'waypoint', 'play_music']
         )
         self.waypoints = waypoints
         self.distance = distance
+        self.resting_points = resting_points
         self.last_waypoint = waypoints[str(max([int(x) for x in waypoints.keys()]))]
         self.previous_waypoint = waypoints[str(min([int(x) for x in waypoints.keys()]))]
         self.sub = None
@@ -58,13 +59,24 @@ class Guiding(smach.State):
         self.card = False
 
         rospy.loginfo("I am going to: " + userdata.waypoint)
-        # Action server that does all the black magic for navigation
+        # Finding previous waypoint
         for elem in self.waypoints.items():
             if elem[1] == userdata.waypoint:
                 key = str(int(elem[0])-1)
                 if not key in self.waypoints.keys():
                     key = "1"
                 self.previous_waypoint = self.waypoints[key]
+        # Finding next waypoint
+        next_waypoint = ""
+        way_idx = sorted(map(int, self.waypoints.keys()))
+        for idx in way_idx:
+            if self.waypoints[str(idx)] == userdata.current_waypoint:
+                key = str(way_idx[way_idx.index(idx)+1])
+                print key
+                if not key in self.waypoints.keys():
+                    rospy.logfatal("No next waypoint found")
+                next_waypoint = self.waypoints[key]
+                break
 
         if userdata.play_music:
             self.music_control("play")
@@ -98,18 +110,29 @@ class Guiding(smach.State):
             userdata.current_waypoint = self.previous_waypoint
             return 'key_card'
         else:
-            try:
-                s = rospy.ServiceProxy('/sound_player_server/sound_player_service', PlaySoundService)
-                s.wait_for_service()
-                s("jingle_waypoint_reached.mp3")
-            except rospy.ServiceException, e:
-                rospy.logwarn("Service call failed: %s" % e)
-
             if state == GoalStatus.SUCCEEDED and not goal.waypoint == self.last_waypoint:
                 userdata.current_waypoint = deepcopy(userdata.waypoint)
-                return 'reached_point'
+                if not userdata.waypoint in self.resting_points and not next_waypoint == "":
+                    userdata.waypoint = next_waypoint
+                    return 'continue'
+                elif userdata.waypoint in self.resting_points:
+                    try:
+                        s = rospy.ServiceProxy('/sound_player_server/sound_player_service', PlaySoundService)
+                        s.wait_for_service()
+                        s("jingle_waypoint_reached.mp3")
+                    except rospy.ServiceException, e:
+                        rospy.logwarn("Service call failed: %s" % e)
+                    return 'reached_point'
+                else:
+                    rospy.logfatal("Unknown state transition from GUIDING: next waypoint: %s" % next_waypoint)
             elif state == GoalStatus.SUCCEEDED and goal.waypoint == self.last_waypoint:
                 userdata.current_waypoint = deepcopy(userdata.waypoint)
+                try:
+                    s = rospy.ServiceProxy('/sound_player_server/sound_player_service', PlaySoundService)
+                    s.wait_for_service()
+                    s("jingle_waypoint_reached.mp3")
+                except rospy.ServiceException, e:
+                    rospy.logwarn("Service call failed: %s" % e)
                 return 'reached_final_point'
 
     def request_preempt(self):

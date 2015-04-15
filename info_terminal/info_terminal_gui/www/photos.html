@@ -1,44 +1,34 @@
-$def with (current_image, next_image, prev_image)
-<div class="row">
-<div class="col-md-4">
-	<div class="row text-center">
-	<a href="/">
-		<img src="/static/back-icon.png" class="img-thumbnail img-responsive" 
-			style="border:5px solid black;max-height:300px"><br>
-		<h1>Back to Start</h1>
-	</a>
-	</div>
-</div>  
-<div class="col-md-8">
-	<div class="row text-center">	
-		<h1>Photo Album</h1>
-		<hr>
-	</div>
-	<div class="row text-center">
-		<img src="http://localhost:8027/get_media_by_name/$current_image" class="img-thumbnail img-responsive" 
-			style="max-height:400px;max-width:600px">
-	</div>
-	<div class="row">
-	<br/>
-	</div>
-	<div class="row text-center">
-		<div class="col-md-6">
-			<a href="/photo_album/$prev_image">
-				<img src="/static/prev-icon.png" class="img-thumbnail img-responsive" 
-					style="border:5px solid black;max-height:180px"><br>
-				<h3>Previous Photo</h3>
-			</a>
-		</div>
-		<div class="col-md-6">
+$def with (strings, current_image, next_image, prev_image)
+<!-- Optimized for a resolution of 1024x720-->
+<center><h1>Photoalbum</h1></center>
+<div class="row text-center">
+        <div class="col-md-2">
+            <a href="/photo_album/$prev_image">
+                    <img src="/static/prev-icon.png" class="img-thumbnail img-responsive"
+                        style="border:5px solid black"><br>
+                    <h3>$strings["previous photo"]</h3>
+            </a>
+        </div>
+        <div class="col-md-8">
+            <img src="http://localhost:8027/get_media_by_name/$current_image" class="img-thumbnail img-responsive">
+        </div>
+		<div class="col-md-2">
 			<a href="/photo_album/$next_image">
 				<img src="/static/next-icon.png" class="img-thumbnail img-responsive" 
-					style="border:5px solid black;max-height:180px"><br>
-				<h3>Next Photo</h3>
+					style="border:5px solid black"><br>
+				<h3>$strings["next photo"]</h3>
 			</a>
 		</div>
 	</div>
 </div>
-</div>
 
 
+<footer class="footer"  style="height:120px;position:absolute;bottom: 0;width: 100%">
+  <div class="container" style="font-size:20pt">
+      <a href="/">
+            <img src="/static/back-icon.png" class="img-thumbnail img-responsive"
+        style="border:5px solid black;max-height:100px; margin-right:20px"><b>$strings["back to menu"]</b>
+        </a>
+  </div>
+</footer>
 
