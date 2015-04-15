@@ -1,45 +1,44 @@
 <launch>
     <arg name="bool_stamped_publisher_topic" default="/logging_manager/log_stamped"/>
-    <arg name="machine" default="localhost" />
-    <arg name="user" default="" />
+    <arg name="head_machine" default="werner-left-cortex" />
+    <arg name="head_user" default="strands" />
+    <arg name="usb_machine" default="werner-right-cortex" />
+    <arg name="usb_user" default="strands" />
     <!-- the logging directory to put the videos in -->
     <arg name="logging_dir" default="/tmp" />
     <!-- the logging tag used to identified different logging files -->
     <arg name="logging_tag" default="logging" />
 
-    <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="true"/>
+    <machine name="$(arg head_machine)" address="$(arg head_machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg head_user)" default="false"/>
+    <machine name="$(arg usb_machine)" address="$(arg usb_machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg usb_user)" default="false"/>
 
     <include file="$(find vision_people_logging)/launch/logging_ubd.launch">
-        <arg name="machine" value="$(arg machine)"/>
-        <arg name="user" value="$(arg user)"/>
+        <arg name="machine" value="$(arg head_machine)"/>
+        <arg name="user" value="$(arg head_user)"/>
         <arg name="manager_topic" value="$(arg bool_stamped_publisher_topic)"/>
     </include>
 
     <include file="$(find bayes_people_tracker_logging)/launch/logging.launch">
-        <arg name="machine" value="$(arg machine)"/>
-        <arg name="user" value="$(arg user)"/>
+        <arg name="machine" value="$(arg head_machine)"/>
+        <arg name="user" value="$(arg head_user)"/>
         <arg name="manager_topic" value=""/>
     </include>
 
-    <!-- record the interaction camera -->
+    <!-- record the interaction camera --> 
     <group ns="interaction_camera">
-        <node name="interaction_camera" pkg="usb_cam" type="usb_cam_node">
+        <node name="interaction_camera" pkg="usb_cam" type="usb_cam_node" machine="$(arg usb_machine)">
             <param name="camera_frame_id" value="interaction_camera" />
         </node>
-        <node name="throttle_image" 
+        <node name="throttle_image" machine="$(arg usb_machine)" 
             pkg="topic_tools" type="throttle" 
-            args="messages interaction_camera/image 1 throttled/image" />
-        <node name="throttle_camera_info"
-            pkg="topic_tools" type="throttle"
-            args="messages camera_info 1 throttled/camera_info" />
-        <node name="image_superimposer"
+            args="messages interaction_camera/image_raw 1 throttled/image" />
+        <node name="image_superimposer" machine="$(arg usb_machine)"
             pkg="image_branding" type="image_superimposer.py">
-            <remap from="image" to="throttled/image_annotated" />
+            <remap from="/image_superimposer/output" to="interaction_camera/image_annotated" />
             <remap from="/head_xtion/rgb/image_color" to="throttled/image" />
         </node>
-        <node name="video_recorder" pkg="image_view" type="video_recorder"> 
-            <remap from="image" to="throttled/image_annotated" />
-            <remap from="camera_info" to="throttled/camera_info" />
+        <node name="video_recorder" pkg="image_view" type="video_recorder" machine="$(arg usb_machine)"> 
+            <remap from="image" to="interaction_camera/image_annotated" />
             <param name="fps" value="1" />
             <param name="codec" value="fmp4" />
             <param name="filename" value="$(arg logging_dir)/interaction_camera_$(arg logging_tag).avi" />
@@ -47,20 +46,16 @@
     </group>
 
     <group ns="head_camera">
-        <node name="throttle_image" 
+        <node name="throttle_image" machine="$(arg head_machine)" 
             pkg="topic_tools" type="throttle" 
             args="messages /head_xtion/rgb/image_color 1 throttled/image" />
-        <node name="throttle_camera_info"
-            pkg="topic_tools" type="throttle"
-            args="messages camera_info 1 throttled/camera_info" />
-        <node name="image_superimposer"
+        <node name="image_superimposer" machine="$(arg head_machine)"
             pkg="image_branding" type="image_superimposer.py">
-            <remap from="image" to="throttled/image_annotated" />
+            <remap from="/image_superimposer/output" to="/head_xtion/rgb/image_annotated" />
             <remap from="/head_xtion/rgb/image_color" to="throttled/image" />
         </node>
-        <node name="video_recorder" pkg="image_view" type="video_recorder"> 
-            <remap from="image" to="throttled/image_annotated" />
-            <remap from="camera_info" to="throttled/camera_info" />
+        <node name="video_recorder" pkg="image_view" type="video_recorder" machine="$(arg head_machine)"> 
+            <remap from="image" to="/head_xtion/rgb/image_annotated" />
             <param name="fps" value="1" />
             <param name="codec" value="fmp4" />
             <param name="filename" value="$(arg logging_dir)/head_camera_$(arg logging_tag).avi" />
