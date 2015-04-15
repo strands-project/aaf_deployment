@@ -37,7 +37,7 @@ tmux send-keys "roslaunch rosbridge_server rosbridge_websocket.launch"
 tmux select-window -t $SESSION:8
 tmux send-keys "rosrun strands_webserver strands_webserver"
 tmux select-window -t $SESSION:9
-tmux send-keys "rosrun bellbot_gui gui.py"
+tmux send-keys "rosrun bellbot_gui gui2.py"
 tmux select-window -t $SESSION:10
 tmux send-keys "rosrun rviz rviz"
 # Set default window
