@@ -13,8 +13,19 @@
         <arg name="topological_map" value="$(arg topological_map)"/>
     </include>
 
-	<node pkg="gcal_routine" type="gcal_routine_node.py" name="gcal_routine" output="screen">
-		<param name="calendar" value="$(arg calendar)" type="string"/>
-	</node>
+    <node pkg="gcal_routine" type="gcal_routine_node.py" name="gcal_routine" output="screen">
+	<param name="calendar" value="$(arg calendar)" type="string"/>
+    </node>
+
+    <node pkg="wait_action" type="wait_node.py" name="charging_task" output="screen">
+	<param name="maximise_duration_delta" value="600" type="int"/>
+	<param name="interruptible" value="false" type="bool"/>
+    </node>
+
+    <node pkg="wait_action" type="wait_node.py" name="maintenance_task" output="screen">
+	<param name="maximise_duration_delta" value="600" type="int"/>
+	<param name="interruptible" value="true" type="bool"/>
+    </node>
+
 
 </launch>
