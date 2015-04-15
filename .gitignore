@@ -1,3 +1,6 @@
+# bellbot
+aaf_bellbot/www/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -57,3 +60,4 @@ target/
 *~
 *.mp4
 *.mp3
+.idea/
