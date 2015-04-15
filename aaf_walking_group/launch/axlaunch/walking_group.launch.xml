@@ -42,7 +42,7 @@
   -->
   <include file="$(find walking_group_recovery)/launch/walking_group_recovery.launch">
     <arg name="music_set" value="$(arg music_set_recovery)"/>
-    <arg name="music_file" value="$(music_file_recovery)"/>
+    <arg name="music_file" value="$(arg music_file_recovery)"/>
     <arg name="audio_priority" value="0.9"/>
   </include>
 
