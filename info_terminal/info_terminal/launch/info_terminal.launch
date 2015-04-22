@@ -3,8 +3,8 @@
 
     <node pkg="info_task" type="info_task_server.py" name="info_task_server" output="screen"/>
     <node pkg="infremen" type="infremen" name="infremen" output="screen">
-		<param name="scheduleDirectory" value="/home/strands/infremen" />
-		<param name="collectionName" value="AAFBetaTests" />
+		<param name="scheduleDirectory" value="/localhome/strands/infremen" />
+		<param name="collectionName" value="WhartBetaTests" />
     </node>
     <node pkg="info_terminal_gui" type="info_terminal.py" name="info_terminal_gui" output="screen">
         <param name="language" value="DE" type="string" />
