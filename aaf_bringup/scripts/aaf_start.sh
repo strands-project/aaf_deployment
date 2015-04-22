@@ -35,16 +35,16 @@ tmux select-window -t $SESSION:2
 tmux send-keys "DISPLAY=:0 roslaunch strands_bringup strands_robot.launch with_mux:=false"
 
 tmux select-window -t $SESSION:3
-tmux send-keys "DISPLAY=:0 roslaunch strands_bringup strands_cameras.launch head_camera:=true head_ip:=werner-left-cortex head_user:=strands chest_camera:=true chest_ip:=werner-right-cortex chest_user:=strands"
+tmux send-keys "DISPLAY=:0 roslaunch strands_bringup strands_cameras.launch head_camera:=true head_ip:=left-cortex head_user:=strands chest_camera:=true chest_ip:=right-cortex chest_user:=strands"
 
 tmux select-window -t $SESSION:4
-tmux send-keys "HOST_IP=192.168.0.100 DISPLAY=:0 roslaunch strands_bringup strands_ui.launch mary_machine:=werner-right-cortex mary_machine_user:=strands"
+tmux send-keys "HOST_IP=192.168.0.100 DISPLAY=:0 roslaunch strands_bringup strands_ui.launch mary_machine:=right-cortex mary_machine_user:=strands"
 
 tmux select-window -t $SESSION:5
 tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_navigation.launch map:=/opt/strands/map/aaf_winter.yaml topological_map:=aaf_predep"
 
 tmux select-window -t $SESSION:6
-tmux send-keys "DISPLAY=:0 roslaunch perception_people_launch people_tracker_robot.launch machine:=werner-left-cortex user:=strands"
+tmux send-keys "DISPLAY=:0 roslaunch perception_people_launch people_tracker_robot.launch machine:=left-cortex user:=strands"
 
 tmux select-window -t $SESSION:7
 tmux send-keys "DISPLAY=:0 rosrun mongodb_media_server server.py"
@@ -65,7 +65,7 @@ tmux select-window -t $SESSION:12
 tmux send-keys "DISPLAY=:0 roslaunch aaf_walking_group task_servers.launch"
 
 tmux select-window -t $SESSION:13
-tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_routine.launch calendar:=henry.strands%40hanheide.net machine:=werner-right-cortex user:=strands topological_map:=aaf_predep"
+tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_routine.launch calendar:=henry.strands%40hanheide.net machine:=right-cortex user:=strands topological_map:=aaf_predep"
 
 # Set default window
 tmux select-window -t $SESSION:0

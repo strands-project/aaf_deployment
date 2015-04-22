@@ -2,12 +2,12 @@
 <launch>
   <arg name="with_chest_xtion" default="true"/>
   <arg name="chest_xtion_name" default="chest_xtion"/>
-  <arg name="chest_xtion_machine" default="werner-right-cortex"/>
+  <arg name="chest_xtion_machine" default="right-cortex"/>
   <arg name="chest_xtion_user" default="strands"/>
-  <arg name="head_xtion_machine" default="werner-left-cortex"/>
+  <arg name="head_xtion_machine" default="left-cortex"/>
   <arg name="head_xtion_user" default="strands"/>
 
-  <arg name="topo_nav_machine" default="werner-right-cortex"/>
+  <arg name="topo_nav_machine" default="right-cortex"/>
   <arg name="topo_nav_user" default="strands"/>
 
   <arg name="map"/>
