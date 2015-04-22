@@ -1,8 +1,8 @@
 <launch>
     <arg name="bool_stamped_publisher_topic" default="/logging_manager/log_stamped"/>
-    <arg name="head_machine" default="werner-left-cortex" />
+    <arg name="head_machine" default="left-cortex" />
     <arg name="head_user" default="strands" />
-    <arg name="usb_machine" default="werner-right-cortex" />
+    <arg name="usb_machine" default="right-cortex" />
     <arg name="usb_user" default="strands" />
     <!-- the logging directory to put the videos in -->
     <arg name="logging_dir" default="/tmp" />

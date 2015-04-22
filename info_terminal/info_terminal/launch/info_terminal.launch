@@ -1,17 +1,13 @@
 <launch>
-    <arg name="schedule_directory" default="/home/strands/infremen"/>
-    <arg name="collection_name" default="AAFBetaTests"/>
-    <arg name="language" default="DE"/>
-
     <!-- This will be inside .ros unless provided with full path -->
 
     <node pkg="info_task" type="info_task_server.py" name="info_task_server" output="screen"/>
     <node pkg="infremen" type="infremen" name="infremen" output="screen">
-		<param name="scheduleDirectory" value="$(arg schedule_directory)" />
-		<param name="collectionName" value="$(arg collection_name)" />
+		<param name="scheduleDirectory" value="/localhome/strands/infremen" />
+		<param name="collectionName" value="WhartBetaTests" />
     </node>
     <node pkg="info_terminal_gui" type="info_terminal.py" name="info_terminal_gui" output="screen">
-        <param name="language" value="$(arg language)" type="string" />
+        <param name="language" value="DE" type="string" />
     </node>
 
 </launch>
