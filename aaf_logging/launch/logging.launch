@@ -37,6 +37,9 @@
     </include>
 
     <node pkg="aaf_logging" type="filter_rosout.py" name="filter_rosout" output="screen" respawn="true"/>
+    <node pkg="topic_tools" type="throttle" name="throttle_tf" output="screen" respawn="true" args="messages tf 3 /tf_throttled"/>
+    <node pkg="topic_tools" type="throttle" name="throttle_global_plan" output="screen" respawn="true" args="messages tf 1 /move_base/DWAPlannerROS/global_plan_throttled"/>
+    <node pkg="topic_tools" type="throttle" name="throttle_local_plan" output="screen" respawn="true" args="messages tf 1 /move_base/DWAPlannerROS/local_plan_throttled"/>
 
     <!--
     <include file="$(find aaf_logging)/launch/topics.launch">
