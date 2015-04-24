@@ -1,6 +1,5 @@
 export AAF_TOPICS="
     /rosout_filtered
-    /tf_throttled
     /robot_pose
     /cmd_vel
     /goal
