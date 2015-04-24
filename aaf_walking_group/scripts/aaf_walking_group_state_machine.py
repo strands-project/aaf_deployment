@@ -257,6 +257,8 @@ class WalkingGroupStateMachine(object):
         else:
             self._as.set_preempted()
 
+        strands_webserver.client_utils.display_relative_page(self.display_no, "ende.html")
+
     def preempt_callback(self):
         rospy.logwarn("Walking group preempt requested")
         self.sm.request_preempt()
