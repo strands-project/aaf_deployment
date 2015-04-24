@@ -88,16 +88,21 @@ class WalkingGroupStateMachine(object):
             name="/monitored_navigation/recover_states/",
             whitelist=rosparam.load_file(rospy.get_param("~recovery_whitelist"))[0][0]["recover_states"]
         )
-        self.dyn_client = DynClient(
+        rospy.loginfo("Creating dynamic reconfigure clients")
+        self.han_dyn_client = DynClient(
             "/human_aware_navigation"
         )
-        self.get_current_han_settings()
+        self.mov_dyn_client = DynClient(
+            "/move_base/DWAPlannerROS"
+        )
+        rospy.loginfo(" ...done")
+        self.get_current_dyn_settings()
 
         rospy.loginfo(" ... starting " + name)
         self._as.start()
         rospy.loginfo(" ... started " + name)
 
-    def get_current_han_settings(self):
+    def get_current_dyn_settings(self):
         gazing = rospy.get_param("/human_aware_navigation/gaze_type")
         angle = round(rospy.get_param("/human_aware_navigation/detection_angle"),2)
         self.han_param = {
@@ -105,6 +110,13 @@ class WalkingGroupStateMachine(object):
             'detection_angle': angle
         }
         rospy.loginfo("Found following default values for human_aware_navigation: %s", self.han_param)
+        max_vel_x = round(rospy.get_param("/move_base/DWAPlannerROS/max_vel_x"), 2)
+        max_trans_vel = round(rospy.get_param("/move_base/DWAPlannerROS/max_trans_vel"),2)
+        self.mov_param = {
+            "max_vel_x": max_vel_x,
+            "max_trans_vel": max_trans_vel
+        }
+        rospy.loginfo("Found following default values for move_base: %s", self.mov_param)
 
     def execute(self, goal):
         rospy.loginfo("Starting state machine")
@@ -148,13 +160,23 @@ class WalkingGroupStateMachine(object):
             'detection_angle': 20.0
         }
         try:
-            self.dyn_client.update_configuration(dyn_param)
+            self.han_dyn_client.update_configuration(dyn_param)
         except rospy.ServiceException as e:
             rospy.logerr("Caught service exception: %s", e)
 
         self.preempt_srv = rospy.Service('/walking_group/cancel', Empty, self.preempt_srv_cb)
         self.waypointset = self.loadConfig(self.waypointset_name, collection_name=self.waypointset_collection, meta_name=self.waypointset_meta)
         pprint.pprint(self.waypointset)
+
+        dyn_param = {
+            'max_vel_x': self.waypointset[goal.group]["speed"],
+            'max_trans_vel': self.waypointset[goal.group]["speed"]
+        }
+        try:
+            self.mov_dyn_client.update_configuration(dyn_param)
+        except rospy.ServiceException as e:
+            rospy.logerr("Caught service exception: %s", e)
+
         resting_points_dict = {k: i for k,i in self.waypointset[goal.group]["waypoints"].iteritems() if i in resting_points}
         pprint.pprint(resting_points)
         pprint.pprint(resting_points_dict)
@@ -232,7 +254,11 @@ class WalkingGroupStateMachine(object):
         self.ptu.turnPTU(0, 0)
         self.recovery.reconfigure(RecoveryReconfigure.RESET)
         try:
-            self.dyn_client.update_configuration(self.han_param)
+            self.han_dyn_client.update_configuration(self.han_param)
+        except rospy.ServiceException as e:
+            rospy.logerr("Caught service exception: %s", e)
+        try:
+            self.mov_dyn_client.update_configuration(self.mov_param)
         except rospy.ServiceException as e:
             rospy.logerr("Caught service exception: %s", e)
         try:

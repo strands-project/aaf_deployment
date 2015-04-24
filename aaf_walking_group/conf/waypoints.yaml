@@ -1,5 +1,6 @@
 slow:
-    stopping_distance: 3.0
+    speed: 0.55
+    stopping_distance: 20.0
     waypoints:
         1: "WayPoint33"
         2: "WayPoint20"
@@ -17,7 +18,8 @@ slow:
         14: "WayPoint11"
         15: "WayPoint33"
 fast:
-    stopping_distance: 5.0
+    speed: 0.7
+    stopping_distance: 20.0
     waypoints:
         1: "WayPoint33"
         2: "WayPoint20"
