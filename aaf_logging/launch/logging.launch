@@ -8,12 +8,14 @@
     <arg name="publishing_rate" default="30"/>
     <arg name="bool_publisher_topic" default="/logging_manager/log"/>
     <arg name="bool_stamped_publisher_topic" default="/logging_manager/log_stamped"/>
+    <arg name="mongodb_host" default="localhost"/>
+    <arg name="mongodb_port" default="62345"/>
 
     <arg name="machine" default="localhost" />
     <arg name="user" default="" />
 
     <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="false"/>
-
+    
     <node pkg="aaf_logging" type="start_stop_logging.py" name="logging_server" output="screen" respawn="true"/>
 
     <node pkg="aaf_logging" type="store_logs_task.py" name="store_logs" output="screen" respawn="true">
@@ -39,7 +41,7 @@
     <node pkg="aaf_logging" type="filter_rosout.py" name="filter_rosout" output="screen" respawn="true"/>
     <node pkg="topic_tools" type="throttle" name="throttle_global_plan" output="screen" respawn="true" args="messages /move_base/DWAPlannerROS/global_plan 0.5 /move_base/DWAPlannerROS/global_plan_throttled"/>
     <node pkg="topic_tools" type="throttle" name="throttle_local_plan" output="screen" respawn="true" args="messages /move_base/DWAPlannerROS/local_plan 0.5 /move_base/DWAPlannerROS/local_plan_throttled"/>
-    <node pkg="mongodb_log" type="mongodb_log_tf" name="tf_logger" output="screen" respawn="true" args="-t /tf -m $(arg machine):62345 -n tf_logger -c roslog.tf -k 0.1 -l 0.1 -g 0.5 -a"/>
+    <node pkg="mongodb_log" type="mongodb_log_tf" name="tf_logger" output="screen" respawn="true" args="-t /tf -m $(arg mongodb_host):$(arg mongodb_port) -n tf_logger -c roslog.tf -k 0.1 -l 0.1 -g 0.5 -a"/>
 
     <!--
     <include file="$(find aaf_logging)/launch/topics.launch">
