@@ -50,6 +50,7 @@
   <run_depend>message_generation</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>topological_logging_manager</run_depend>
+  <run_depend>topic_tools</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
