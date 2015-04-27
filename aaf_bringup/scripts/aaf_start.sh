@@ -29,7 +29,7 @@ tmux select-pane -t 1
 tmux send-keys "htop" C-m
 
 tmux select-window -t $SESSION:1
-tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_core.launch"
+tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_core.launch db_path:=/opt/strands/aaf_datacentre"
 
 tmux select-window -t $SESSION:2
 tmux send-keys "DISPLAY=:0 roslaunch strands_bringup strands_robot.launch with_mux:=false"
