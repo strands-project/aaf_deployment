@@ -50,4 +50,8 @@
     </include>
     -->
 
+    <include file="$(find vision_people_logging)/launch/logging_ubd.launch">
+        <arg name="manager_topic" value="$(arg bool_stamped_publisher_topic)"/>
+    </include>
+
 </launch>
