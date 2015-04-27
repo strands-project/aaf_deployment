@@ -1,14 +1,10 @@
 export AAF_TOPICS="
     /rosout_filtered
-    /tf
     /robot_pose
     /cmd_vel
     /goal
     /mileage
     /motor_status
-    /head/actual_state
-    /head/cmd_light_state
-    /head/commanded_state
     /barrier_status
     /battery_state
     /bumper
@@ -29,7 +25,6 @@ export AAF_TOPICS="
     /mary_tts/speak
     /strands_emails/goal
     /strands_image_tweets/goal
-    /pygame_player_negotiation
     /chargingServer/goal
     /chargingServer/result
     /chargingServer/cancel
@@ -42,8 +37,8 @@ export AAF_TOPICS="
     /map_updates
     /move_base/NavfnROS/plan
     /move_base/current_goal
-    /move_base/DWAPlannerROS/global_plan
-    /move_base/DWAPlannerROS/local_plan
+    /move_base/DWAPlannerROS/global_plan_throttled
+    /move_base/DWAPlannerROS/local_plan_throttled
     /move_base/goal
     /wait_node/goal
     /wait_node/result
