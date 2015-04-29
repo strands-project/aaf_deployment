@@ -6,6 +6,7 @@ import flir_pantilt_d46.msg
 from sensor_msgs.msg import JointState
 import strands_gazing.msg
 from copy import deepcopy
+import subprocess
 
 
 class Gaze():
@@ -95,3 +96,20 @@ class RecoveryReconfigure():
                     to_set[k] = self.whitelist[k]
             rospy.set_param(self.name, to_set)
 
+def get_master_volume():
+    proc = subprocess.Popen('/usr/bin/amixer sget Master', shell=True, stdout=subprocess.PIPE)
+    amixer_stdout = proc.communicate()[0].split('\n')[4]
+    proc.wait()
+
+    find_start = amixer_stdout.find('[') + 1
+    find_end = amixer_stdout.find('%]', find_start)
+
+    return float(amixer_stdout[find_start:find_end])
+
+def set_master_volume(val):
+    val = val if val <= 100.0 else 100.0
+    val = val if val >= 0.0 else 0.0
+    val = float(int(val))
+    proc = subprocess.Popen('/usr/bin/amixer sset Master ' + str(val) + '%', shell=True, stdout=subprocess.PIPE)
+    proc.wait()
+    subprocess.call(['/usr/bin/canberra-gtk-play','--id','message'])
