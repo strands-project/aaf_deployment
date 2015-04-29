@@ -8,6 +8,7 @@ from std_msgs.msg import Bool
 from actionlib_msgs.msg import GoalStatus
 from aaf_walking_group.msg import InterfaceAction, InterfaceGoal
 from std_srvs.srv import Empty, EmptyResponse
+import aaf_walking_group.utils as utils
 
 class GuideInterface(smach.State):
     def __init__(self, waypointset):
@@ -29,6 +30,8 @@ class GuideInterface(smach.State):
         self.srv = None
         self.play_pub = rospy.Publisher("~play_music", Bool, queue_size=1, latch=True)
         self.srv_music = rospy.Service('/walking_group/guide_interface/toggle_music', Empty, self.toggle_play_music)
+        self.srv_quieter = rospy.Service('/walking_group/guide_interface/volume_quieter', Empty, self.volume_control_quieter)
+        self.srv_louder = rospy.Service('/walking_group/guide_interface/volume_louder', Empty, self.volume_control_louder)
 
     def execute(self, userdata):
         self.srv = rospy.Service('/walking_group/guide_interface/cancel', Empty, self.cancel_srv)
@@ -89,4 +92,12 @@ class GuideInterface(smach.State):
     def toggle_play_music(self, req):
         self.play_music = not self.play_music
         self.play_pub.publish(self.play_music)
+        return EmptyResponse()
+
+    def volume_control_quieter(self, req):
+        utils.set_master_volume(utils.get_master_volume() - 5)
+        return EmptyResponse()
+
+    def volume_control_louder(self, req):
+        utils.set_master_volume(utils.get_master_volume() + 5)
         return EmptyResponse()

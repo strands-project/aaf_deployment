@@ -19,6 +19,7 @@ from aaf_walking_group.msg import GuidingAction, EmptyAction, StateMachineAction
 from aaf_walking_group.srv import GetMediaId
 from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
 from aaf_walking_group.utils import PTU, Gaze, RecoveryReconfigure
+import aaf_walking_group.utils as utils
 from music_player.srv import MusicPlayerService
 from sound_player_server.srv import PlaySoundService
 from walking_group_recovery.srv import ToggleWalkingGroupRecovery
@@ -71,6 +72,7 @@ class WalkingGroupStateMachine(object):
         s.wait_for_service()
         rospy.loginfo(" ... done")
         # Get parameters
+        self.volume = utils.get_master_volume()
         self.display_no = rospy.get_param("~display_no", 0)
         self.waypointset_name = rospy.get_param("~mongodb_params/waypointset_name", "")
         self.waypointset_collection = rospy.get_param("~mongodb_params/waypointset_collection", "aaf_walking_group")
@@ -253,6 +255,7 @@ class WalkingGroupStateMachine(object):
         self.preempt_srv.shutdown()
         self.ptu.turnPTU(0, 0)
         self.recovery.reconfigure(RecoveryReconfigure.RESET)
+        utils.set_master_volume(self.volume)
         try:
             self.han_dyn_client.update_configuration(self.han_param)
         except rospy.ServiceException as e:
