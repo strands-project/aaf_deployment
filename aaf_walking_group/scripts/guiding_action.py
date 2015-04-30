@@ -29,8 +29,8 @@ class GuidingServer():
             topological_navigation.msg.GotoNodeAction
         )
         self.client.wait_for_server()
-        
-        
+
+
         rospy.loginfo(" ... done ")
         rospy.loginfo("Creating wait client...")
         self.empty_client = actionlib.SimpleActionClient(
@@ -38,16 +38,16 @@ class GuidingServer():
             EmptyAction
         )
         self.empty_client.wait_for_server()
-        
-        
+
+
         rospy.loginfo(" ... done ")
         rospy.loginfo("Creating interface client...")
         self.client_walking_interface = actionlib.SimpleActionClient(
             '/walking_interface_server',
             EmptyAction
         )
-        
-        
+
+
         rospy.loginfo(" ... done ")
         rospy.loginfo("Creating interface client...")
         self.client_move_base = actionlib.SimpleActionClient(
@@ -55,7 +55,7 @@ class GuidingServer():
             MoveBaseAction
         )
         self.client_move_base.wait_for_server()
-        
+
         self.client_walking_interface.wait_for_server()
         rospy.loginfo(" ... done ")
         self.card_subscriber = rospy.Subscriber(
@@ -64,7 +64,7 @@ class GuidingServer():
             self.card_callback,
             queue_size=1
         )
-        
+
         self.node_subscriber = rospy.Subscriber(
             "/current_node",
             String,
@@ -91,7 +91,7 @@ class GuidingServer():
             rospy.loginfo(" ... called get tagged nodes recovery")
         except rospy.ServiceException, e:
                      rospy.logwarn("Service call failed: %s" % e)
-            
+
         self.pause = 0
         self.client_walking_interface.send_goal(EmptyActionGoal())
         self.navgoal = topological_navigation.msg.GotoNodeGoal()
@@ -99,14 +99,14 @@ class GuidingServer():
         self.client.send_goal(self.navgoal)
         while not self.current_node == goal.waypoint and not rospy.is_shutdown():
             rospy.sleep(1)
-            
+
         self.client.wait_for_result()
         self.client_walking_interface.cancel_goal()
         if not self.server.is_preempt_requested():
             self.server.set_succeeded()
         else:
             self.server.set_preempted()
-            
+
     def node_callback(self, data):
         if self.server.is_active():
             self.current_node = data.data
@@ -115,8 +115,14 @@ class GuidingServer():
                 self.client.cancel_all_goals()
                 self.client_move_base.cancel_all_goals()
                 self.pause = 1
+                try:
+                    s = rospy.ServiceProxy('/sound_player_server/sound_player_service', PlaySoundService)
+                    s.wait_for_service()
+                    s("jingle_stop.mp3")
+                except rospy.ServiceException, e:
+                    rospy.logwarn("Service call failed: %s" % e)
 
-        
+
     def preempt_callback(self):
         rospy.logwarn("Guiding action preempt requested")
         self.client.cancel_all_goals()
