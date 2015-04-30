@@ -65,11 +65,7 @@ class GuidingServer():
             queue_size=1
         )
         
-        self.node_subscriber = rospy.Subscriber(
-            "/current_node",
-            String,
-            self.node_callback
-        )
+        self.node_subscriber = None
 
         self.pause = 0
         self.pause_points = []
@@ -81,6 +77,11 @@ class GuidingServer():
         rospy.loginfo(" ... started "+name)
 
     def execute(self, goal):
+        self.node_subscriber = rospy.Subscriber(
+            "/current_node",
+            String,
+            self.node_callback
+        )
         try:
             nodes_service = rospy.ServiceProxy('/topological_map_manager/get_tagged_nodes', GetTaggedNodes)
             nodes_service.wait_for_service()
@@ -97,24 +98,25 @@ class GuidingServer():
         self.navgoal = topological_navigation.msg.GotoNodeGoal()
         self.navgoal.target = goal.waypoint
         self.client.send_goal(self.navgoal)
-        while not self.current_node == goal.waypoint and not rospy.is_shutdown():
+        while not self.current_node == goal.waypoint and not rospy.is_shutdown() and not self.server.is_preempt_requested():
             rospy.sleep(1)
             
         self.client.wait_for_result()
         self.client_walking_interface.cancel_goal()
+        self.node_subscriber.unregister()
+        self.node_subscriber = None
         if not self.server.is_preempt_requested():
             self.server.set_succeeded()
         else:
             self.server.set_preempted()
             
     def node_callback(self, data):
-        if self.server.is_active():
-            self.current_node = data.data
-            if data.data in self.pause_points:
-                rospy.loginfo("Pausing...")
-                self.client.cancel_all_goals()
-                self.client_move_base.cancel_all_goals()
-                self.pause = 1
+        self.current_node = data.data
+        if data.data in self.pause_points:
+            rospy.loginfo("Pausing...")
+            self.client.cancel_all_goals()
+            self.client_move_base.cancel_all_goals()
+            self.pause = 1
 
         
     def preempt_callback(self):
