@@ -5,6 +5,7 @@
 class WaypointManager():
     RESTING = "resting"
     INTERMEDIATE = "intermediate"
+    ASKING = "asking"
 
     def __init__(self, waypoints):
         self.waypoints = waypoints
@@ -44,6 +45,9 @@ class WaypointManager():
     def get_current_resting_waypoint(self):
         return self.get_current_waypoint()[self.RESTING]
 
+    def get_current_asking_waypoint(self):
+        return self.get_current_waypoint()[self.ASKING]
+
     def get_resting_waypoints(self):
         return [x["resting"] for x in self.get_waypoints()]
 
@@ -56,7 +60,7 @@ class WaypointManager():
 
     def create_route(self):
         r = [x for x in self.get_current_intermediate_waypoints()]
-        r.append(self.get_current_resting_waypoint())
+        r.append(self.get_current_asking_waypoint())
         idx = 0 if not self.route["route"] == r else self.route["idx"]
         self.route = {"route": r, "idx": idx}
 
@@ -65,6 +69,10 @@ class WaypointManager():
 
     def advance_on_route(self):
         self.route["idx"] = self.route["idx"] + 1
+        return self.route["route"][self.route["idx"]]
+
+    def reverse_on_route(self):
+        self.route["idx"] = self.route["idx"] - 1 if self.route["idx"] > 0 else 0
         return self.route["route"][self.route["idx"]]
 
     def get_current_waypoint_in_route(self):
