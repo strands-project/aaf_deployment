@@ -19,11 +19,11 @@ from aaf_walking_group.msg import GuidingAction, EmptyAction, StateMachineAction
 from aaf_walking_group.srv import GetMediaId
 from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
 from aaf_walking_group.utils import PTU, Gaze, RecoveryReconfigure
+from aaf_walking_group.waypoint_manager import WaypointManager
 import aaf_walking_group.utils as utils
 from music_player.srv import MusicPlayerService
 from sound_player_server.srv import PlaySoundService
 from walking_group_recovery.srv import ToggleWalkingGroupRecovery
-from strands_navigation_msgs.srv import GetTaggedNodes, GetTaggedNodesRequest, GetTaggedNodesResponse
 import actionlib
 import json
 import pprint
@@ -123,21 +123,6 @@ class WalkingGroupStateMachine(object):
     def execute(self, goal):
         rospy.loginfo("Starting state machine")
 
-        resting_points = []
-        try:
-            rospy.loginfo("Creating get tagged nodes service proxy and waiting ...")
-            s = rospy.ServiceProxy('/topological_map_manager/get_tagged_nodes', GetTaggedNodes)
-            s.wait_for_service()
-            rospy.loginfo(" ... calling get tagged nodes service")
-            req = GetTaggedNodesRequest(tag='walking_group_resting_point')
-            res = s(req)
-            resting_points = res.nodes
-            rospy.loginfo(" ... called get tagged nodes recovery")
-        except (rospy.ServiceException, rospy.ROSInterruptException) as e:
-            rospy.logfatal("get tagged nodes service call failed: %s" % e)
-            self._as.set_aborted()
-            return
-
         try:
             rospy.loginfo("Creating recovery toggle service proxy and waiting ...")
             self.rec_srv.wait_for_service()
@@ -167,21 +152,18 @@ class WalkingGroupStateMachine(object):
             rospy.logerr("Caught service exception: %s", e)
 
         self.preempt_srv = rospy.Service('/walking_group/cancel', Empty, self.preempt_srv_cb)
-        self.waypointset = self.loadConfig(self.waypointset_name, collection_name=self.waypointset_collection, meta_name=self.waypointset_meta)
-        pprint.pprint(self.waypointset)
+        config = self.loadConfig(self.waypointset_name, collection_name=self.waypointset_collection, meta_name=self.waypointset_meta)
+        pprint.pprint(config)
 
         dyn_param = {
-            'max_vel_x': self.waypointset[goal.group]["speed"],
-            'max_trans_vel': self.waypointset[goal.group]["speed"]
+            'max_vel_x': config[goal.group]["speed"],
+            'max_trans_vel': config[goal.group]["speed"]
         }
         try:
             self.mov_dyn_client.update_configuration(dyn_param)
         except rospy.ServiceException as e:
             rospy.logerr("Caught service exception: %s", e)
 
-        resting_points_dict = {k: i for k,i in self.waypointset[goal.group]["waypoints"].iteritems() if i in resting_points}
-        pprint.pprint(resting_points)
-        pprint.pprint(resting_points_dict)
         try:
             rospy.loginfo("Creating waypoint sound service proxy and waiting ...")
             s = rospy.ServiceProxy('aaf_waypoint_sounds_service', WaypointSoundsService)
@@ -194,7 +176,7 @@ class WalkingGroupStateMachine(object):
 
         # Create a SMACH state machine
         self.sm = smach.StateMachine(outcomes=['succeeded', 'aborted', 'preempted'])
-        self.sm.userdata.current_waypoint = self.waypointset[goal.group]["waypoints"][str(min([int(x) for x in self.waypointset[goal.group]["waypoints"].keys()]))]
+        self.sm.userdata.waypoints = WaypointManager([i for k,i in sorted(config[goal.group]["waypoints"].items(),key=lambda to_int: int(to_int[0]))])
         self.sm.userdata.play_music = True
         sis = smach_ros.IntrospectionServer(
             'walking_group_state_machine',
@@ -212,40 +194,39 @@ class WalkingGroupStateMachine(object):
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
-                remapping={'current_waypoint' : 'current_waypoint', 'play_music' : 'play_music'}
+                remapping={'waypoints' : 'waypoints', 'play_music' : 'play_music'}
             )
             smach.StateMachine.add(
                 'GUIDE_INTERFACE',
-                GuideInterface(resting_points_dict),
+                GuideInterface(),
                 transitions={
                     'move_to_point': 'GUIDING',
                     'aborted': 'ENTERTAIN',
                     'killall': 'preempted'
                 },
-                remapping={'current_waypoint' : 'current_waypoint', 'play_music' : 'play_music'}
+                remapping={'waypoints' : 'waypoints', 'play_music' : 'play_music'}
             )
             smach.StateMachine.add(
                 'GUIDING',
-                Guiding(waypoints=self.waypointset[goal.group]["waypoints"], distance=self.waypointset[goal.group]["stopping_distance"], resting_points=resting_points),
+                Guiding(distance=config[goal.group]["stopping_distance"]),
                 transitions={
                     'reached_point': 'RESTING_CONT',
                     'reached_final_point': 'succeeded',
-                    'continue': 'GUIDING',
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
-                remapping={'waypoint' : 'waypoint', 'play_music' : 'play_music'}
+                remapping={'waypoints' : 'waypoints', 'play_music' : 'play_music'}
             )
             smach.StateMachine.add(
                 'RESTING_CONT',
-                RestingPoint(self.display_no,self.waypointset[goal.group]["waypoints"]),
+                RestingPoint(self.display_no),
                 transitions={
                     'rest': 'ENTERTAIN',
                     'continue': 'GUIDING',
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
-                remapping={'current_waypoint' : 'current_waypoint', 'play_music' : 'play_music'}
+                remapping={'waypoints' : 'waypoints', 'play_music' : 'play_music'}
             )
 
         # Execute SMACH plan
