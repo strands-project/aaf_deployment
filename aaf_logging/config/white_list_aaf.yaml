@@ -1,28 +1,55 @@
 nodes:
-    - "ChargingPoint"
-    - "Station"
-    - "WayPoint8"
-    - "WayPoint2"
-    - "Eingang"
-    - "Rezeption"
-    - "WayPoint17"
-    - "WayPoint35"
-    - "WayPoint26"
-    - "Cafeteria"
-    - "Lift2"
-    - "WayPoint7"
-    - "WayPoint12"
-    - "WayPoint19"
-    - "WayPoint21"
-    - "WayPoint28"
-    - "Feuerloescher"
-    - "WayPoint39"
-    - "Konferenzraum"
-    - "WayPoint43"
-    - "WayPoint47"
-    - "WayPoint32"
-    - "WayPoint45"
-    - "WayPoint48"
-    - "WayPoint34"
-    - "List1"
-    - "WayPoint14"
+- ChargingPoint
+- WayPoint34
+- WayPoint52
+- WayPoint75
+- WayPoint53
+- WayPoint56
+- WayPoint61
+- WayPoint7
+- Lift1
+- WayPoint14
+- WayPoint51
+- WayPoint77
+- WayPoint50
+- WayPoint49
+- WayPoint12
+- WayPoint78
+- Cafeteria
+- WayPoint8
+- Rezeption
+- WayPoint35
+- WayPoint45
+- WayPoint58
+- WayPoint59
+- WayPoint32
+- WayPoint82
+- WayPoint57
+- WayPoint54
+- WayPoint55
+- WayPoint47
+- WayPoint83
+- WayPoint60
+- WayPoint43
+- WayPoint84
+- WayPoint63
+- WayPoint85
+- WayPoint17
+- Eingang
+- Station
+- WayPoint2
+- WayPoint26
+- WayPoint87
+- WayPoint66
+- Konferenzraum
+- Feuerloescher
+- WayPoint39
+- WayPoint48
+- WayPoint62
+- WayPoint28
+- WayPoint21
+- WayPoint19
+- Lift2
+- WayPoint76
+- WayPoint81
+- WayPoint86

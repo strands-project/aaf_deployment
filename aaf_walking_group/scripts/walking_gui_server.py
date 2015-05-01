@@ -30,6 +30,14 @@ class WalkingInterfaceServer(object):
         self.direction = "straight"
         self.previous_direction = ""
 
+        rospy.loginfo("%s: Starting walking interface action server", name)
+        self._as = actionlib.SimpleActionServer(
+            self._action_name,
+            EmptyAction,
+            execute_cb=self.executeCallback,
+            auto_start=False
+        )
+
         self.head_pub = rospy.Publisher(
             '/head/commanded_state',
             JointState,
@@ -39,9 +47,11 @@ class WalkingInterfaceServer(object):
         self.head.header.stamp = rospy.Time.now()
         self.head.name = ["HeadPan", "HeadTilt"]
 
+        rospy.loginfo("%s: Waiting for topological map...", name)
         self.topological_nodes = rospy.wait_for_message(
             '/topological_map',
             TopologicalMap)
+        rospy.loginfo("%s: ... done", name)
 
         self.route_sub = rospy.Subscriber(
             "/topological_navigation/Route",
@@ -63,7 +73,13 @@ class WalkingInterfaceServer(object):
 
         self.ts.registerCallback(self.filter_callback)
 
-        self.dyn_client = DynClient('/EBC')
+        rospy.loginfo("%s: Waiting for dynamic reconfigure server for 5 sec...", name)
+        try:
+            self.dyn_client = DynClient('/EBC', timeout=5.0)
+            rospy.loginfo("%s: ... done", name)
+        except rospy.ROSException as e:
+            rospy.logwarn("%s: %s" % (name, e))
+            self.dyn_client = None
         self.thread = None
 
         #tell the webserver where it should look for web files to serve
@@ -73,16 +89,9 @@ class WalkingInterfaceServer(object):
         #client_utils.set_http_root(http_root)
 
         #Starting server
-        rospy.loginfo("%s: Starting walking interface action server", name)
-        self._as = actionlib.SimpleActionServer(
-            self._action_name,
-            EmptyAction,
-            execute_cb=self.executeCallback,
-            auto_start=False
-        )
 
         self._as.start()
-        rospy.loginfo("%s: ...done.", name)
+        rospy.loginfo("%s: ... started.", name)
 
 
     def filter_callback(self, path, pose):
@@ -194,7 +203,10 @@ class WalkingInterfaceServer(object):
             params = {'Port0_5V_Enabled' : isOn}
         else:
             params = {'Port1_5V_Enabled' : isOn}
-        self.dyn_client.update_configuration(params)
+        if self.dyn_client:
+            self.dyn_client.update_configuration(params)
+        else:
+            rospy.logwarn("%s: No dynamic reconfigure for indicators available. Please restart.")
 
     def blink(self, side):
         r = rospy.Rate(2)
