@@ -193,6 +193,10 @@ class WalkingInterfaceServer(object):
                         rospy.loginfo("Moving straight...")
                         self.previous_direction = "straight"
 
+        if self.thread:
+            self.indicate = False
+            self.thread.join()
+
         if self._as.is_preempt_requested():
             self._as.set_preempted()
         else:
