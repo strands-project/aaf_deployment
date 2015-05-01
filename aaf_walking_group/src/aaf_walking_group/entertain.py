@@ -11,8 +11,8 @@ class Entertain(smach.State):
         smach.State.__init__(
             self,
             outcomes=['key_card', 'killall'],
-            input_keys=['current_waypoint', 'play_music'],
-            output_keys=['current_waypoint', 'play_music']
+            input_keys=['waypoints', 'play_music'],
+            output_keys=['waypoints', 'play_music']
         )
         self.display_no = display_no
         self.card = False
@@ -25,7 +25,7 @@ class Entertain(smach.State):
         self.sub = rospy.Subscriber("/socialCardReader/commands", String, callback=self.callback)
         rospy.loginfo("Showing entertainment interface.")
         strands_webserver.client_utils.display_relative_page(self.display_no, "entertainment.html")
-        rospy.loginfo("I am at: " + userdata.current_waypoint)
+        rospy.loginfo("I am at: " + userdata.waypoints.get_current_resting_waypoint())
         while not self.card and not rospy.is_shutdown() and not self.preempt_requested():
             rospy.sleep(1)
         self.gaze.preempt()
