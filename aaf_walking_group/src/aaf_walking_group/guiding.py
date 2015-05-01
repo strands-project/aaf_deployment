@@ -12,14 +12,13 @@ from sound_player_server.srv import PlaySoundService
 
 
 class Guiding(smach.State):
-    def __init__(self, distance):
+    def __init__(self):
         smach.State.__init__(
             self,
             outcomes=['reached_point', 'reached_final_point', 'key_card', 'killall'],
             input_keys=['waypoints', 'play_music'],
             output_keys=['waypoints', 'play_music']
         )
-        self.distance = distance
         self.sub = None
         self.card = False
         rospy.loginfo("Creating guiding client...")

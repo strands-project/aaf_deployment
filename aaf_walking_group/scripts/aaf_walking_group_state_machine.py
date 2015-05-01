@@ -208,7 +208,7 @@ class WalkingGroupStateMachine(object):
             )
             smach.StateMachine.add(
                 'GUIDING',
-                Guiding(distance=config[goal.group]["stopping_distance"]),
+                Guiding(),
                 transitions={
                     'reached_point': 'RESTING_CONT',
                     'reached_final_point': 'succeeded',
