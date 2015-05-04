@@ -32,7 +32,7 @@ class Guiding(smach.State):
             rospy.loginfo("Creating waypoint sound service proxy and waiting ...")
             s = rospy.ServiceProxy('aaf_waypoint_sounds_service', WaypointSoundsService)
             if command == "play":
-                music_client(MusicPlayerServiceRequest.PLAY)
+                music_client(MusicPlayerServiceRequest.RESUME)
                 s(WaypointSoundsServiceRequest.PAUSE)
             elif command == "pause":
                 music_client(MusicPlayerServiceRequest.PAUSE)
