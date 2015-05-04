@@ -15,6 +15,7 @@ from aaf_walking_group.entertain import Entertain
 from aaf_walking_group.guide_interface import GuideInterface
 from aaf_walking_group.guiding import Guiding
 from aaf_walking_group.reached_resting_point import RestingPoint
+from aaf_walking_group.final_approach import FinalApproach
 from aaf_walking_group.msg import GuidingAction, EmptyAction, StateMachineAction
 from aaf_walking_group.srv import GetMediaId
 from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
@@ -221,8 +222,18 @@ class WalkingGroupStateMachine(object):
                 'RESTING_CONT',
                 RestingPoint(self.display_no),
                 transitions={
-                    'rest': 'ENTERTAIN',
+                    'rest': 'FINAL_APPROACH',
                     'continue': 'GUIDING',
+                    'key_card': 'GUIDE_INTERFACE',
+                    'killall': 'preempted'
+                },
+                remapping={'waypoints' : 'waypoints', 'play_music' : 'play_music'}
+            )
+            smach.StateMachine.add(
+                'FINAL_APPROACH',
+                FinalApproach(),
+                transitions={
+                    'reached_point': 'ENTERTAIN',
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },

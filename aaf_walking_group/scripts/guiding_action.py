@@ -113,6 +113,9 @@ class GuidingServer():
 
     def node_callback(self, data):
         self.current_node = data.data
+        if data.data == self.navgoal.target and self.navgoal.no_orientation: # For intermediate nodes, being in the influence are is enough
+            self.client.cancel_all_goals()
+#            self.client_move_base.cancel_all_goals()
         if data.data in self.pause_points:
             rospy.loginfo("Pausing...")
             self.client.cancel_all_goals()

@@ -58,6 +58,7 @@ class Guiding(smach.State):
         else:
             self.music_control("pause")
 
+        print userdata.waypoints.get_route_to_current_waypoint()
         next_waypoint = userdata.waypoints.get_current_waypoint_in_route()
 
         while not rospy.is_shutdown() and not self.preempt_requested():
@@ -65,7 +66,7 @@ class Guiding(smach.State):
 
             goal = GuidingGoal()
             goal.waypoint = next_waypoint
-            goal.no_orientation = not next_waypoint == userdata.waypoints.get_route_to_current_waypoint()["route"][-1]
+            goal.no_orientation = True
 
             self.nav_client.send_goal(goal)
             # Necessary to account for seeing the card immediately after the goal was sent.
@@ -87,6 +88,7 @@ class Guiding(smach.State):
                 if not self.preempt_requested():
                     next_waypoint = userdata.waypoints.advance_on_route()
             except IndexError:
+                userdata.waypoints.reverse_on_route() # Necessary to resume after interupting final_approach
                 break
 
         self.music_control("pause")
