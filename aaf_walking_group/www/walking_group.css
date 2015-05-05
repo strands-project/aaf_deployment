@@ -85,6 +85,12 @@ p {font-size:200%}
 .music-off-button {
   background: url('img/button_musik_off.png') left center / 100% no-repeat;
 }
+.music-quieter {
+  background: url('img/button_leiser.png') left center / 100% no-repeat;
+}
+.music-louder {
+  background: url('img/button_lauter.png') left center / 100% no-repeat;
+}
 .speechout{
   border-radius: 10px 10px 10px 10px;
   -moz-border-radius: 10px 10px 10px 10px;

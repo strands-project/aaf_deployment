@@ -1,4 +1,4 @@
 string waypoint
-float64 distance
+bool no_orientation
 ---
 ---
