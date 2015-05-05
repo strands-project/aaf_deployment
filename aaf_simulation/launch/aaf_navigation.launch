@@ -14,9 +14,10 @@
   
   <node name="gaze_at_pose" pkg="strands_gazing" type="gaze_at_pose"/>
   <node name="pose_extractor" pkg="pose_extractor" type="extract_last_pose_from_path.py"/>
-  <node name="human_aware_navigation" pkg="strands_human_aware_navigation" type="human_aware_navigation.py"/>
+  <!-- <node name="human_aware_navigation" pkg="strands_human_aware_navigation" type="human_aware_navigation.py"/> -->
+  <include file="$(find strands_human_aware_navigation)/launch/human_aware_navigation.launch"/>
 
-   <!--- Topological Navigation (includes monitored_navigation) -->
+  <!--- Topological Navigation (includes monitored_navigation) -->
   <include file="$(find topological_navigation)/launch/topological_navigation.launch">
     <arg name="map" value="$(arg dataset)"/>
     <arg name="mon_nav_config_file" value="$(arg mon_nav_config_file)"/>
