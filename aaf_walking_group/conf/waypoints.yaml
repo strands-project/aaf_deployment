@@ -1,38 +1,106 @@
 slow:
     speed: 0.55
-    stopping_distance: 20.0
     waypoints:
-        1: "WayPoint33"
-        2: "WayPoint20"
-        3: "WayPoint79"
-        4: "WayPoint78"
-        5: "WayPoint77"
-        6: "WayPoint75"
-        7: "WayPoint82"
-        8: "WayPoint83"
-        9: "WayPoint84"
-        10: "WayPoint28"
-        11: "WayPoint7"
-        12: "WayPoint78"
-        13: "WayPoint79"
-        14: "WayPoint11"
-        15: "WayPoint33"
+        1:
+            resting:
+                "WayPoint33"
+            asking:
+                "WayPoint33"
+        2: 
+            resting:
+                "WayPoint79"
+            asking:
+                "WayPoint4"
+            intermediate: 
+                1: "WayPoint20"
+        3:
+            resting:
+                "WayPoint78"
+            asking:
+                "WayPoint35"
+        4:
+            resting:
+                "WayPoint77"
+            asking:
+                "WayPoint14"
+        5:
+            resting:
+                "WayPoint75"
+            asking:
+                "Lift1"
+        6:
+            resting:
+                "WayPoint78"
+            asking:
+                "WayPoint26"
+            intermediate:
+                1: "WayPoint82"
+                2: "WayPoint83"
+                3: "WayPoint84"
+                4: "WayPoint28"
+                5: "WayPoint7"
+        7:
+            resting:
+                "WayPoint79"
+            asking:
+                "WayPoint4"
+        8:
+            resting:
+                "WayPoint33"
+            asking:
+                "WayPoint33"
+            intermediate:
+                1: "WayPoint11"
 fast:
     speed: 0.7
-    stopping_distance: 20.0
     waypoints:
-        1: "WayPoint33"
-        2: "WayPoint20"
-        3: "WayPoint79"
-        4: "WayPoint78"
-        5: "WayPoint77"
-        6: "WayPoint75"
-        7: "WayPoint82"
-        8: "WayPoint83"
-        9: "WayPoint84"
-        10: "WayPoint28"
-        11: "WayPoint7"
-        12: "WayPoint78"
-        13: "WayPoint79"
-        14: "WayPoint11"
-        15: "WayPoint33"
+        1:
+            resting:
+                "WayPoint33"
+            asking:
+                "WayPoint33"
+        2: 
+            resting:
+                "WayPoint79"
+            asking:
+                "WayPoint4"
+            intermediate: 
+                1: "WayPoint20"
+        3:
+            resting:
+                "WayPoint78"
+            asking:
+                "WayPoint35"
+        4:
+            resting:
+                "WayPoint77"
+            asking:
+                "WayPoint14"
+        5:
+            resting:
+                "WayPoint75"
+            asking:
+                "Lift1"
+        6:
+            resting:
+                "WayPoint78"
+            asking:
+                "WayPoint26"
+            intermediate:
+                1: "WayPoint82"
+                2: "WayPoint83"
+                3: "WayPoint84"
+                4: "WayPoint28"
+                5: "WayPoint7"
+        7:
+            resting:
+                "WayPoint79"
+            asking:
+                "WayPoint4"
+        8:
+            resting:
+                "WayPoint33"
+            asking:
+                "WayPoint33"
+            intermediate:
+                1: "WayPoint11"
