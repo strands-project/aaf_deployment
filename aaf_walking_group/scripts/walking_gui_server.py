@@ -30,6 +30,7 @@ class WalkingInterfaceServer(object):
         self.coordinates = PoseArray()
         self.direction = "straight"
         self.previous_direction = ""
+        self.previous_pub_direction = ""
 
         rospy.loginfo("%s: Starting walking interface action server", name)
         self._as = actionlib.SimpleActionServer(
@@ -136,6 +137,10 @@ class WalkingInterfaceServer(object):
         else:
             self.direction = "straight"
 
+        if not self.direction == self.previous_pub_direction:
+            self.res_pub.publish(self.direction)
+            self.previous_pub_direction = self.direction
+
 
 
     def route_callback(self, data):
@@ -159,7 +164,6 @@ class WalkingInterfaceServer(object):
                     self.head.position = [0, 0]
                     self.head_pub.publish(self.head)
                     self.previous_direction = "stop"
-                    self.res_pub.publish(self.direction)
             else:
                 if self.previous_direction != self.direction:
                     if self.direction == 'right':
@@ -200,8 +204,6 @@ class WalkingInterfaceServer(object):
                         self.head_pub.publish(self.head)
                         rospy.loginfo("Moving straight...")
                         self.previous_direction = "straight"
-
-                    self.res_pub.publish(self.direction)
 
         if self.thread:
             self.indicate = False
