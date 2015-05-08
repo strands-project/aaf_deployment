@@ -15,6 +15,7 @@ from nav_msgs.msg import Path
 from strands_navigation_msgs.msg import TopologicalMap, TopologicalRoute
 from sensor_msgs.msg import JointState
 from geometry_msgs.msg import PoseStamped, PoseArray
+from std_msgs.msg import String
 
 
 
@@ -38,10 +39,19 @@ class WalkingInterfaceServer(object):
             auto_start=False
         )
 
+        self.show_webpage = rospy.get_param("~show_webpage", True)
+        self.use_indicators = rospy.get_param("~use_indicators", True)
+
         self.head_pub = rospy.Publisher(
             '/head/commanded_state',
             JointState,
             queue_size=10)
+
+        self.res_pub = rospy.Publisher(
+            '~direction',
+            String,
+            queue_size=10,
+            latch=True)
 
         self.head = JointState()
         self.head.header.stamp = rospy.Time.now()
@@ -73,14 +83,15 @@ class WalkingInterfaceServer(object):
 
         self.ts.registerCallback(self.filter_callback)
 
-        rospy.loginfo("%s: Waiting for dynamic reconfigure server for 5 sec...", name)
-        try:
-            self.dyn_client = DynClient('/EBC', timeout=5.0)
-            rospy.loginfo("%s: ... done", name)
-        except rospy.ROSException as e:
-            rospy.logwarn("%s: %s" % (name, e))
-            self.dyn_client = None
         self.thread = None
+        self.dyn_client = None
+        if self.use_indicators:
+            rospy.loginfo("%s: Waiting for dynamic reconfigure server for 5 sec...", name)
+            try:
+                self.dyn_client = DynClient('/EBC', timeout=5.0)
+                rospy.loginfo("%s: ... done", name)
+            except rospy.ROSException as e:
+                rospy.logwarn("%s: %s" % (name, e))
 
         #tell the webserver where it should look for web files to serve
         #http_root = os.path.join(
@@ -141,19 +152,18 @@ class WalkingInterfaceServer(object):
             if time.time() - self.start_time > 5:#reconfigurable parameter
                 self.direction = "stop"
                 if self.previous_direction != self.direction:
-                    client_utils.display_relative_page(self.display_no,
-                                                       'stop.html')
+                    self.display('stop.html')
                     rospy.loginfo("STOP")
                     self.indicate = False
                     #move head straight
                     self.head.position = [0, 0]
                     self.head_pub.publish(self.head)
                     self.previous_direction = "stop"
+                    self.res_pub.publish(self.direction)
             else:
                 if self.previous_direction != self.direction:
                     if self.direction == 'right':
-                        client_utils.display_relative_page(self.display_no,
-                                                           'turn_right.html')
+                        self.display('turn_right.html')
                         #move head right
                         self.head.position = [-30, 0]
                         self.head_pub.publish(self.head)
@@ -168,8 +178,7 @@ class WalkingInterfaceServer(object):
                         self.previous_direction = "right"
 
                     elif self.direction == 'left':
-                        client_utils.display_relative_page(self.display_no,
-                                                           'turn_left.html')
+                        self.display('turn_left.html')
                         #move head left
                         self.head.position = [30, 0]
                         self.head_pub.publish(self.head)
@@ -184,14 +193,15 @@ class WalkingInterfaceServer(object):
                         self.previous_direction = "left"
 
                     else:
-                        client_utils.display_relative_page(self.display_no,
-                                                           'straight.html')
+                        self.display('straight.html')
                         self.indicate = False
                         #move head straight
                         self.head.position = [0, 0]
                         self.head_pub.publish(self.head)
                         rospy.loginfo("Moving straight...")
                         self.previous_direction = "straight"
+
+                    self.res_pub.publish(self.direction)
 
         if self.thread:
             self.indicate = False
@@ -202,6 +212,10 @@ class WalkingInterfaceServer(object):
         else:
             self._as.set_succeeded()
 
+    def display(self, page):
+        if self.show_webpage:
+            client_utils.display_relative_page(self.display_no, page)
+
     def switchIndicator(self, isOn, side):
         if side == "left":
             params = {'Port0_5V_Enabled' : isOn}
@@ -209,8 +223,6 @@ class WalkingInterfaceServer(object):
             params = {'Port1_5V_Enabled' : isOn}
         if self.dyn_client:
             self.dyn_client.update_configuration(params)
-        else:
-            rospy.logwarn("%s: No dynamic reconfigure for indicators available. Please restart.")
 
     def blink(self, side):
         r = rospy.Rate(2)
