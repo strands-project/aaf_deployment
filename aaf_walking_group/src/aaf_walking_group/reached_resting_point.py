@@ -32,6 +32,7 @@ class RestingPoint(smach.State):
         self.sub_key = rospy.Subscriber("/socialCardReader/commands", String, callback=self.key_callback)
         self.sub_dist = rospy.Subscriber("/socialCardReader/QSR_generator", String, self.dist_callback)
         rospy.loginfo("I am at: " + userdata.waypoints.get_current_resting_waypoint())
+        strands_webserver.client_utils.display_relative_page(self.display_no, 'warte.html')
         while not self.close and not rospy.is_shutdown() and not self.preempt_requested():
             rospy.sleep(1)
         rospy.loginfo("Showing rest interface.")

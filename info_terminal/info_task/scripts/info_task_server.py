@@ -60,7 +60,7 @@ class InfoTaskServer(AbstractTaskServer):
     def create(self, req):
         task = super(InfoTaskServer, self).create(req)
         if task.max_duration.secs == 0:
-            task.max_duration.secs = 600 # Default execution time: 10min
+            task.max_duration = task.end_before - task.start_after # Default execution time: window length
         if task.priority == 0:
             task.priority = 1
         return task

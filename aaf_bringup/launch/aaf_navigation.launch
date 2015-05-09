@@ -94,6 +94,7 @@
   <include file="$(find emergency_behaviours)/launch/emergency_behaviours.launch">
     <arg name="machine"  value="$(arg topo_nav_machine)"/>
     <arg name="user"  value="$(arg topo_nav_user)"/>
+    <arg name="smtp_server"  value="werner:25"/>
   </include>
 
   <node name="odometry_mileage" pkg="odometry_mileage" type="odometry_mileage"/>
