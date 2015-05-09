@@ -96,7 +96,7 @@ class WalkingGroupStateMachine(object):
             "/human_aware_navigation"
         )
         self.mov_dyn_client = DynClient(
-            "/move_base/DWAPlannerROS"
+            "/human_aware_navigation/DWAPlannerROS"
         )
         rospy.loginfo(" ...done")
         self.get_current_dyn_settings()
@@ -113,13 +113,13 @@ class WalkingGroupStateMachine(object):
             'detection_angle': angle
         }
         rospy.loginfo("Found following default values for human_aware_navigation: %s", self.han_param)
-        max_vel_x = round(rospy.get_param("/move_base/DWAPlannerROS/max_vel_x"), 2)
-        max_trans_vel = round(rospy.get_param("/move_base/DWAPlannerROS/max_trans_vel"),2)
+        max_vel_x = round(rospy.get_param("/human_aware_navigation/DWAPlannerROS/max_vel_x"), 2)
+        max_trans_vel = round(rospy.get_param("/human_aware_navigation/DWAPlannerROS/max_trans_vel"),2)
         self.mov_param = {
             "max_vel_x": max_vel_x,
             "max_trans_vel": max_trans_vel
         }
-        rospy.loginfo("Found following default values for move_base: %s", self.mov_param)
+        rospy.loginfo("Found following default values for human_aware_navigation/DWAPlannerROS: %s", self.mov_param)
 
     def execute(self, goal):
         rospy.loginfo("Starting state machine")
