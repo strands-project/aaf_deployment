@@ -42,26 +42,28 @@ class Manager(object):
     def callback(self, msg):
         if msg.task.action[1:] in self.config.keys():
             events = itertools.chain(self.all, self.config[msg.task.action[1:]]["events"])
-            for event in events:
-                execute = True
-                print event
-                if msg.event == eval("TaskEvent." + event.keys()[0]):
-                    if "compare" in event.values()[0].keys():
-                        comps = event.values()[0]["compare"]
-                        for comp in comps:
-                            if not eval(str(comp["static_value"]) + comp["comparison"] + "msg." + comp["task_field"]):
-                                execute = False
-                                break
-                    if "compare_to_topic" in event.values()[0].keys():
-                        comps = event.values()[0]["compare_to_topic"]
-                        for comp in comps:
-                            res = rospy.wait_for_message(comp["topic"], roslib.message.get_message_class(rostopic.get_topic_type(comp["topic"], True)[0]))
-                            if not eval("res." + comp["field"] + comp["comparison"] + "msg." + comp["task_field"]):
-                                execute = False
-                                break
-                    if execute:
-                        self.mary_client.send_goal_and_wait(maryttsGoal(text=event.values()[0]["text"]))
-                        rospy.loginfo("Saying: " + event.values()[0]["text"])
+        else:
+            events = self.all
+
+        for event in events:
+            execute = True
+            if msg.event == eval("TaskEvent." + event.keys()[0]):
+                if "compare" in event.values()[0].keys():
+                    comps = event.values()[0]["compare"]
+                    for comp in comps:
+                        if not eval(str(comp["static_value"]) + comp["comparison"] + "msg." + comp["task_field"]):
+                            execute = False
+                            break
+                if "compare_to_topic" in event.values()[0].keys():
+                    comps = event.values()[0]["compare_to_topic"]
+                    for comp in comps:
+                        res = rospy.wait_for_message(comp["topic"], roslib.message.get_message_class(rostopic.get_topic_type(comp["topic"], True)[0]))
+                        if not eval("res." + comp["field"] + comp["comparison"] + "msg." + comp["task_field"]):
+                            execute = False
+                            break
+                if execute:
+                    self.mary_client.send_goal_and_wait(maryttsGoal(text=event.values()[0]["text"]))
+                    rospy.loginfo("Saying: " + event.values()[0]["text"])
 
 
 if __name__ == "__main__":
