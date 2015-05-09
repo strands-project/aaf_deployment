@@ -2,7 +2,6 @@ walking_group:
     walking_group_slow:
         group: 'slow'
         start_location: 'WayPoint33'
-        max_duration: 3600
         parameters: 
             - 'head_machine'
             - 'head_user'
@@ -26,7 +25,6 @@ walking_group:
     walking_group_fast:
         group: 'fast'
         start_location: 'WayPoint33'
-        max_duration: 3600
         parameters: 
             - 'head_machine'
             - 'head_user'
