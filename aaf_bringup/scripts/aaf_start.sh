@@ -59,7 +59,7 @@ tmux select-window -t $SESSION:10
 tmux send-keys "DISPLAY=:0  roslaunch info_terminal info_terminal.launch"
 
 tmux select-window -t $SESSION:11
-tmux send-keys "DISPLAY=:0 TODO: launch this with axlaunch_server roslaunch aaf_bringup aaf_bellbot.launch"
+tmux send-keys "DISPLAY=:0 roslaunch aaf_bellbot bellbot.launch"
 
 tmux select-window -t $SESSION:12
 tmux send-keys "DISPLAY=:0 roslaunch aaf_walking_group task_servers.launch"
