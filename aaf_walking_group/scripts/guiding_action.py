@@ -9,6 +9,7 @@ from std_msgs.msg import String
 from sound_player_server.srv import PlaySoundService
 from move_base_msgs.msg import MoveBaseAction
 from strands_navigation_msgs.srv import GetTaggedNodes, GetTaggedNodesRequest
+import strands_webserver.client_utils as client_utils
 
 
 class GuidingServer():
@@ -22,6 +23,8 @@ class GuidingServer():
             False
         )
         self.server.register_preempt_callback(self.preempt_callback)
+
+        self.display_no = rospy.get_param("~display_no", 0)
 
         rospy.loginfo("Creating topo nav client...")
         self.client = actionlib.SimpleActionClient(
@@ -118,6 +121,7 @@ class GuidingServer():
 #            self.client_move_base.cancel_all_goals()
         if data.data in self.pause_points:
             rospy.loginfo("Pausing...")
+            client_utils.display_relative_page(self.display_no, 'warte.html')
             self.client.cancel_all_goals()
             self.client_move_base.cancel_all_goals()
             self.pause = 1
