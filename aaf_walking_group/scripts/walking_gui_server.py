@@ -2,15 +2,17 @@
 # -*- coding: utf-8 -*-
 
 import rospy
-import actionlib
+#import actionlib
 import message_filters
 import time
 import math
 import tf
 from dynamic_reconfigure.client import Client as DynClient
+from dynamic_reconfigure.server import Server as DynServer
+from aaf_walking_group.cfg import LegibilityConfig
 from threading import Thread
 import strands_webserver.client_utils as client_utils
-from aaf_walking_group.msg import EmptyAction
+#from aaf_walking_group.msg import EmptyAction
 from nav_msgs.msg import Path
 from strands_navigation_msgs.msg import TopologicalMap, TopologicalRoute
 from sensor_msgs.msg import JointState
@@ -28,20 +30,9 @@ class WalkingInterfaceServer(object):
         self.start_time = 0
         self.route = TopologicalRoute()
         self.coordinates = PoseArray()
-        self.direction = "straight"
         self.previous_direction = ""
-        self.previous_pub_direction = ""
 
-        rospy.loginfo("%s: Starting walking interface action server", name)
-        self._as = actionlib.SimpleActionServer(
-            self._action_name,
-            EmptyAction,
-            execute_cb=self.executeCallback,
-            auto_start=False
-        )
-
-        self.show_webpage = rospy.get_param("~show_webpage", True)
-        self.use_indicators = rospy.get_param("~use_indicators", True)
+        rospy.loginfo("%s: Starting walking interface.", name)
 
         self.head_pub = rospy.Publisher(
             '/head/commanded_state',
@@ -55,7 +46,6 @@ class WalkingInterfaceServer(object):
             latch=True)
 
         self.head = JointState()
-        self.head.header.stamp = rospy.Time.now()
         self.head.name = ["HeadPan", "HeadTilt"]
 
         rospy.loginfo("%s: Waiting for topological map...", name)
@@ -86,25 +76,32 @@ class WalkingInterfaceServer(object):
 
         self.thread = None
         self.dyn_client = None
-        if self.use_indicators:
-            rospy.loginfo("%s: Waiting for dynamic reconfigure server for 5 sec...", name)
+
+        self.indicators = True
+        self.web_page   = True
+        self.move_head  = True
+        self.dyn_srv = DynServer(LegibilityConfig, self.dyn_callback)
+
+        rospy.loginfo("%s: ... all done.", name)
+
+    def dyn_callback(self, config, level):
+        self.indicators = config["indicators"]
+        self.web_page   = config["web_page"]
+        self.move_head  = config["move_head"]
+
+        if self.indicators and not self.dyn_client:
+            rospy.loginfo("Waiting for dynamic reconfigure server for 1 sec...")
             try:
-                self.dyn_client = DynClient('/EBC', timeout=5.0)
-                rospy.loginfo("%s: ... done", name)
+                self.dyn_client = DynClient('/EBC', timeout=1.0)
+                rospy.loginfo(" ... done")
             except rospy.ROSException as e:
-                rospy.logwarn("%s: %s" % (name, e))
+                rospy.logwarn(e)
+        elif not self.indicators:
+            self.dyn_client = None
 
-        #tell the webserver where it should look for web files to serve
-        #http_root = os.path.join(
-        #    roslib.packages.get_pkg_dir("aaf_walking_group"),
-        #    "www")
-        #client_utils.set_http_root(http_root)
+        self.show_direction(self.previous_direction)
 
-        #Starting server
-
-        self._as.start()
-        rospy.loginfo("%s: ... started.", name)
-
+        return config
 
     def filter_callback(self, path, pose):
         self.start_time = time.time()
@@ -115,6 +112,8 @@ class WalkingInterfaceServer(object):
         xDiff = path.poses[-1].pose.position.x - pose.pose.position.x
 
         dist = math.sqrt(xDiff*xDiff + yDiff*yDiff)
+
+        direction = "straight"
 
         if dist > 1.0:
             angle = robot_angle[-1] - math.atan2(yDiff,xDiff)
@@ -127,21 +126,13 @@ class WalkingInterfaceServer(object):
 
             #print math.degrees(angle)
 
-            if abs(math.degrees(angle)) < 30:
-                self.direction = "straight"
-            else:
+            if abs(math.degrees(angle)) >= 30:
                 if angle > 0:
-                    self.direction = "right"
+                    direction = "right"
                 else:
-                    self.direction = "left"
-        else:
-            self.direction = "straight"
+                    direction = "left"
 
-        if not self.direction == self.previous_pub_direction:
-            self.res_pub.publish(self.direction)
-            self.previous_pub_direction = self.direction
-
-
+        self.visualise(direction)
 
     def route_callback(self, data):
         #search for waypouint and store coordinates
@@ -151,72 +142,62 @@ class WalkingInterfaceServer(object):
                 if i == j.name:
                     self.coordinates.poses.append(j.pose)
 
-    def executeCallback(self, goal):
-        self.previous_direction = ""
-        while not self._as.is_preempt_requested() and not rospy.is_shutdown():
-            if time.time() - self.start_time > 5:#reconfigurable parameter
-                self.direction = "stop"
-                if self.previous_direction != self.direction:
-                    self.display('stop.html')
-                    rospy.loginfo("STOP")
-                    self.indicate = False
-                    #move head straight
-                    self.head.position = [0, 0]
-                    self.head_pub.publish(self.head)
-                    self.previous_direction = "stop"
-            else:
-                if self.previous_direction != self.direction:
-                    if self.direction == 'right':
-                        self.display('turn_right.html')
-                        #move head right
-                        self.head.position = [-30, 0]
-                        self.head_pub.publish(self.head)
-                        #indicate
-                        if self.thread:
-                            self.indicate = False
-                            self.thread.join()
-                        self.indicate = True
-                        self.thread = Thread(target=self.blink, args=('right',))
-                        self.thread.start()
-                        rospy.loginfo("Moving right...")
-                        self.previous_direction = "right"
+    def visualise(self, direction):
+        if time.time() - self.start_time > 5:#reconfigurable parameter
+            direction = "stop"
+            if self.previous_direction != direction:
+                rospy.loginfo("STOP")
+                self.previous_direction = "stop"
+                self.show_direction(direction)
+        else:
+            if self.previous_direction != direction:
+                if direction == 'right':
+                    rospy.loginfo("Moving right...")
+                    self.previous_direction = "right"
+                    self.show_direction(direction)
 
-                    elif self.direction == 'left':
-                        self.display('turn_left.html')
-                        #move head left
-                        self.head.position = [30, 0]
-                        self.head_pub.publish(self.head)
-                        #indicate
-                        if self.thread:
-                            self.indicate = False
-                            self.thread.join()
-                        self.indicate = True
-                        self.thread = Thread(target=self.blink, args=('left',))
-                        self.thread.start()
-                        rospy.loginfo("Moving left...")
-                        self.previous_direction = "left"
+                elif direction == 'left':
+                    rospy.loginfo("Moving left...")
+                    self.previous_direction = "left"
+                    self.show_direction(direction)
 
-                    else:
-                        self.display('straight.html')
-                        self.indicate = False
-                        #move head straight
-                        self.head.position = [0, 0]
-                        self.head_pub.publish(self.head)
-                        rospy.loginfo("Moving straight...")
-                        self.previous_direction = "straight"
+                else:
+                    rospy.loginfo("Moving straight...")
+                    self.previous_direction = "straight"
+                    self.show_direction(direction)
 
+    def show_direction(self, direction):
+        direction = direction if not direction == "" else "stop"
+        self.res_pub.publish(direction)
+        if self.web_page:
+            self.display(direction)
+        if self.indicators:
+            self.indicate(direction)
+        if self.move_head:
+            self.turn_head(direction)
+
+    def display(self, direction):
+        client_utils.display_relative_page(self.display_no, direction+".html")
+
+    def turn_head(self, direction):
+        self.head.header.stamp = rospy.Time.now()
+        if direction == "left":
+            self.head.position = [30, 0]
+        elif direction == "right":
+            self.head.position = [-30, 0]
+        else:
+            self.head.position = [0, 0]
+        self.head_pub.publish(self.head)
+
+    def indicate(self, direction):
+        self.indicating = False
         if self.thread:
-            self.indicate = False
             self.thread.join()
 
-        if self._as.is_preempt_requested():
-            self._as.set_preempted()
-        else:
-            self._as.set_succeeded()
-
-    def display(self, page):
-        if self.show_webpage:
-            client_utils.display_relative_page(self.display_no, page)
+        if direction in ["left", "right"]:
+            self.indicating = True
+            self.thread = Thread(target=self.blink, args=(direction,))
+            self.thread.start()
 
     def switchIndicator(self, isOn, side):
         if side == "left":
@@ -230,15 +211,12 @@ class WalkingInterfaceServer(object):
         r = rospy.Rate(2)
         toggle = True
 
-        while self.indicate and not rospy.is_shutdown():
+        while self.indicating and not rospy.is_shutdown():
             self.switchIndicator(toggle, side)
             toggle = not toggle
             r.sleep()
 
         self.switchIndicator(False, side)
-
-    def _on_node_shutdown(self):
-        self.client.cancel_all_goals()
 
 if __name__ == '__main__':
     rospy.init_node('walking_interface_server')

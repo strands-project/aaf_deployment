@@ -28,8 +28,9 @@
   </node>
   <node pkg="aaf_walking_group" type="interface_server.py" name="interface_server" output="screen" respawn="true"/>
   <node pkg="aaf_walking_group" type="walking_gui_server.py" name="walking_interface_server" output="screen" respawn="true">
-    <param name="show_webpage" value="true" type="bool"/>
-    <param name="use_indicators" value="true" type="bool"/>
+    <param name="web_page" value="false" type="bool"/> <!-- Start without showing pages, is dynamically reconfigred -->
+    <param name="indicators" value="true" type="bool"/>
+    <param name="move_head" value="true" type="bool"/>
   </node>
   <node pkg="aaf_walking_group" type="aaf_walking_group_state_machine.py" name="walking_group_smach" output="screen" respawn="true">
     <param name="mongodb_params/waypointset_name" type="string" value="$(arg waypoint_set)"/>

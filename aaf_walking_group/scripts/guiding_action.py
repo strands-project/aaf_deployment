@@ -9,6 +9,7 @@ from std_msgs.msg import String
 from sound_player_server.srv import PlaySoundService
 from move_base_msgs.msg import MoveBaseAction
 from strands_navigation_msgs.srv import GetTaggedNodes, GetTaggedNodesRequest
+from dynamic_reconfigure.client import Client as DynClient
 
 
 class GuidingServer():
@@ -29,35 +30,32 @@ class GuidingServer():
             topological_navigation.msg.GotoNodeAction
         )
         self.client.wait_for_server()
-
-
         rospy.loginfo(" ... done ")
+
         rospy.loginfo("Creating wait client...")
         self.empty_client = actionlib.SimpleActionClient(
             '/wait_for_participant',
             EmptyAction
         )
         self.empty_client.wait_for_server()
-
-
         rospy.loginfo(" ... done ")
-        rospy.loginfo("Creating interface client...")
-        self.client_walking_interface = actionlib.SimpleActionClient(
-            '/walking_interface_server',
-            EmptyAction
-        )
 
+        rospy.loginfo("Creating interface dynamic reconfigure client...")
+        self.dyn_client = None
+        try:
+            self.dyn_client = DynClient('/walking_interface_server', timeout=10.0)
+            rospy.loginfo(" ... done")
+        except rospy.ROSException as e:
+            rospy.logwarn(e)
 
-        rospy.loginfo(" ... done ")
-        rospy.loginfo("Creating interface client...")
+        rospy.loginfo("Creating move_base client...")
         self.client_move_base = actionlib.SimpleActionClient(
             '/move_base',
             MoveBaseAction
         )
         self.client_move_base.wait_for_server()
-
-        self.client_walking_interface.wait_for_server()
         rospy.loginfo(" ... done ")
+
         self.card_subscriber = rospy.Subscriber(
             "/socialCardReader/QSR_generator",
             String,
@@ -75,6 +73,10 @@ class GuidingServer():
         rospy.loginfo(" ... starting "+name)
         self.server.start()
         rospy.loginfo(" ... started "+name)
+
+    def show_web_page(self, show):
+        if self.dyn_client:
+            self.dyn_client.update_configuration({"web_page": show})
 
     def execute(self, goal):
         self.node_subscriber = rospy.Subscriber(
@@ -94,7 +96,7 @@ class GuidingServer():
                      rospy.logwarn("Service call failed: %s" % e)
 
         self.pause = 0
-        self.client_walking_interface.send_goal(EmptyActionGoal())
+        self.show_web_page(True)
         self.navgoal = topological_navigation.msg.GotoNodeGoal()
         self.navgoal.target = goal.waypoint
         self.navgoal.no_orientation = goal.no_orientation
@@ -103,7 +105,7 @@ class GuidingServer():
             rospy.sleep(1)
 
         self.client.wait_for_result()
-        self.client_walking_interface.cancel_goal()
+        self.show_web_page(False)
         self.node_subscriber.unregister()
         self.node_subscriber = None
         if not self.server.is_preempt_requested():
@@ -142,7 +144,7 @@ class GuidingServer():
         if self.pause == 1 and self.server.is_active():
             # call action server
             if data.data == 'near':
-                self.client_walking_interface.cancel_goal()
+                self.show_web_page(False)
                 rospy.loginfo("Therapist is close enough. Show continue button")
                 self.empty_client.send_goal_and_wait(EmptyActionGoal())
                 try:
@@ -155,7 +157,7 @@ class GuidingServer():
                 except rospy.ServiceException, e:
                     rospy.logwarn("Service call failed: %s" % e)
                 rospy.loginfo("sending goal to wi")
-                self.client_walking_interface.send_goal(EmptyActionGoal())
+                self.show_web_page(True)
 
 
 if __name__ == '__main__':
