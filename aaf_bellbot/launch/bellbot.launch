@@ -1,0 +1,4 @@
+<launch>
+  <node name="bellbot" pkg="aaf_bellbot" type="start_bellbot.py" output="screen" respawn="true"/>
+</launch>
+

@@ -12,12 +12,11 @@ from std_msgs.msg import Bool
 
 class StartWalkingGroup(AbstractTaskServer):
     TOPIC = "/walking_group_action_status"
-    def __init__(self, name, group, location, max_duration, params, values):
+    def __init__(self, name, group, location, params, values):
         rospy.loginfo("Starting node: %s" % name)
         self.started = False
         self.group = group
         self.location = location
-        self.max_duration = max_duration
         self.params = params
         self.values = values
 
@@ -48,7 +47,7 @@ class StartWalkingGroup(AbstractTaskServer):
             task.start_node_id = self.location
             task.end_node_id = task.start_node_id
         if task.max_duration.secs == 0.0:
-            task.max_duration.secs = self.max_duration
+            task.max_duration = task.end_before - task.start_after
         if task.priority == 0:
             task.priority = 3
         return task
@@ -133,7 +132,6 @@ class StartGroups(object):
                 name=k,
                 group=paramlist["walking_group"][k]["group"],
                 location=paramlist["walking_group"][k]["start_location"],
-                max_duration=paramlist["walking_group"][k]["max_duration"],
                 params=paramlist["walking_group"][k]["parameters"],
                 values=paramlist["walking_group"][k]["values"]
             ))
