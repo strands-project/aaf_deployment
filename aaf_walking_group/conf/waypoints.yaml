@@ -3,34 +3,34 @@ slow:
     waypoints:
         1:
             resting:
-                "WayPoint33"
+                "WalkingGruppeStart"
             asking:
-                "WayPoint33"
+                "WalkingGruppeStart"
         2: 
             resting:
-                "WayPoint79"
+                "Ambulanz"
             asking:
                 "WayPoint4"
             intermediate: 
                 1: "WayPoint20"
         3:
             resting:
-                "WayPoint78"
+                "Frisoer"
             asking:
                 "WayPoint35"
         4:
             resting:
-                "WayPoint77"
+                "Kapelle"
             asking:
                 "WayPoint14"
         5:
             resting:
-                "WayPoint75"
+                "Teekueche"
             asking:
                 "Lift1"
         6:
             resting:
-                "WayPoint78"
+                "Frisoer"
             asking:
                 "WayPoint26"
             intermediate:
@@ -41,14 +41,14 @@ slow:
                 5: "WayPoint7"
         7:
             resting:
-                "WayPoint79"
+                "Ambulanz"
             asking:
                 "WayPoint4"
         8:
             resting:
-                "WayPoint33"
+                "WalkingGruppeStart"
             asking:
-                "WayPoint33"
+                "WalkingGruppeStart"
             intermediate:
                 1: "WayPoint11"
 fast:
@@ -56,34 +56,34 @@ fast:
     waypoints:
         1:
             resting:
-                "WayPoint33"
+                "WalkingGruppeStart"
             asking:
-                "WayPoint33"
+                "WalkingGruppeStart"
         2: 
             resting:
-                "WayPoint79"
+                "Ambulanz"
             asking:
                 "WayPoint4"
             intermediate: 
                 1: "WayPoint20"
         3:
             resting:
-                "WayPoint78"
+                "Frisoer"
             asking:
                 "WayPoint35"
         4:
             resting:
-                "WayPoint77"
+                "Kapelle"
             asking:
                 "WayPoint14"
         5:
             resting:
-                "WayPoint75"
+                "Teekueche"
             asking:
                 "Lift1"
         6:
             resting:
-                "WayPoint78"
+                "Frisoer"
             asking:
                 "WayPoint26"
             intermediate:
@@ -94,13 +94,13 @@ fast:
                 5: "WayPoint7"
         7:
             resting:
-                "WayPoint79"
+                "Ambulanz"
             asking:
                 "WayPoint4"
         8:
             resting:
-                "WayPoint33"
+                "WalkingGruppeStart"
             asking:
-                "WayPoint33"
+                "WalkingGruppeStart"
             intermediate:
                 1: "WayPoint11"

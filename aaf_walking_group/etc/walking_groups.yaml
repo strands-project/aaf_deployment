@@ -1,7 +1,7 @@
 walking_group:
     walking_group_slow:
         group: 'slow'
-        start_location: 'WayPoint33'
+        start_location: 'WalkingGruppeStart'
         parameters: 
             - 'head_machine'
             - 'head_user'
@@ -24,7 +24,7 @@ walking_group:
             - 'aaf_walking_group_pictures'
     walking_group_fast:
         group: 'fast'
-        start_location: 'WayPoint33'
+        start_location: 'WalkingGruppeStart'
         parameters: 
             - 'head_machine'
             - 'head_user'
