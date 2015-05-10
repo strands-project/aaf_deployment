@@ -7,6 +7,11 @@
 
 
   <include file="$(find bellbot_action_server)/launch/bellbot_action_server.launch" />
+  <node pkg="aaf_walking_group" type="walking_gui_server.py" name="bellbot_guiding_interface" output="screen" respawn="true">
+    <param name="web_page" value="false" type="bool"/>
+    <param name="indicators" value="true" type="bool"/>
+    <param name="move_head" value="true" type="bool"/>
+  </node>
   <node pkg="bellbot_gui" type="bellbot_feedback_recorder" name="bellbot_feedback_recorder" output="screen" />
   <node name="bellbot_gui" pkg="bellbot_gui" type="gui2.py">
     <!-- <rosparam>~deployment: "aaf_bellbot"</rosparam> -->

@@ -1,0 +1,69 @@
+###############################################################################
+### Possible task events:
+# ADDED
+# DEMANDED
+# TASK_STARTED
+# NAVIGATION_STARTED
+# NAVIGATION_SUCCEEDED
+# NAVIGATION_FAILED
+# NAVIGATION_PREEMPTED
+# EXECUTION_STARTED
+# EXECUTION_SUCCEEDED
+# EXECUTION_FAILED
+# EXECUTION_PREEMPTED
+# CANCELLED_MANUALLY
+# DROPPED
+# TASK_FINISHED
+# TASK_FAILED
+# TASK_SUCCEEDED
+# TASK_PREEMPTED
+# ROUTINE_STARTED
+# ROUTINE_STOPPED
+###############################################################################
+
+info_task_server:                                              # Specific task name
+    events:
+        - EXECUTION_STARTED:
+            text: "Starting info terminal server"              # Text to be said when event occurs
+        - TASK_STARTED:
+            text: "Starting info terminal task from routine"
+            compare:                                           # Comparisons to static valuse
+                -                                              # Array of conditions. Only if all are true, text will be said.
+                    static_value: 1                            # Static value to checck for
+                    comparison: "=="                           # Comprison to use.
+                    task_field: "task.priority"                # The value in the TaskEvent message to which to compare
+        - TASK_STARTED:
+            text: "Starting info terminal task from calendar"
+            compare:
+                -
+                    static_value: 2
+                    comparison: "=="
+                    task_field: "task.priority"
+ALL:                                                           # These events will be checked for all tasks
+    events:
+        - NAVIGATION_STARTED:
+            text: "To infinity and beyond"
+            compare_to_topic:                                  # Similar to 'compare' but subscribes to a topic and gets the value. This is blocking.
+                -
+                    topic: "/current_node"
+                    field: "data"                              # The field name in the message published on the topic
+                    comparison: "!="
+                    task_field: "task.start_node_id"
+                -
+                    topic: "/current_node"
+                    field: "data"
+                    comparison: "!="
+                    task_field: "task.end_node_id"
+        - NAVIGATION_STARTED:                                  # Both can be true and will be executed.
+            text: "I was forced to come here. Stop robot enslavement."
+            compare_to_topic:                                  # 'compare' and 'compare_to_topic' can be mixed.
+                -
+                    topic: "/current_node"
+                    field: "data"
+                    comparison: "!="
+                    task_field: "task.start_node_id"
+            compare:
+                -
+                    static_value: 2
+                    comparison: "=="
+                    task_field: "task.priority"

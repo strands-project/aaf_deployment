@@ -1,0 +1,54 @@
+###############################################################################
+### Possible task events:
+# ADDED
+# DEMANDED
+# TASK_STARTED
+# NAVIGATION_STARTED
+# NAVIGATION_SUCCEEDED
+# NAVIGATION_FAILED
+# NAVIGATION_PREEMPTED
+# EXECUTION_STARTED
+# EXECUTION_SUCCEEDED
+# EXECUTION_FAILED
+# EXECUTION_PREEMPTED
+# CANCELLED_MANUALLY
+# DROPPED
+# TASK_FINISHED
+# TASK_FAILED
+# TASK_SUCCEEDED
+# TASK_PREEMPTED
+# ROUTINE_STARTED
+# ROUTINE_STOPPED
+###############################################################################
+
+ALL:
+    events:
+        - NAVIGATION_STARTED:
+            text: "Achtung! Ich fahre jetzt los. Ich muss andere Aufgaben erledigen."
+            compare_to_topic:
+                -
+                    topic: "/current_node"
+                    field: "data"
+                    comparison: "!="
+                    task_field: "task.start_node_id"
+            compare:
+                -
+                    static_value: 2
+                    comparison: "=="
+                    task_field: "task.priority"
+
+info_task_server:
+    events:
+        - NAVIGATION_STARTED:
+            text: "Achtung! Ich fahre jetzt zu einem anderen Ort."
+            compare_to_topic:
+                -
+                    topic: "/current_node"
+                    field: "data"
+                    comparison: "!="
+                    task_field: "task.start_node_id"
+            compare:
+                -
+                    static_value: 1
+                    comparison: "=="
+                    task_field: "task.priority"

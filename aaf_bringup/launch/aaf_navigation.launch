@@ -103,6 +103,9 @@
   <group if="$(arg with_human_aware)">
     <node name="gaze_at_pose" pkg="strands_gazing" type="gaze_at_pose"/>
     <node name="pose_extractor" pkg="pose_extractor" type="extract_last_pose_from_path.py"/>
-    <node name="human_aware_navigation" pkg="strands_human_aware_navigation" type="human_aware_navigation.py"/>
+    <include file="$(find strands_human_aware_navigation)/launch/human_aware_navigation.launch">
+      <arg name="machine"  value="$(arg machine)"/>
+      <arg name="user"  value="$(arg user)"/>
+    </include>
   </group>
 </launch>
