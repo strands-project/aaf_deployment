@@ -98,10 +98,10 @@ class StartBellbot(AbstractTaskServer):
         rospy.loginfo(" ... stopping Bellbot")
         if self.bellbot_client:
             self.bellbot_client.cancel_all_goals()
-            # Making the bellbot "preemptable"
-            # rospy.loginfo(" ... waiting for Bellbot to die")
-            # while not self.bellbot_client.get_state() == GoalStatus.PREEMPTED and not rospy.is_shutdown():
-                # rospy.sleep(0.1)
+            rospy.loginfo(" ... waiting for Bellbot to die")
+            while not self.bellbot_client.get_state() == GoalStatus.PREEMPTED and not rospy.is_shutdown():
+                rospy.sleep(0.1)
+            rospy.loginfo(" ... died")
         rospy.loginfo(" ... stopping launch server")
         self.launch_client.cancel_goal()
         rospy.loginfo(" ... preempted")
