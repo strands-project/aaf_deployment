@@ -12,10 +12,8 @@
     <param name="indicators" value="true" type="bool"/>
     <param name="move_head" value="true" type="bool"/>
   </node>
-  <node pkg="bellbot_gui" type="bellbot_feedback_recorder" name="bellbot_feedback_recorder" output="screen" />
-  <node name="bellbot_gui" pkg="bellbot_gui" type="gui2.py">
+  <node name="bellbot_gui" pkg="bellbot_gui" type="server.py">
     <!-- <rosparam>~deployment: "aaf_bellbot"</rosparam> -->
-    <param name="deployment" type="string" value="aaf_bellbot"/>
     <rosparam command="load" file="$(find aaf_bellbot)/conf/destinations_types.yaml" />
   </node>
 
