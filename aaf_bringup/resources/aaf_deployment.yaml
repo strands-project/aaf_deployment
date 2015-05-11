@@ -3967,7 +3967,7 @@
       recovery_behaviours_config: ''
       top_vel: 0.55
     - action: human_aware_navigation
-      edge_id: WayPoint34_Lift1_  0
+      edge_id: WayPoint34_Lift1
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: Lift1
