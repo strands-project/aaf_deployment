@@ -6,7 +6,9 @@
   <arg name="chest_xtion_user" default="strands"/>
   <arg name="head_xtion_machine" default="werner-left-cortex"/>
   <arg name="head_xtion_user" default="strands"/>
-
+  <arg name="smtp_server"  default="werner:25"/>
+  <arg name="from_add" 	default="henry.strands@hanheide.net" />
+  <arg name="to_add" 	default="henry.strands@hanheide.net" />
   <arg name="topo_nav_machine" default="werner-right-cortex"/>
   <arg name="topo_nav_user" default="strands"/>
 
@@ -15,6 +17,7 @@
   <arg name="no_go_map" default=""/>
   <arg name="with_mux" default="false" />
   <arg name="topological_map"/>
+  
   <arg name="mon_nav_config_file" default="$(find strands_recovery_behaviours)/config/monitored_nav_config.yaml"/>
   <arg name="z_stair_threshold" default="0.12"/>
   <arg name="z_obstacle_threshold" default="0.15"/>
@@ -92,9 +95,11 @@
   
     <!--- Emergency Behaviours includes strands emails -->
   <include file="$(find emergency_behaviours)/launch/emergency_behaviours.launch">
-    <arg name="machine"  value="$(arg topo_nav_machine)"/>
-    <arg name="user"  value="$(arg topo_nav_user)"/>
-    <arg name="smtp_server"  value="werner:25"/>
+    <arg name="machine" value="$(arg topo_nav_machine)"/>
+    <arg name="user" value="$(arg topo_nav_user)"/>
+    <arg name="smtp_server" value="$(arg smtp_server)"/>
+    <arg name="from_add" value="$(arg from_add)"/>
+    <arg name="to_add" value="$(arg to_add)"/>
   </include>
 
   <node name="odometry_mileage" pkg="odometry_mileage" type="odometry_mileage"/>
