@@ -65,20 +65,21 @@ class DeploymentControl(object):
             rospy.loginfo(" ... called")
 
             rospy.loginfo("Creating reset_motorstop service proxy and waiting ...")
-            s = rospy.ServiceProxy("/reset_barrier_stop", ResetMotorStop)
+            s = rospy.ServiceProxy("/reset_motorstop", ResetMotorStop)
             s.wait_for_service()
             rospy.loginfo(" ... calling service")
             s()
             rospy.loginfo(" ... called")
 
             rospy.loginfo("Creating reset_safety_stop service proxy and waiting ...")
-            s = rospy.ServiceProxy("/reset_barrier_stop", Empty)
+            s = rospy.ServiceProxy("/reset_safety_stop", Empty)
             s.wait_for_service()
             rospy.loginfo(" ... calling service")
             s()
             rospy.loginfo(" ... called")
         except (rospy.ServiceException, rospy.ROSInterruptException) as e:
             rospy.logwarn(e)
+        self.set_execution_status(True)
         return EmptyResponse()
 
     def _log_end(self):
