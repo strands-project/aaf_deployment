@@ -292,10 +292,7 @@
       node: Station
       recovery_behaviours_config: ''
       top_vel: 0.55
-    localise_by_topic:
-      field: charging
-      topic: /battery_state
-      val: true
+    localise_by_topic: "{\"topic\":\"/battery_state\",\"field\":\"charging\", \"val\": true}" 
     map: aaf_winter
     name: ChargingPoint
     pointset: aaf_deployment
