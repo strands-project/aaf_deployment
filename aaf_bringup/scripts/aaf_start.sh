@@ -18,6 +18,7 @@ tmux new-window -t $SESSION:10 -n 'info_terminal'
 tmux new-window -t $SESSION:11 -n 'bell_bot'
 tmux new-window -t $SESSION:12 -n 'walking_group'
 tmux new-window -t $SESSION:13 -n 'scheduler'
+tmux new-window -t $SESSION:14 -n 'control'
 
 
 tmux select-window -t $SESSION:0
@@ -47,10 +48,10 @@ tmux select-window -t $SESSION:6
 tmux send-keys "DISPLAY=:0 roslaunch perception_people_launch people_tracker_robot.launch machine:=werner-left-cortex user:=strands"
 
 tmux select-window -t $SESSION:7
-tmux send-keys "DISPLAY=:0 rosrun mongodb_media_server server.py"
+tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_media_server.launch"
 
 tmux select-window -t $SESSION:8
-tmux send-keys "DISPLAY=:0 rosrun roslaunch_axserver roslaunch_server.py"
+tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_launch_server.launch"
 
 tmux select-window -t $SESSION:9
 tmux send-keys "DISPLAY=:0 roslaunch aaf_logging logging.launch"
@@ -67,10 +68,13 @@ tmux send-keys "DISPLAY=:0 roslaunch aaf_walking_group task_servers.launch"
 tmux select-window -t $SESSION:13
 tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_routine.launch calendar:=henry.strands%40hanheide.net machine:=werner-right-cortex user:=strands"
 
+tmux select-window -t $SESSION:14
+tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_deployment_control.launch"
+
 # Set default window
 tmux select-window -t $SESSION:0
 
 # Attach to session
 tmux -2 attach-session -t $SESSION
 
-tmux setw -g mode-mouse on
+tmux setw -g mode-mouse off
