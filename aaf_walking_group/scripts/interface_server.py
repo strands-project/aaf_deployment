@@ -64,6 +64,7 @@ class InterfaceServer(object):
 
         if self.request_name == 'next':
             result.chosen_point = goal.next_point
+            result.idx = goal.idx
             rospy.loginfo(result)
             self._as.set_succeeded(result)
         elif self.request_name == 'abort':
@@ -87,12 +88,13 @@ class InterfaceServer(object):
             self.listWaypointPage(goal.possible_points)
             while self.request_name == '':
                 rospy.sleep(0.1)
-            result.chosen_point = self.request_name
+            result.idx = int(self.request_name.split(":")[0])
+            result.chosen_point = self.request_name.split(":")[1]
             rospy.loginfo(result)
             self._as.set_succeeded(result)
 
     def listWaypointPage(self, possible_points):
-        notice = 'W&auml;hlen Sie das n&auml;chste Ziel.'
+        notice = 'Wählen Sie den nächsten Routenabschnitt.'
         buttons = []
         three_buttons = []
         for i in range(len(possible_points)):
@@ -100,7 +102,7 @@ class InterfaceServer(object):
                 if three_buttons != []:
                     buttons.append(three_buttons)
                 three_buttons = []
-            three_buttons.append((possible_points[i], 'button'))
+            three_buttons.append((str(i)+":"+possible_points[i], 'button'))
         buttons.append(three_buttons)
 
         content = ''

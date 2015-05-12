@@ -6,7 +6,9 @@
   <arg name="chest_xtion_user" default="strands"/>
   <arg name="head_xtion_machine" default="werner-left-cortex"/>
   <arg name="head_xtion_user" default="strands"/>
-
+  <arg name="smtp_server"  default="werner:25"/>
+  <arg name="from_add" 	default="henry.strands@hanheide.net" />
+  <arg name="to_add" 	default="henry.strands@hanheide.net" />
   <arg name="topo_nav_machine" default="werner-right-cortex"/>
   <arg name="topo_nav_user" default="strands"/>
 
@@ -15,6 +17,7 @@
   <arg name="no_go_map" default=""/>
   <arg name="with_mux" default="false" />
   <arg name="topological_map"/>
+  
   <arg name="mon_nav_config_file" default="$(find strands_recovery_behaviours)/config/monitored_nav_config.yaml"/>
   <arg name="z_stair_threshold" default="0.12"/>
   <arg name="z_obstacle_threshold" default="0.15"/>
@@ -92,16 +95,22 @@
   
     <!--- Emergency Behaviours includes strands emails -->
   <include file="$(find emergency_behaviours)/launch/emergency_behaviours.launch">
-    <arg name="machine"  value="$(arg topo_nav_machine)"/>
-    <arg name="user"  value="$(arg topo_nav_user)"/>
+    <arg name="machine" value="$(arg topo_nav_machine)"/>
+    <arg name="user" value="$(arg topo_nav_user)"/>
+    <arg name="smtp_server" value="$(arg smtp_server)"/>
+    <arg name="from_add" value="$(arg from_add)"/>
+    <arg name="to_add" value="$(arg to_add)"/>
   </include>
 
-  <node name="odometry_mileage" pkg="odometry_mileage" type="odometry_mileage"/>
+  <node name="odometry_mileage" pkg="odometry_mileage" type="odometry_mileage" respawn="true"/>
   <!-- <node name="door_pass_node" pkg="door_pass" type="door_pass.py" output="screen" /> --> <!-- Might still be needed -->
 
   <group if="$(arg with_human_aware)">
-    <node name="gaze_at_pose" pkg="strands_gazing" type="gaze_at_pose"/>
-    <node name="pose_extractor" pkg="pose_extractor" type="extract_last_pose_from_path.py"/>
-    <node name="human_aware_navigation" pkg="strands_human_aware_navigation" type="human_aware_navigation.py"/>
+    <node name="gaze_at_pose" pkg="strands_gazing" type="gaze_at_pose" respawn="true"/>
+    <node name="pose_extractor" pkg="pose_extractor" type="extract_last_pose_from_path.py" respawn="true"/>
+    <include file="$(find strands_human_aware_navigation)/launch/human_aware_navigation.launch">
+      <arg name="machine"  value="$(arg machine)"/>
+      <arg name="user"  value="$(arg user)"/>
+    </include>
   </group>
 </launch>

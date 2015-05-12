@@ -1,52 +1,44 @@
-$def with (blog_events, events)
+$def with (blog_events, strings, events)
+<div class="row" style="padding:50px; text-align: justify;text-justify: inter-word;">
 
-<div class="row text-center">	
-	<h1>News</h1>
-	<hr>
+    <div class="row" style="color:#00CC00;font-size:20pt; font-weight:bold">
+	    <div class="col-md-6">NEUES AM HdB</div>
+        <div class="col-md-6">WIEN AKTUELL</div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            $for event in blog_events:
+                <div class="row">
+                    <!--<div class="col-md-3">-->
+                        <!--<img src="$event[0]" style="min-height:150px">	-->
+                    <!--</div>-->
+                    <div class="col-md-12">
+                        $:event
+                    </div>
+                </div>
+        </div>
+        <div class="col-md-6">
+            $for event in events:
+                <div class="row">
+                    <!--if event[0] is not None:-->
+                        <!--<div class="col-md-3">-->
+                            <!--<img src="$event[0]" style="max-height:150px">-->
+                        <!--</div>-->
+                    <div class="col-md-12">
+                        $:event[1]
+                    </div>
+                </div>
+        </div>
+    </div>
 </div>
-<div class="row">
-	<div class="col-md-6">
-		$for event in blog_events:
-			<div class="row">
-				<!--<div class="col-md-3">-->
-					<!--<img src="$event[0]" style="min-height:150px">	-->
-				<!--</div>-->
-				<div class="col-md-12">
-					$:event
-				</div>
-			</div>
-	</div>
-	<div class="col-md-6">
-		$for event in events:
-			<div class="row">
-				<!--if event[0] is not None:-->
-					<!--<div class="col-md-3">-->
-						<!--<img src="$event[0]" style="max-height:150px">-->
-					<!--</div>-->
-				<div class="col-md-12">
-					$:event[1]
-				</div>
-			</div>
-	</div>
-</div>
 
-<hr>
-<div class="row">
-	<div class="col-md-4">
-		<div class="row text-center">
-		<a href="/">
-			<img src="static/back-icon.png" class="img-thumbnail img-responsive" 
-				style="border:5px solid black;max-height:100px"><br>
-		</a>
-		</div>
-	</div>  
-	<div class="col-md-4">
-		<div class="row text-center">
-		<a href="/">
-			<h1>Back to Start</h1>
-		</a>
-		</div>
-	</div>  
-<div>
-
+<footer class="footer"  style="height:120px;position:absolute;bottom: 0;width: 100%">
+  <div class="container" style="font-size:20pt">
+      <a href="/">
+            <img src="/static/back-icon.png" class="img-thumbnail img-responsive"
+        style="border:5px solid black;max-height:100px; margin-right:20px"><b>$strings["back to menu"]</b>
+        </a>
+  </div>
+</footer>
 

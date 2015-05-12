@@ -1,8 +1,10 @@
 # goal definition
-string next_point 
+string next_point
+int32 idx
 string[] possible_points 
 ---
 # result definition
-string chosen_point 
+string chosen_point
+int32 idx
 ---
 # feedback

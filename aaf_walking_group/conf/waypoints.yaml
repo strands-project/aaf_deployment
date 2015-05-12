@@ -1,0 +1,106 @@
+slow:
+    speed: 0.55
+    waypoints:
+        1:
+            resting:
+                "WalkingGruppeStart"
+            asking:
+                "WalkingGruppeStart"
+        2: 
+            resting:
+                "Ambulanz"
+            asking:
+                "WayPoint4"
+            intermediate: 
+                1: "WayPoint88"
+        3:
+            resting:
+                "Frisoer"
+            asking:
+                "WayPoint35"
+        4:
+            resting:
+                "Kapelle"
+            asking:
+                "WayPoint14"
+        5:
+            resting:
+                "Teekueche"
+            asking:
+                "Lift1"
+        6:
+            resting:
+                "Frisoer"
+            asking:
+                "WayPoint26"
+            intermediate:
+                1: "WayPoint82"
+                2: "WayPoint83"
+                3: "WayPoint84"
+                4: "WayPoint28"
+                5: "WayPoint7"
+        7:
+            resting:
+                "Ambulanz"
+            asking:
+                "WayPoint4"
+        8:
+            resting:
+                "WalkingGruppeStart"
+            asking:
+                "WalkingGruppeStart"
+            intermediate:
+                1: "WayPoint88"
+fast:
+    speed: 0.7
+    waypoints:
+        1:
+            resting:
+                "WalkingGruppeStart"
+            asking:
+                "WalkingGruppeStart"
+        2: 
+            resting:
+                "Ambulanz"
+            asking:
+                "WayPoint4"
+            intermediate: 
+                1: "WayPoint20"
+        3:
+            resting:
+                "Frisoer"
+            asking:
+                "WayPoint35"
+        4:
+            resting:
+                "Kapelle"
+            asking:
+                "WayPoint14"
+        5:
+            resting:
+                "Teekueche"
+            asking:
+                "Lift1"
+        6:
+            resting:
+                "Frisoer"
+            asking:
+                "WayPoint26"
+            intermediate:
+                1: "WayPoint82"
+                2: "WayPoint83"
+                3: "WayPoint84"
+                4: "WayPoint28"
+                5: "WayPoint7"
+        7:
+            resting:
+                "Ambulanz"
+            asking:
+                "WayPoint4"
+        8:
+            resting:
+                "WalkingGruppeStart"
+            asking:
+                "WalkingGruppeStart"
+            intermediate:
+                1: "WayPoint11"

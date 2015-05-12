@@ -16,10 +16,6 @@ class StartBellbot(AbstractTaskServer):
     def __init__(self, name):
         rospy.loginfo("Starting node: %s" % name)
         self.started = False
-        self.mode = rospy.get_param("~mode", 1)
-        self.start = rospy.get_param("~start_waypoint", "Rezeption")
-        self.end = rospy.get_param("~goal", "Rezeption")
-        self.text = rospy.get_param("~text", "Henry im Haus der Barmherzigkeit")
 
         rospy.loginfo("Creating launch client...")
         self.launch_client = actionlib.SimpleActionClient("/launchServer", launchAction)
@@ -30,7 +26,7 @@ class StartBellbot(AbstractTaskServer):
         super(StartBellbot, self).__init__(
             name=name,
             action_type=bellbot_action_server.msg.bellbotAction,
-            interruptible=False
+            interruptible=True
         )
         rospy.loginfo(" ... started " + name)
 
@@ -38,16 +34,12 @@ class StartBellbot(AbstractTaskServer):
         self.instance_running = msg.data
 
     def create(self, req):
-        req.yaml = "{arguments: [{'first': '____int____', 'second': '"+str(self.mode)+"'}, "+\
-        "{'second': '"+str(self.start)+"'}, "+\
-        "{'second': '"+str(self.end)+"'}, "+\
-        "{'second': '"+str(self.text)+"'}]}"
         task = super(StartBellbot, self).create(req)
         if task.start_node_id == '':
             task.start_node_id = str(self.start)
             task.end_node_id = task.start_node_id
         if task.max_duration.secs == 0.0:
-            task.max_duration.secs = 3600
+            task.max_duration = task.end_before - task.start_after
         if task.priority == 0:
             task.priority = 2
 
@@ -57,7 +49,7 @@ class StartBellbot(AbstractTaskServer):
         self.started = False
         lg = launchGoal()
         lg.pkg = "aaf_bellbot"
-        lg.launch_file = "aaf_bellbot.launch"
+        lg.launch_file = "aaf_bellbot.launch.xml"
 
         lg.monitored_topics.append(self.TOPIC)
         self.launch_client.send_goal(lg, feedback_cb=self.feedback_cb)
@@ -83,7 +75,9 @@ class StartBellbot(AbstractTaskServer):
             while self.bellbot_client.get_state() == GoalStatus.PENDING and not self.server.is_preempt_requested() and not rospy.is_shutdown():
                 rospy.sleep(0.1)
             rospy.loginfo(" ... started")
-            self.bellbot_client.wait_for_result()
+            #self.bellbot_client.wait_for_result() # This does not return when killed, i.e. the goal is cancelled.
+            while self.bellbot_client.get_state() == GoalStatus.ACTIVE and not self.server.is_preempt_requested() and not rospy.is_shutdown():
+                rospy.sleep(1.0)
             state = self.bellbot_client.get_state()
 
         rospy.loginfo("Bellbot finished")
@@ -91,7 +85,7 @@ class StartBellbot(AbstractTaskServer):
         if state == GoalStatus.SUCCEEDED:
             self.launch_client.cancel_goal()
             self.server.set_succeeded()
-        elif state == GoalStatus.PREEMPTED:
+        elif self.server.is_preempt_requested():
             self.server.set_preempted()
         else:
             self.launch_client.cancel_goal()
@@ -104,10 +98,10 @@ class StartBellbot(AbstractTaskServer):
         rospy.loginfo(" ... stopping Bellbot")
         if self.bellbot_client:
             self.bellbot_client.cancel_all_goals()
-            # Making the bellbot "preemptable"
-            # rospy.loginfo(" ... waiting for Bellbot to die")
-            # while not self.bellbot_client.get_state() == GoalStatus.PREEMPTED and not rospy.is_shutdown():
-                # rospy.sleep(0.1)
+            rospy.loginfo(" ... waiting for Bellbot to die")
+            while not self.bellbot_client.get_state() == GoalStatus.PREEMPTED and not rospy.is_shutdown():
+                rospy.sleep(0.1)
+            rospy.loginfo(" ... died")
         rospy.loginfo(" ... stopping launch server")
         self.launch_client.cancel_goal()
         rospy.loginfo(" ... preempted")
@@ -117,6 +111,6 @@ class StartBellbot(AbstractTaskServer):
 
 
 if __name__ == "__main__":
-    rospy.init_node("bellbot_launch")
+    rospy.init_node("bellbot")
     s = StartBellbot(rospy.get_name())
     rospy.spin()

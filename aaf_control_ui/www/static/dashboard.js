@@ -1,6 +1,6 @@
   var hostname = location.hostname;
     var ros = new ROSLIB.Ros({
-      url : 'ws://'+hostname+'/rosws'
+      url : rosws_url
     });
   
   function emergency_stop() {
@@ -15,13 +15,13 @@
   function init_say() {
     var sayTopic = new ROSLIB.Topic({
         ros         : ros,
-        name        : '/mary_tts/speak',
-        messageType : 'std_msgs/String'
+        name        : '/speak/goal',
+        messageType : 'mary_tts/maryttsActionGoal'
     });
     
     sayTopic.subscribe(function(message) {
         // Formats the pose for outputting.
-        var say = message.data;
+        var say = message.goal.text;
 
         document.getElementById("saytext").innerHTML=say;
     });
@@ -43,9 +43,29 @@
           text = message.execution_queue[0].action + " an " + message.execution_queue[0].start_node_id;
         }
         document.getElementById("tasktext").innerHTML = text;
+
+        html = ""
+        for (var t=0; t < message.execution_queue.length; t++) {
+            var task = message.execution_queue[t];
+            var date = new Date(task.execution_time.secs*1000).toLocaleString('de-AT', { timeZone: 'Europe/Vienna' });
+            html += "<tr data-toggle=\"modal\" data-target=\"#deletetask\" data-whatever=\" * task.task_id + \">";
+            html += "<td>" + task.task_id + "</td>";
+            html += "<td>" + task.action + "</td>";
+            html += "<td>" + task.start_node_id + "</td>";
+            html += "<td>" + date + "</td>";
+            html += "</tr>";
+           
+        }
+        document.getElementById("tasklist").innerHTML = html;
+
+
+
     });
 
   }
+
+
+
 
   function init_node() {
     var nodeTopic = new ROSLIB.Topic({
@@ -104,7 +124,7 @@
     var viewer = new MJPEGCANVAS.Viewer({
     divID : 'mjpeg',
     host : hostname,
-    port: '/video',
+    port: mjpeg_suffix,
     width : 320,
     height : 240,
     topic : '/head_xtion/rgb/image_color'

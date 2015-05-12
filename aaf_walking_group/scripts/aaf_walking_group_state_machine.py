@@ -15,10 +15,13 @@ from aaf_walking_group.entertain import Entertain
 from aaf_walking_group.guide_interface import GuideInterface
 from aaf_walking_group.guiding import Guiding
 from aaf_walking_group.reached_resting_point import RestingPoint
+from aaf_walking_group.final_approach import FinalApproach
 from aaf_walking_group.msg import GuidingAction, EmptyAction, StateMachineAction
 from aaf_walking_group.srv import GetMediaId
 from aaf_waypoint_sounds.srv import WaypointSoundsService, WaypointSoundsServiceRequest
 from aaf_walking_group.utils import PTU, Gaze, RecoveryReconfigure
+from aaf_walking_group.waypoint_manager import WaypointManager
+import aaf_walking_group.utils as utils
 from music_player.srv import MusicPlayerService
 from sound_player_server.srv import PlaySoundService
 from walking_group_recovery.srv import ToggleWalkingGroupRecovery
@@ -63,13 +66,14 @@ class WalkingGroupStateMachine(object):
         s = rospy.ServiceProxy('/music_player_service', MusicPlayerService)
         s.wait_for_service()
         rospy.loginfo("  ... jingles")
-        s = rospy.ServiceProxy('/sound_player_service', PlaySoundService)
+        s = rospy.ServiceProxy('/sound_player_server/sound_player_service', PlaySoundService)
         s.wait_for_service()
         rospy.loginfo("  ... waypoints")
         s = rospy.ServiceProxy('/aaf_waypoint_sounds_service', WaypointSoundsService)
         s.wait_for_service()
         rospy.loginfo(" ... done")
         # Get parameters
+        self.volume = utils.get_master_volume()
         self.display_no = rospy.get_param("~display_no", 0)
         self.waypointset_name = rospy.get_param("~mongodb_params/waypointset_name", "")
         self.waypointset_collection = rospy.get_param("~mongodb_params/waypointset_collection", "aaf_walking_group")
@@ -87,16 +91,21 @@ class WalkingGroupStateMachine(object):
             name="/monitored_navigation/recover_states/",
             whitelist=rosparam.load_file(rospy.get_param("~recovery_whitelist"))[0][0]["recover_states"]
         )
-        self.dyn_client = DynClient(
+        rospy.loginfo("Creating dynamic reconfigure clients")
+        self.han_dyn_client = DynClient(
             "/human_aware_navigation"
         )
-        self.get_current_han_settings()
+        self.mov_dyn_client = DynClient(
+            "/human_aware_navigation/DWAPlannerROS"
+        )
+        rospy.loginfo(" ...done")
+        self.get_current_dyn_settings()
 
         rospy.loginfo(" ... starting " + name)
         self._as.start()
         rospy.loginfo(" ... started " + name)
 
-    def get_current_han_settings(self):
+    def get_current_dyn_settings(self):
         gazing = rospy.get_param("/human_aware_navigation/gaze_type")
         angle = round(rospy.get_param("/human_aware_navigation/detection_angle"),2)
         self.han_param = {
@@ -104,6 +113,13 @@ class WalkingGroupStateMachine(object):
             'detection_angle': angle
         }
         rospy.loginfo("Found following default values for human_aware_navigation: %s", self.han_param)
+        max_vel_x = round(rospy.get_param("/human_aware_navigation/DWAPlannerROS/max_vel_x"), 2)
+        max_trans_vel = round(rospy.get_param("/human_aware_navigation/DWAPlannerROS/max_trans_vel"),2)
+        self.mov_param = {
+            "max_vel_x": max_vel_x,
+            "max_trans_vel": max_trans_vel
+        }
+        rospy.loginfo("Found following default values for human_aware_navigation/DWAPlannerROS: %s", self.mov_param)
 
     def execute(self, goal):
         rospy.loginfo("Starting state machine")
@@ -129,16 +145,25 @@ class WalkingGroupStateMachine(object):
         dyn_param = {
             'timeout': 0.0,
             'gaze_type': 1,
-            'detection_angle': 80.0
+            'detection_angle': 20.0
         }
         try:
-            self.dyn_client.update_configuration(dyn_param)
+            self.han_dyn_client.update_configuration(dyn_param)
         except rospy.ServiceException as e:
             rospy.logerr("Caught service exception: %s", e)
 
         self.preempt_srv = rospy.Service('/walking_group/cancel', Empty, self.preempt_srv_cb)
-        self.waypointset = self.loadConfig(self.waypointset_name, collection_name=self.waypointset_collection, meta_name=self.waypointset_meta)
-        pprint.pprint(self.waypointset)
+        config = self.loadConfig(self.waypointset_name, collection_name=self.waypointset_collection, meta_name=self.waypointset_meta)
+        pprint.pprint(config)
+
+        dyn_param = {
+            'max_vel_x': config[goal.group]["speed"],
+            'max_trans_vel': config[goal.group]["speed"]
+        }
+        try:
+            self.mov_dyn_client.update_configuration(dyn_param)
+        except rospy.ServiceException as e:
+            rospy.logerr("Caught service exception: %s", e)
 
         try:
             rospy.loginfo("Creating waypoint sound service proxy and waiting ...")
@@ -152,7 +177,7 @@ class WalkingGroupStateMachine(object):
 
         # Create a SMACH state machine
         self.sm = smach.StateMachine(outcomes=['succeeded', 'aborted', 'preempted'])
-        self.sm.userdata.current_waypoint = self.waypointset[goal.group]["waypoints"][str(min([int(x) for x in self.waypointset[goal.group]["waypoints"].keys()]))]
+        self.sm.userdata.waypoints = WaypointManager([i for k,i in sorted(config[goal.group]["waypoints"].items(),key=lambda to_int: int(to_int[0]))])
         self.sm.userdata.play_music = True
         sis = smach_ros.IntrospectionServer(
             'walking_group_state_machine',
@@ -170,39 +195,49 @@ class WalkingGroupStateMachine(object):
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
-                remapping={'current_waypoint' : 'current_waypoint', 'play_music' : 'play_music'}
+                remapping={'waypoints' : 'waypoints', 'play_music' : 'play_music'}
             )
             smach.StateMachine.add(
                 'GUIDE_INTERFACE',
-                GuideInterface(self.waypointset[goal.group]["waypoints"]),
+                GuideInterface(),
                 transitions={
                     'move_to_point': 'GUIDING',
                     'aborted': 'ENTERTAIN',
                     'killall': 'preempted'
                 },
-                remapping={'current_waypoint' : 'current_waypoint', 'play_music' : 'play_music'}
+                remapping={'waypoints' : 'waypoints', 'play_music' : 'play_music'}
             )
             smach.StateMachine.add(
                 'GUIDING',
-                Guiding(waypoints=self.waypointset[goal.group]["waypoints"], distance=self.waypointset[goal.group]["stopping_distance"]),
+                Guiding(),
                 transitions={
                     'reached_point': 'RESTING_CONT',
                     'reached_final_point': 'succeeded',
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
-                remapping={'waypoint' : 'waypoint', 'play_music' : 'play_music'}
+                remapping={'waypoints' : 'waypoints', 'play_music' : 'play_music'}
             )
             smach.StateMachine.add(
                 'RESTING_CONT',
-                RestingPoint(self.display_no,self.waypointset[goal.group]["waypoints"]),
+                RestingPoint(self.display_no),
                 transitions={
-                    'rest': 'ENTERTAIN',
+                    'rest': 'FINAL_APPROACH',
                     'continue': 'GUIDING',
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
                 },
-                remapping={'current_waypoint' : 'current_waypoint', 'play_music' : 'play_music'}
+                remapping={'waypoints' : 'waypoints', 'play_music' : 'play_music'}
+            )
+            smach.StateMachine.add(
+                'FINAL_APPROACH',
+                FinalApproach(),
+                transitions={
+                    'reached_point': 'ENTERTAIN',
+                    'key_card': 'GUIDE_INTERFACE',
+                    'killall': 'preempted'
+                },
+                remapping={'waypoints' : 'waypoints', 'play_music' : 'play_music'}
             )
 
         # Execute SMACH plan
@@ -212,8 +247,13 @@ class WalkingGroupStateMachine(object):
         self.preempt_srv.shutdown()
         self.ptu.turnPTU(0, 0)
         self.recovery.reconfigure(RecoveryReconfigure.RESET)
+        utils.set_master_volume(self.volume)
         try:
-            self.dyn_client.update_configuration(self.han_param)
+            self.han_dyn_client.update_configuration(self.han_param)
+        except rospy.ServiceException as e:
+            rospy.logerr("Caught service exception: %s", e)
+        try:
+            self.mov_dyn_client.update_configuration(self.mov_param)
         except rospy.ServiceException as e:
             rospy.logerr("Caught service exception: %s", e)
         try:
@@ -237,6 +277,8 @@ class WalkingGroupStateMachine(object):
             self._as.set_succeeded()
         else:
             self._as.set_preempted()
+
+        strands_webserver.client_utils.display_relative_page(self.display_no, "ende.html")
 
     def preempt_callback(self):
         rospy.logwarn("Walking group preempt requested")

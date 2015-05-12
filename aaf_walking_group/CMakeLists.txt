@@ -39,6 +39,10 @@ catkin_python_setup()
 ## Declare ROS messages, services and actions ##
 ################################################
 
+generate_dynamic_reconfigure_options(
+  cfg/Legibility.cfg
+)
+
 add_service_files(
   FILES
   GetMediaId.srv
