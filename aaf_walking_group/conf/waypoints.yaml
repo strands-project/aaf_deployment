@@ -12,7 +12,7 @@ slow:
             asking:
                 "WayPoint4"
             intermediate: 
-                1: "WayPoint20"
+                1: "WayPoint88"
         3:
             resting:
                 "Frisoer"
@@ -50,7 +50,7 @@ slow:
             asking:
                 "WalkingGruppeStart"
             intermediate:
-                1: "WayPoint11"
+                1: "WayPoint88"
 fast:
     speed: 0.7
     waypoints:
