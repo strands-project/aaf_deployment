@@ -394,8 +394,6 @@ int createTask(int slot)
 
   		task.start_after =  ros::Time(timeSlots[slot]+taskStartDelay,0);
 		task.end_before = ros::Time(timeSlots[slot]+windowDuration - 2,0);
-		task.max_duration = ros::Duration(taskDuration,0);
-		if (slot > 1 && nodes[slot]==nodes[slot-1]) task.max_duration = ros::Duration(windowDuration-(taskStartDelay-5),0);
 		strands_executive_msgs::AddTask taskAdd;
 		taskAdd.request.task = task;
 		if (taskAdder.call(taskAdd))
