@@ -1,6 +1,6 @@
 <launch>
 
-	<node pkg="aaf_control_ui" type="server.py" name="aaf_control_ui_server" output="screen">
+	<node pkg="aaf_control_ui" type="server.py" name="aaf_control_ui_server" output="screen" respawn="true">
 		<param name="lang" value="de" />
 	</node>
 
