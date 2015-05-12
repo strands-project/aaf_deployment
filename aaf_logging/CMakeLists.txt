@@ -20,6 +20,7 @@ add_action_files(
   DIRECTORY action
   FILES
   Empty.action
+  StoreAndWait.action
 )
 
 generate_messages(
