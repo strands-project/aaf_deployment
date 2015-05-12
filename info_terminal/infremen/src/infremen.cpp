@@ -49,8 +49,9 @@ int interactionTimeout = 30;
 int maxTaskNumber = 5;
 int taskDuration = 180;	
 int taskPriority = 1;	
-bool debug = false;
+bool debug = true;
 int taskStartDelay = 5;
+int rescheduleCheckTime = 5;
 
 //ROS communication
 ros::NodeHandle *n;
@@ -105,6 +106,7 @@ void reconfigureCallback(infremen::infremenConfig &config, uint32_t level)
 	taskPriority = config.taskPriority;
 	debug = config.verbose;
 	taskStartDelay = config.taskStartDelay;
+	rescheduleCheckTime = config.rescheduleCheckTime;
 }
 
 //listen to battery and set forced charging if necessary
@@ -320,7 +322,7 @@ int generateSchedule(uint32_t givenTime)
 	time_t timeInfo = midnight;
 	strftime(dummy, sizeof(dummy), "InfoTerminal-Schedule-%Y-%m-%d.txt",localtime(&timeInfo));
 	sprintf(fileName,"%s/%s",scheduleDirectory.c_str(),dummy);
-	printf("Retrieving schedule from %s\n",fileName);
+	ROS_INFO("Retrieving schedule from %s",fileName);
 	FILE* file = fopen(fileName,"r");
 	if (file == NULL){
 		printf("Schedule file not found %s\n",fileName);
@@ -355,7 +357,7 @@ int getNextTimeSlot(int lookAhead)
 	time_t timeInfo;
 	int numSlots = 24*3600/windowDuration;
 	ros::Time currentTime = ros::Time::now();
-	uint32_t givenTime = currentTime.sec+lookAhead*windowDuration;
+	uint32_t givenTime = currentTime.sec+lookAhead*windowDuration+rescheduleCheckTime;
 	uint32_t midnight = getMidnightTime(givenTime);
 	if (timeSlots[0] != midnight)
 	{
@@ -398,8 +400,8 @@ int createTask(int slot)
 		taskAdd.request.task = task;
 		if (taskAdder.call(taskAdd))
 		{
-			sprintf(dummy,"%s for timeslot %i on %s.",frelementSet.frelements[nodes[slot]]->id,slot,testTime);
-			ROS_INFO("Task %ld created %s at ", taskAdd.response.task_id,dummy);
+			sprintf(dummy,"%s for timeslot %i on %s, between %i and %i.",frelementSet.frelements[nodes[slot]]->id,slot,testTime,task.start_after.sec,task.end_before.sec);
+			ROS_INFO("Task %ld created at %s ", taskAdd.response.task_id,dummy);
 			taskIDs[slot] = taskAdd.response.task_id;
 		}
 	}else{
@@ -548,15 +550,13 @@ int main(int argc,char* argv[])
 	ros::Time currentTime = ros::Time::now();
 	//buildModels(currentTime.sec);
 	generateSchedule(currentTime.sec);
-	//to start scheduler - for standalone testing 
-	ros::ServiceClient taskStart;
-	taskStart = n->serviceClient<strands_executive_msgs::SetExecutionStatus>("/task_executor/set_execution_status");
 
-	//TODO for testing only - remove later 
-	/*strands_executive_msgs::SetExecutionStatus runExec;
+	//to start scheduler - for standalone testing 
+	/*ros::ServiceClient taskStart;
+	/taskStart = n->serviceClient<strands_executive_msgs::SetExecutionStatus>("/task_executor/set_execution_status");
+	strands_executive_msgs::SetExecutionStatus runExec;
 	runExec.request.status = true;
 	if (taskStart.call(runExec)) ROS_INFO("Task execution enabled.");*/
-
 	while (ros::ok())
 	{
 		ros::spinOnce();
