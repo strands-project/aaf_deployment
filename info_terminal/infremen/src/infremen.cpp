@@ -50,6 +50,7 @@ int maxTaskNumber = 5;
 int taskDuration = 180;	
 int taskPriority = 1;	
 bool debug = false;
+int taskStartDelay = 5;
 
 //ROS communication
 ros::NodeHandle *n;
@@ -103,6 +104,7 @@ void reconfigureCallback(infremen::infremenConfig &config, uint32_t level)
 	taskDuration = config.taskDuration;
 	taskPriority = config.taskPriority;
 	debug = config.verbose;
+	taskStartDelay = config.taskStartDelay;
 }
 
 //listen to battery and set forced charging if necessary
@@ -361,6 +363,7 @@ int getNextTimeSlot(int lookAhead)
 		generateSchedule(givenTime);
 	} 
 	int currentSlot = (givenTime-timeSlots[0])/windowDuration;
+	//ROS_INFO("Time %i - slot %i: going to node %i(%s).",currentTime.sec-midnight,currentSlot,nodes[currentSlot],frelementSet.frelements[nodes[currentSlot]]->id);
 	if (debug)
 	{
 		timeInfo = givenTime;
@@ -389,10 +392,10 @@ int createTask(int slot)
 		task.end_node_id = frelementSet.frelements[nodes[slot]]->id;
 		task.priority = taskPriority;
 
-  		task.start_after =  ros::Time(timeSlots[slot]+5,0);
+  		task.start_after =  ros::Time(timeSlots[slot]+taskStartDelay,0);
 		task.end_before = ros::Time(timeSlots[slot]+windowDuration - 2,0);
 		task.max_duration = ros::Duration(taskDuration,0);
-		if (slot > 1 && nodes[slot]==nodes[slot-1]) task.max_duration = ros::Duration(windowDuration-10,0);
+		if (slot > 1 && nodes[slot]==nodes[slot-1]) task.max_duration = ros::Duration(windowDuration-(taskStartDelay-5),0);
 		strands_executive_msgs::AddTask taskAdd;
 		taskAdd.request.task = task;
 		if (taskAdder.call(taskAdd))
