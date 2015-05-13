@@ -20,12 +20,12 @@
 
     <node pkg="wait_action" type="wait_node.py" name="charging_task" output="screen" respawn="true">
     <param name="maximise_duration_delta" value="600" type="int"/>
-    <param name="interruptible" value="false" type="bool"/>
+    <param name="interruptible" value="true" type="bool"/>
     </node>
 
     <node pkg="wait_action" type="wait_node.py" name="maintenance_task" output="screen" respawn="true">
     <param name="maximise_duration_delta" value="600" type="int"/>
-    <param name="interruptible" value="true" type="bool"/>
+    <param name="interruptible" value="false" type="bool"/>
     </node>
 
     <node pkg="voice_output" type="task_monitor.py" name="task_monitor" output="screen" respawn="true">
