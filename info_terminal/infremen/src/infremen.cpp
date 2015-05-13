@@ -387,6 +387,7 @@ int createTask(int slot)
 	strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
 
 	strands_executive_msgs::CreateTask srv;
+        taskCreator.waitForExistence();
 	if (taskCreator.call(srv))
 	{
 		strands_executive_msgs::Task task=srv.response.task;
@@ -396,6 +397,7 @@ int createTask(int slot)
 
   		task.start_after =  ros::Time(timeSlots[slot]+taskStartDelay,0);
 		task.end_before = ros::Time(timeSlots[slot]+windowDuration - 2,0);
+                task.max_duration = task.end_before - task.start_after;
 		strands_executive_msgs::AddTask taskAdd;
 		taskAdd.request.task = task;
 		if (taskAdder.call(taskAdd))
