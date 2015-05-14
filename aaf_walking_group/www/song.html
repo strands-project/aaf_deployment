@@ -10,7 +10,7 @@
 	<body style="width: 1000px; height: 750px; background-repeat:no-repeat;">
 
 	<!-- Go back to the main page -->
-	<a class="button-style liste-button" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
+	<a class="button-style liste-button" onclick="javascript:exit_page()" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
 
 	<div id="soundDiv" style="position: absolute; width:700px; left: 150px; top: 65px;">
 		<img id="imgElem" src="img/sheetmusic.png" />
@@ -74,6 +74,12 @@
 	            playing = true;
 			}
             showHideButtons();
+		}
+		
+		function exit_page() {
+			playing = false;
+			var result = aafMusicPlayerService(1);
+			
 		}
 
         function showHideButtons() {

@@ -55,36 +55,31 @@
 	
 		var playDiv = document.getElementById("playDiv"); 
 		var pauseDiv = document.getElementById("pauseDiv");
-		var playing = false;
-      showHideButtons();
+		showHideButtons();
       
       function showHideButtons() {
-      	if (playing == true) {
-				playDiv.style.display = 'none';
-				pauseDiv.style.display = 'block';
+      	if (myVideo.paused) {
+            playDiv.style.display = 'block';
+				pauseDiv.style.display = 'none';
 
 			} else {
-				playDiv.style.display = 'block';
-				pauseDiv.style.display = 'none';
+				playDiv.style.display = 'none';
+				pauseDiv.style.display = 'block';
 			}
       }
 
 		function prev() {
 			myVideo.pause();
-			playing = false;
 			setVideo(2);
-			playPause()
-         showHideButtons();
+			showHideButtons();
 
 			console.log('prev() called');
 		} 
 
 		function next() {
 			myVideo.pause();
-			playing = false;
 			setVideo(1);
-			playPause()
-         showHideButtons();
+			showHideButtons();
             
 			console.log('next() called');
 		}
@@ -108,12 +103,10 @@
 		function playPause() { 
 			if (myVideo.paused) {
 			    myVideo.play(); 
-			    playing = true;
-	          showHideButtons();
+			    showHideButtons();
 			} else {
 			    myVideo.pause(); 
-			    playing = false;
-	          showHideButtons();
+			    showHideButtons();
 			}
 		}
 	</script> 
