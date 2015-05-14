@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import rospy
+from yaml import load
 from actionlib import SimpleActionClient
 from actionlib_msgs.msg import GoalStatus
 from mongodb_store_msgs.msg import MoveEntriesGoal, MoveEntriesAction, StringList
@@ -34,20 +35,39 @@ class StoreLogsServer(AbstractTaskServer):
         target = goal.wait_until
         target.secs -= 10 # Making sure the wait finishes before the window ends.
 
-        rospy.loginfo("Starting data transfer")
+        rospy.loginfo("Starting data transfer. This task is not interruptible.")
         self.running = False
         g = MoveEntriesGoal()
         g.database = rospy.get_param('~database', 'message_store')
-        g.collections = StringList(rospy.get_param('~collections', ''))
+
+        p = str(rospy.get_param('~collections', '[]'))
+        self.collections = load(p)
+        g.collections = StringList(self.collections)
+
         hours = rospy.get_param('~past_hours', 24)
         time_ago = rospy.Duration(60 * 60 * hours)
         g.move_before = time_ago
 
-        rospy.loginfo("Starting data upload")
-        self.client.send_goal(g, feedback_cb=self.feeback_cb)
-        self.client.wait_for_result()
-        state = self.client.get_state()
-        rospy.loginfo("Data upload complete. Waiting ...")
+        retries = int(rospy.get_param('retries', 3))
+
+        t = 0
+        state = 0
+
+        while t < retries and state != GoalStatus.SUCCEEDED:
+            t = t + 1
+            rospy.loginfo("Starting data upload of collections %s (try %d of %d)" % (g.collections, t, retries))
+            self.client.send_goal(g, feedback_cb=self.feeback_cb)
+            self.client.wait_for_result()
+            state = self.client.get_state()
+            if state != GoalStatus.SUCCEEDED:
+                rospy.logwarn('Data replication failed.')
+
+        if state != GoalStatus.SUCCEEDED:
+            rospy.logerr('Data replication failed for some reason after %d tries. '
+                      'Check mongodb logs. Will still continue to wait in this action. '
+                      'Data upload exited with state %s. Waiting ...' % (retries, state))
+        rospy.loginfo("From now on I'm interruptible and will just wait")
+        self.interruptible=True
 
         while not rospy.is_shutdown() and not self.server.is_preempt_requested() and rospy.get_rostime() < target:
             rospy.sleep(1.0)
@@ -62,7 +82,9 @@ class StoreLogsServer(AbstractTaskServer):
             self.server.set_aborted()
 
     def feeback_cb(self, msg):
-        rospy.loginfo("Upload of '" + msg.completed[-1] + "' completed")
+        rospy.loginfo(" - Upload of '%s' completed (%d%%). " % \
+                      (msg.completed[-1],
+                       len(completed) * 100 / len(self.collections)))
 
     def create(self, req):
         task = super(StoreLogsServer, self).create(req)
