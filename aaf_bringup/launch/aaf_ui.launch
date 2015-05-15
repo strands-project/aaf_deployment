@@ -1,0 +1,23 @@
+<launch>
+    <arg name="machine" default="localhost" />
+    <arg name="user" default="" />
+    <arg name="mary_machine" default="localhost" />
+    <arg name="mary_machine_user" default="" />
+
+    <!-- NOW when launching in a remote mode it will need the ROS_ENV_LOADER set if not it will leave it empty -->
+    <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="true" />
+
+    <include file="$(find strands_ui)/launch/strands_ui.launch">
+        <arg name="machine" value="$(arg machine)"/>
+        <arg name="user" value="$(arg user)"/>        
+        <arg name="mary_machine" value="$(arg mary_machine)"/>
+        <arg name="mary_machine_user" value="$(arg mary_machine_user)"/>        
+    </include>
+
+    <node pkg="aaf_walking_group" type="walking_gui_server.py" name="walking_interface_server" output="screen" respawn="true">
+        <param name="web_page" value="false" type="bool"/> <!-- Start without showing pages, is dynamically reconfigred -->
+        <param name="indicators" value="true" type="bool"/>
+        <param name="move_head" value="true" type="bool"/>
+    </node>
+
+</launch>
