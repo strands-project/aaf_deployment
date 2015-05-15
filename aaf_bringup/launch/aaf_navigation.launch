@@ -34,6 +34,7 @@
 
   <!-- WARNING: This EBC will be powerded on and off during docking! -->
   <arg name="lightEBC" default=""/>
+  <arg name="positionUpdate" default="true"/>
 
   <arg name="machine" default="localhost" />
   <arg name="user" default="" />
@@ -76,11 +77,13 @@
     <arg name="machine"  value="$(arg machine)"/>
     <arg name="user"  value="$(arg user)"/>
     <arg name="lightEBC"  value="$(arg lightEBC)"/>
+    <arg name="positionUpdate"  value="$(arg positionUpdate)"/>
   </include>
   <include if="$(arg with_mux)" file="$(find scitos_docking)/launch/charging_mux.launch">
     <arg name="machine"  value="$(arg machine)"/>
     <arg name="user"  value="$(arg user)"/>
     <arg name="lightEBC"  value="$(arg lightEBC)"/>
+    <arg name="positionUpdate"  value="$(arg positionUpdate)"/>
   </include>
 
   <!-- Backtrack server -->
