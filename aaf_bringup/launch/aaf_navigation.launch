@@ -23,7 +23,13 @@
   <arg name="z_stair_threshold" default="0.12"/>
   <arg name="z_obstacle_threshold" default="0.15"/>
   <arg name="with_head_xtion" default="true"/>
+
   <arg name="with_human_aware" default="true"/>
+  <arg name="timeout" default="0.0" />
+  <arg name="max_dist" default="4.0" />
+  <arg name="min_dist" default="1.0" />
+  <arg name="detection_angle" default="45.0" />
+  <arg name="gaze_type" default="1" />
 
   <arg name="with_site_movebase_params" default="false"/>
   <arg name="site_movebase_params" default=""/>
@@ -116,6 +122,11 @@
     <include file="$(find strands_human_aware_navigation)/launch/human_aware_navigation.launch">
       <arg name="machine"  value="$(arg machine)"/>
       <arg name="user"  value="$(arg user)"/>
+      <arg name="timeout"  value="$(arg timeout)"/>
+      <arg name="max_dist"  value="$(arg max_dist)"/>
+      <arg name="min_dist"  value="$(arg min_dist)"/>
+      <arg name="detection_angle"  value="$(arg detection_angle)"/>
+      <arg name="gaze_type"  value="$(arg gaze_type)"/>
     </include>
   </group>
 </launch>
