@@ -10,6 +10,11 @@
     service.callService(request, function(result) {
       console.log('Called emergency service');
     });
+    var service = new ROSLIB.Service({ros : ros, name : '/deployment_control/pause', serviceType : 'std_srvs/Empty'});
+    var request = new ROSLIB.ServiceRequest();
+    service.callService(request, function(result) {
+      console.log('Called pause service');
+    });
   }
 
   function init_say() {
