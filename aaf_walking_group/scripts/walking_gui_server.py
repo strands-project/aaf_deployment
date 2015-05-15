@@ -88,6 +88,7 @@ class WalkingInterfaceServer(object):
         self.indicators = config["indicators"]
         self.web_page   = config["web_page"]
         self.move_head  = config["move_head"]
+        self.turn_angle = config["turn_angle"]
 
         if self.indicators and not self.dyn_client:
             rospy.loginfo("Waiting for dynamic reconfigure server for 1 sec...")
@@ -126,7 +127,7 @@ class WalkingInterfaceServer(object):
 
             #print math.degrees(angle)
 
-            if abs(math.degrees(angle)) >= 30:
+            if abs(math.degrees(angle)) >= self.turn_angle:
                 if angle > 0:
                     direction = "right"
                 else:
