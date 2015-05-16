@@ -13,23 +13,18 @@
   <body onload="setImage(0)" style="width: 1000px; height: 750px; background-repeat:no-repeat;">
   
   <!-- Go back to the main page -->
-  <a class="button-style liste-button" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
+  <a class="button-style liste-button" onclick="clearInterval(image_loop)" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
   
-  <div class="landscape" style="position: absolute; left: 192px; top: 10px; width: 640px; height: 480px;">
+  <div class="landscape" style="position: absolute; left: 63px; top: 1px; width: 873px; height: 655px;">
     <img id="img1" src="">
   </div>
   
-  <button type="button" onclick="javascript:setImage(2)"
-            class="button-style back-button" style="position: absolute; left: 80px; top: 480px; width: 300px; height: 255px;"></button>
-  <button type="button" onclick="javascript:setImage(1)"
-            class="button-style next-button" style="position: absolute; left: 620px; top: 480px; width: 300px; height: 255px;"></button>
-
   <script type="text/javascript">
         var hostname = location.hostname;
         
         var ros = new ROSLIB.Ros({
             url : 'ws://'+hostname+':9090'
-        }); 
+        });
           
         function setImage(actionId) {
 				console.log('Set image called')
@@ -42,7 +37,9 @@
 						document.getElementById('img1').src=("http://"+hostname+":8027/get_media_by_name/"+result.id);
 		            console.log(result.id); 
         			});            
-        }                 
+        }
+        
+        var image_loop = setInterval(function () {setImage(1)}, 10000);              
         
       </script>
   </body>
