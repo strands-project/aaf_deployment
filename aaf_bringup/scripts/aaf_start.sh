@@ -39,7 +39,7 @@ tmux select-window -t $SESSION:3
 tmux send-keys "DISPLAY=:0 roslaunch strands_bringup strands_cameras.launch head_camera:=true head_ip:=werner-left-cortex head_user:=strands chest_camera:=true chest_ip:=werner-right-cortex chest_user:=strands"
 
 tmux select-window -t $SESSION:4
-tmux send-keys "HOST_IP=192.168.0.100 DISPLAY=:0 rosparam set /deployment_language german && DISPLAY=:0 roslaunch aaf_bringup aaf_ui.launch mary_machine:=werner-right-cortex mary_machine_user:=strands"
+tmux send-keys "rosparam set /deployment_language german && HOST_IP=192.168.0.100 DISPLAY=:0 roslaunch aaf_bringup aaf_ui.launch mary_machine:=werner-right-cortex mary_machine_user:=strands"
 
 tmux select-window -t $SESSION:5
 tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_navigation.launch map:=/opt/strands/map/aaf_winter.yaml topological_map:=aaf_deployment"
