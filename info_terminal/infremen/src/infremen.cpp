@@ -381,18 +381,25 @@ int getNextTimeSlot(int lookAhead)
 /*creates a task for the given slot*/
 int createTask(int slot)
 {
-	char dummy[1000];
+    char dummy[1000];
 	char testTime[1000];
 	time_t timeInfo = timeSlots[slot];
 	strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
+
+    int chargeNodeID = frelementSet.find("ChargingPoint");
+    /*charge when low on battery*/
+    if (chargeNodeID != -1 && forceCharging){
+        nodes[slot]=chargeNodeID;
+        ROS_INFO("Task %i should be changed to charging.",taskIDs[slot]);
+    }
 
 	strands_executive_msgs::CreateTask srv;
         taskCreator.waitForExistence();
 	if (taskCreator.call(srv))
 	{
 		strands_executive_msgs::Task task=srv.response.task;
-		task.start_node_id = frelementSet.frelements[nodes[slot]]->id;
-		task.end_node_id = frelementSet.frelements[nodes[slot]]->id;
+        task.start_node_id = frelementSet.frelements[nodes[slot]]->id;
+        task.end_node_id = frelementSet.frelements[nodes[slot]]->id;
 		task.priority = taskPriority;
 
   		task.start_after =  ros::Time(timeSlots[slot]+taskStartDelay,0);
@@ -416,7 +423,7 @@ int createTask(int slot)
 /*drops and reschedules the following task on special conditions*/
 int modifyNextTask(int slot)
 {
-	int lastNodeID = frelementSet.find(nodeName.c_str());
+    int lastNodeID = frelementSet.find(nodeName.c_str());
 	int chargeNodeID = frelementSet.find("ChargingPoint");
 	bool changeTaskFlag = false;
 	/*charge when low on battery*/
@@ -526,7 +533,7 @@ int main(int argc,char* argv[])
 	//to receive feedback from task_info
 	infoTaskSub = n->subscribe("/info_terminal/task_outcome", 1, guiCallBack);
 	//to receive feedback about the task outcome 
-	infoTaskSub = n->subscribe("/info_terminal/task_outcome", 1, guiCallBack);
+//	infoTaskSub = n->subscribe("/info_terminal/task_outcome", 1, guiCallBack);
 	//to receive feedback from the gui itself 
 	guiSub = n->subscribe("/info_terminal/active_screen", 1, interacted);
 	//to get relevant nodes
@@ -565,11 +572,11 @@ int main(int argc,char* argv[])
 		sleep(1);
 		if (debug) ROS_INFO("Infremen tasks: %i %i",numCurrentTasks,maxTaskNumber);
 		currentTimeSlot = getNextTimeSlot(0);
-		if (currentTimeSlot!=lastTimeSlot){
-			modifyNextTask(currentTimeSlot);
-			numCurrentTasks--;
-			if (numCurrentTasks < 0) numCurrentTasks = 0;
-		}
+//		if (currentTimeSlot!=lastTimeSlot){
+//			modifyNextTask(currentTimeSlot);
+//			numCurrentTasks--;
+//			if (numCurrentTasks < 0) numCurrentTasks = 0;
+//		}
 		if (numCurrentTasks < maxTaskNumber)
 		{
 			lastTimeSlot=currentTimeSlot;
