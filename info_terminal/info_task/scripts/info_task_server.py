@@ -21,6 +21,9 @@ class InfoTaskServer(AbstractTaskServer):
         self.interaction_times = []
         self.pages = []
 
+        self.extension_time = rospy.get_param("~extension_time", 30.0)
+        self.reset_time = 0.0
+
         # Creating activity subscriber and publisher
         rospy.Subscriber("info_terminal/active_screen", Int32, self.button_pressed_callback)
         self.pub = rospy.Publisher("/info_terminal/task_outcome", Clicks, queue_size=10, latch=True)
@@ -45,6 +48,8 @@ class InfoTaskServer(AbstractTaskServer):
         # preempt will not be requested while activity is happening
         while not rospy.is_shutdown() and not self.server.is_preempt_requested():
             # loop for duration
+            if self.reset_time < rospy.Time.now().to_sec():
+                self.interruptible = True
             rate.sleep()
 
         # Reset ptu, head and gaze
@@ -70,6 +75,8 @@ class InfoTaskServer(AbstractTaskServer):
         rospy.loginfo('button_pressed_callback')
         self.interaction_times.append(rospy.Time.now())
         self.pages.append(active_screen.data)
+        self.reset_time = rospy.Time.now().to_sec() + self.extension_time
+        self.interruptible = False
 
     def preempt_cb(self):
         clicks = Clicks()
