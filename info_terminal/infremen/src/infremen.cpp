@@ -572,11 +572,11 @@ int main(int argc,char* argv[])
 		sleep(1);
 		if (debug) ROS_INFO("Infremen tasks: %i %i",numCurrentTasks,maxTaskNumber);
 		currentTimeSlot = getNextTimeSlot(0);
-//		if (currentTimeSlot!=lastTimeSlot){
+        if (currentTimeSlot!=lastTimeSlot){
 //			modifyNextTask(currentTimeSlot);
-//			numCurrentTasks--;
-//			if (numCurrentTasks < 0) numCurrentTasks = 0;
-//		}
+            numCurrentTasks--;
+            if (numCurrentTasks < 0) numCurrentTasks = 0;
+        }
 		if (numCurrentTasks < maxTaskNumber)
 		{
 			lastTimeSlot=currentTimeSlot;
