@@ -1,0 +1,16 @@
+###############################################################################
+### Possible states:
+# Setup
+# WaitingForGoal
+# Guiding
+# WaitingForFeedback
+###############################################################################
+
+WaitingForGoal:
+    start: "Hallo! Ich kann dir helfen Räume oder Personen zu finden! Tippe dein Ziel ein!"
+Guiding:
+    start: "Es geht los! Bitte folge mir!"
+    end: "Wir haben unser Ziel erreicht"
+WaitingForFeedback:
+    start: "Bitte gib mir noch Bescheid, wie du meinen Bringdienst gefunden hast! Klicke dazu auf die Gesichter neben den Fragen am Bildschirm!"
+    end: "Vielen Dank. Ich fahre jetzt wieder zurück."
