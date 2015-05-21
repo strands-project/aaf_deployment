@@ -117,7 +117,9 @@ class Events(object):
         if not type(items) is list:
             items = [items]		
         for n in items:
-            blog_events.append("<h3>"+n["title"]+"</h3><h4>"+n["description"] +"</h4>")
+            # big *HACK* to remove HTML tags
+            d = n["content:encoded"]
+            blog_events.append("<h3>"+n["title"]+"</h3><h4>"+ d +"</h4>")
 
         news = xmltodict.parse(requests.get(NEWS_URL).text)
         events = []
@@ -126,8 +128,8 @@ class Events(object):
             items = [items]
         for n in items:
             events.append((None,
-                           "<h3>"+n["title"]+"</h3><h4>"+n["description"] +"</h4>"))
-        return render.events(blog_events[:3], app.strings, events[:3])
+                           "<h3>"+n["title"]+"</h3><h4>"+ n["description"] +"</h4>"))
+        return render.events(blog_events[:2], app.strings, events[:3])
 
 
 class GoAway(object):
