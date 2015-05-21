@@ -22,7 +22,6 @@ export AAF_TOPICS="
     /closest_node
     /do_backtrack/goal
     /speak/goal
-    /mary_tts/speak
     /strands_emails/goal
     /strands_image_tweets/goal
     /chargingServer/goal
@@ -40,9 +39,12 @@ export AAF_TOPICS="
     /move_base/DWAPlannerROS/global_plan_throttled
     /move_base/DWAPlannerROS/local_plan_throttled
     /move_base/goal
-    /wait_node/goal
-    /wait_node/result
-    /wait_node/cancel
+    /charging_task/goal
+    /charging_task/result
+    /charging_task/cancel
+    /maintenance_task/goal
+    /maintenance_task/result
+    /maintenance_task/cancel
 "
 
 rosrun mongodb_log mongodb_log.py --nodename-prefix=aaf_logger_ $AAF_TOPICS
