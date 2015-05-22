@@ -40,6 +40,9 @@ export AAF_TOPICS="
     /walking_group_fast/goal
     /walking_group_fast/result
     /walking_group_fast/cancel
+    /walking_group_slow/goal
+    /walking_group_slow/result
+    /walking_group_slow/cancel
     /store_logs/cancel
     /store_logs/goal
     /store_logs/result
