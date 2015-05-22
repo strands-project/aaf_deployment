@@ -60,6 +60,4 @@ export AAF_TOPICS="
 "
 
 
-
 rosrun mongodb_log mongodb_log.py --nodename-prefix=aaf_logger_ $AAF_TOPICS > $HOME/.ros/mongodb_log.log 2>&1
-
