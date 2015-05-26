@@ -15,7 +15,7 @@
     <arg name="user" default="" />
 
     <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="false"/>
-    
+
     <node pkg="aaf_logging" type="start_stop_logging.py" name="logging_server" output="screen" respawn="true"/>
 
     <node pkg="aaf_logging" type="store_logs_task.py" name="store_logs" output="screen" respawn="true">
@@ -39,8 +39,6 @@
     </include>
 
     <node pkg="aaf_logging" type="filter_rosout.py" name="filter_rosout" output="screen" respawn="true"/>
-    <node pkg="topic_tools" type="throttle" name="throttle_global_plan" output="screen" respawn="true" args="messages /move_base/DWAPlannerROS/global_plan 0.5 /move_base/DWAPlannerROS/global_plan_throttled"/>
-    <node pkg="topic_tools" type="throttle" name="throttle_local_plan" output="screen" respawn="true" args="messages /move_base/DWAPlannerROS/local_plan 0.5 /move_base/DWAPlannerROS/local_plan_throttled"/>
     <node pkg="mongodb_log" type="mongodb_log_tf" name="tf_logger" output="screen" respawn="true" args="-t /tf -m $(arg mongodb_host):$(arg mongodb_port) -n tf_logger -c roslog.tf -k 0.1 -l 0.1 -g 60 -a"/>
 
     <!--
