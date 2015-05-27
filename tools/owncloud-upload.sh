@@ -14,5 +14,5 @@ URL_BASE="https://lcas.lincoln.ac.uk/owncloud/remote.php/webdav/"
 
 for f in "$@"; do
 	bn=`basename "$f"`
-	curl -X PUT --progress-bar --verbose --user $LOGIN --data-binary "@$f" "$URL_BASE/$DESTDIR/$bn"
+	curl -X PUT --user $LOGIN --data-binary "@$f" "$URL_BASE/$DESTDIR/$bn" > /tmp/curl.$USER.log
 done
