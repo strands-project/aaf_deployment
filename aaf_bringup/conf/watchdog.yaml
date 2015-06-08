@@ -1,0 +1,59 @@
+- name: check_battery
+  description: Monitors the battery level.
+  restart_timeout: 30
+  monitors:
+      - monitor_type: TopicFieldCondition
+        topic: "/battery_state/lifePercent"
+        condition: "{value} < 30"
+  actions:
+      - action_type: SendEmail
+        to_addresses:  [henry.strands@hanheide.net]
+        from_address: henry.strands@hanheide.net
+        message: "Warning: robot battery is critically low."
+        server: localhost
+        port: 25
+- name: check_scitos_node
+  description: Checks the /odom topic, kills scitos node if not published for 20s.
+  restart_timeout: 30
+  monitors:
+      - monitor_type: TopicAlive
+        topic: "/odom"
+        max_duration: 20
+  actions:
+      - action_type: KillNode
+        node_name: "/scitos_mira"
+      - action_type: SendEmail
+        to_addresses:  [henry.strands@hanheide.net]
+        from_address: henry.strands@hanheide.net
+        message: "Warning: scitos_node needed to be restarted."
+        server: localhost
+        port: 25
+- name: chest_xtion_check
+  description: Checks the /chest_xtion/rgb/image_color topic
+  restart_timeout: 300
+  monitors:
+      - monitor_type: TopicAlive
+        topic: "/chest_xtion/rgb/image_color"
+        max_duration: 20
+  actions:
+      - action_type: SendEmail
+        to_addresses:  [henry.strands@hanheide.net]
+        from_address: henry.strands@hanheide.net
+        message: "Warning: /chest_xtion/rgb/image_color is not publishing."
+        server: localhost
+        port: 25
+- name: head_xtion_check
+  description: Checks the /head_xtion/rgb/image_color topic 
+  restart_timeout: 300
+  monitors:
+      - monitor_type: TopicAlive
+        topic: "/head_xtion/rgb/image_color"
+        max_duration: 20
+  actions:
+      - action_type: SendEmail   
+        to_addresses:  [henry.strands@hanheide.net]
+        from_address: henry.strands@hanheide.net   
+        message: "Warning: /head_xtion/rgb/image_color is not publishing."
+        server: localhost
+        port: 25
+
