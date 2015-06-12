@@ -13,35 +13,16 @@
   <body onload="setVideo(0)" style="width: 1000px; height: 750px; background-repeat:no-repeat;">
   
   <!-- Go back to the main page -->
-  <a class="button-style liste-button" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
+  <a class="button-style liste-button" onclick="clearInterval(video_loop)" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
   
-  <div id="videoDiv" style="position: absolute; left: 156px; top: 40px; width:711px; height: 400px;">
-	   <video id="videoplayer" width="640" height="480" >
+  <div id="videoDiv" style="position: absolute; left: 63px; top: 1px; width: 873px; height: 655px;">
+	   <video id="videoplayer" width="873" height="655" >
 			<source id="mp4" src="" />
 			<source id="ogg" src="" />
 			<source id="webm" src="" />
 			<em>Sorry, your browser doesn't support HTML5 video.</em>
 		</video>
   </div>
-  
-  <div id="prevDiv">
-		<button type="button" onclick="javascript:prev()"
-            class="button-style back-button" style="position: absolute; left: 80px; top: 480px; width: 300px; height: 255px;"></button>
-	</div>
-
-	<div id="pauseDiv">
-      <button type="button" onclick="javascript:playPause()"
-            class="button-style stopp-button" style="position: absolute; left: 350px; top: 480px; width: 300px; height: 255px;"></button>
-	</div>
-	<div id="playDiv">
-      <button type="button" onclick="javascript:playPause()"
-            class="button-style start-button" style="position: absolute; left: 350px; top: 480px; width: 300px; height: 255px;"></button>
-	</div>
-
-	<div id="nextDiv">
-      <button type="button" onclick="javascript:next()"
-            class="button-style next-button" style="position: absolute; left: 620px; top: 480px; width: 300px; height: 255px;"></button>
-	</div>
 
   <script>
 		var hostname = location.hostname;
@@ -53,39 +34,8 @@
 		  url : 'ws://'+hostname+':9090'
 		});
 	
-		var playDiv = document.getElementById("playDiv"); 
-		var pauseDiv = document.getElementById("pauseDiv");
-		showHideButtons();
-      
-      function showHideButtons() {
-      	if (myVideo.paused) {
-            playDiv.style.display = 'block';
-				pauseDiv.style.display = 'none';
-
-			} else {
-				playDiv.style.display = 'none';
-				pauseDiv.style.display = 'block';
-			}
-      }
-
-		function prev() {
-			myVideo.pause();
-			setVideo(2);
-			showHideButtons();
-
-			console.log('prev() called');
-		} 
-
-		function next() {
-			myVideo.pause();
-			setVideo(1);
-			showHideButtons();
-            
-			console.log('next() called');
-		}
-
 		function setVideo(actionId) {
-				console.log('Set image called')
+				console.log('Set video called')
 				var service_button = new ROSLIB.Service({
         			ros : ros, name : '/aaf_walking_group/video_server/get_id', serviceType : 'aaf_walking_group/GetMediaId'
         		}); 
@@ -96,19 +46,20 @@
 						document.getElementById('ogg').src=("http://"+hostname+":8027/get_media_by_name/"+result.id);
 						document.getElementById('webm').src=("http://"+hostname+":8027/get_media_by_name/"+result.id);
 						document.getElementById("videoplayer").load();
+						document.getElementById("videoplayer").play();
         				console.log(result.id); 
         			});            
         }  
 		
-		function playPause() { 
-			if (myVideo.paused) {
-			    myVideo.play(); 
-			    showHideButtons();
-			} else {
-			    myVideo.pause(); 
-			    showHideButtons();
+		function auto_paly() {
+			console.log('Auto play called')
+			if (myVideo.ended) {
+				console.log('Play next video')
+			   setVideo(1);
 			}
 		}
+		
+		var video_loop = setInterval(function () {auto_paly()}, 10000);
 	</script> 
   </body>
 </html>
