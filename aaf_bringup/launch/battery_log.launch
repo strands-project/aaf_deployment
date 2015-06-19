@@ -1,4 +1,5 @@
 <launch>
     <node name="battery_throttle" pkg="topic_tools" type="throttle" args="messages /battery_state 0.1 /battery_state_throttled" />
-    <node name="battery_rosbag" pkg="rosbag" type="record" args="-j -o battery_state /battery_state_throttled" />
+    <node name="diag_throttle" pkg="topic_tools" type="throttle" args="messages /diagnostics_agg 0.1 /diagnostics_agg_throttled" />
+    <node name="battery_rosbag" pkg="rosbag" type="record" args="-j -o battery_state /battery_state_throttle /diagnostics_agg_throttled" />
 </launch>
