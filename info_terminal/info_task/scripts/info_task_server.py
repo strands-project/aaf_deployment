@@ -59,7 +59,7 @@ class InfoTaskServer(AbstractTaskServer):
 
         exploration_goal.goal.navigation = 0
         exploration_goal.goal.locations.poses.append(pose)
-        self.client.send_goal(exploration_goal)
+        self.client.send_goal(exploration_goal.goal)
         #wait and get information
 
         # Showing info terminal webserver
