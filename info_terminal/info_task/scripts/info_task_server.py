@@ -17,9 +17,9 @@ class InfoTaskServer(AbstractTaskServer):
     def __init__(self, name):
         rospy.loginfo("Starting node: %s" % name)
         # Creating action clients
-        self.gaze = Gaze()
+#        self.gaze = Gaze()
         self.head = Head()
-        self.ptu = PTU()
+#        self.ptu = PTU()
         self.information = Float64()
 
         # interaction storage
@@ -54,13 +54,11 @@ class InfoTaskServer(AbstractTaskServer):
         #ST exploration
         pose = Pose()        
         pose.orientation.w = 1.0
-        pose_array = PoseArray()
-        pose_array.poses.append(pose)
-        
         
         exploration_goal = ExecutionActionGoal()
+
         exploration_goal.goal.navigation = 0
-        exploration_goal.goal.locations.poses.append(pose_array)
+        exploration_goal.goal.locations.poses.append(pose)
         self.client.send_goal(exploration_goal)
         #wait and get information
 
