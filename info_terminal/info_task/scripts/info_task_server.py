@@ -2,11 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import rospy
-from std_msgs.msg import Int32
+import actionlib
+
+from std_msgs.msg import Int32, Float64
 from info_task.msg import EmptyAction, Clicks
 from info_task.utils import Gaze, Head, PTU
 from strands_executive_msgs.abstract_task_server import AbstractTaskServer
 import strands_webserver.client_utils
+from spatiotemporalexploration.msg import ExecutionAction, ExecutionActionGoal
+from geometry_msgs.msg import PoseArray, Pose
 
 
 class InfoTaskServer(AbstractTaskServer):
@@ -16,17 +20,21 @@ class InfoTaskServer(AbstractTaskServer):
         self.gaze = Gaze()
         self.head = Head()
         self.ptu = PTU()
+        self.information = Float64()
 
         # interaction storage
         self.interaction_times = []
         self.pages = []
 
-        self.extension_time = rospy.get_param("~extension_time", 30.0)
-        self.reset_time = 0.0
-
         # Creating activity subscriber and publisher
         rospy.Subscriber("info_terminal/active_screen", Int32, self.button_pressed_callback)
         self.pub = rospy.Publisher("/info_terminal/task_outcome", Clicks, queue_size=10, latch=True)
+        
+        self.client = actionlib.SimpleActionClient(
+            '/executioner',
+            ExecutionAction
+        )
+        self.client.wait_for_server()
 
         rospy.loginfo(" ... starting " + name)
         super(InfoTaskServer, self).__init__(
@@ -37,24 +45,41 @@ class InfoTaskServer(AbstractTaskServer):
         rospy.loginfo(" ... started " + name)
 
     def execute(self, goal):
-        self.ptu.turnPTU(-180, 10) # Looking back and slightly down
+
+        
+        #self.ptu.turnPTU(-180, 10) # Looking back and slightly down
         self.head.turnHead()       # Turning head backwards
-        self.gaze.people()         # Looking at upper bodies
+        #self.gaze.people()         # Looking at upper bodies
+        
+        #ST exploration
+        pose = Pose()        
+        pose.orientation.w = 1.0
+        pose_array = PoseArray()
+        pose_array.poses.append(pose)
+        
+        
+        exploration_goal = ExecutionActionGoal()
+        exploration_goal.goal.navigation = 0
+        exploration_goal.goal.locations.poses.append(pose_array)
+        self.client.send_goal(self.exploration_goal)
+        #wait and get information
 
         # Showing info terminal webserver
         strands_webserver.client_utils.display_url(0, 'http://localhost:8080')
 
         rate = rospy.Rate(1)
-        # preempt will not be requested while activity is happening
+
+        self.client.wait_for_result()
+        self.information = self.client.get_result()
+        
+        #preempt will not be requested while activity is happening
         while not rospy.is_shutdown() and not self.server.is_preempt_requested():
-            # loop for duration
-            if self.reset_time < rospy.Time.now().to_sec():
-                self.interruptible = True
+            #loop for duration
             rate.sleep()
 
         # Reset ptu, head and gaze
-        self.ptu.turnPTU(0, 0)
-        self.gaze.preempt()
+        #self.ptu.turnPTU(0, 0)
+        #self.gaze.preempt()
         self.head.resetHead()
 
         if not self.server.is_preempt_requested():
@@ -75,13 +100,12 @@ class InfoTaskServer(AbstractTaskServer):
         rospy.loginfo('button_pressed_callback')
         self.interaction_times.append(rospy.Time.now())
         self.pages.append(active_screen.data)
-        self.reset_time = rospy.Time.now().to_sec() + self.extension_time
-        self.interruptible = False
 
     def preempt_cb(self):
         clicks = Clicks()
         clicks.time_array = self.interaction_times
         clicks.page_array = self.pages
+        clicks.information = self.information
 
         self.interaction_times = []
         self.pages = []
@@ -92,4 +116,5 @@ if __name__ == "__main__":
     rospy.init_node("info_task_server")
     i = InfoTaskServer(rospy.get_name())
     rospy.spin()
+
 
