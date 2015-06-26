@@ -89,6 +89,9 @@ int nodes[10000];
 int taskIDs[10000];
 int numNodes = 0;
 
+float info_array[100000];
+unsigned int info_index = 0;
+
 uint32_t getMidnightTime(uint32_t givenTime)
 {
 	return ((givenTime+timeOffset)/rescheduleInterval)*rescheduleInterval-timeOffset;
@@ -458,6 +461,8 @@ int modifyNextTask(int slot)
 /*records interaction to mongodb*/
 void guiCallBack(const info_task::Clicks &msg)
 {
+    info_array[info_index] = msg.information;
+
 	static bool firstGuiCallBack = true;
 	if (firstGuiCallBack==false)
 	{
@@ -473,6 +478,8 @@ void guiCallBack(const info_task::Clicks &msg)
 	}else{
 		firstGuiCallBack = false;
 	}
+    info_index++;
+
 }
 
 /*retrieve interactions from the database and build the FreMen model*/

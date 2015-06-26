@@ -103,7 +103,7 @@ class InfoTaskServer(AbstractTaskServer):
         clicks = Clicks()
         clicks.time_array = self.interaction_times
         clicks.page_array = self.pages
-        clicks.information = self.information
+        clicks.information = self.information.information
 
         self.interaction_times = []
         self.pages = []
