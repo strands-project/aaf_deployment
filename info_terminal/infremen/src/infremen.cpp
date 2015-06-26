@@ -525,7 +525,7 @@ int main(int argc,char* argv[])
 	server.setCallback(dynSer);
 
 	//to get the robot position
-	robotPoseSub = n->subscribe("/robot_pose", 1, poseCallback); 
+    robotPoseSub = n->subscribe("/robot_pose", 1, poseCallback);
 	//to get the current node 
 	currentNodeSub = n->subscribe("/closest_node", 1, getCurrentNode);
 	//to determine if charging is required
