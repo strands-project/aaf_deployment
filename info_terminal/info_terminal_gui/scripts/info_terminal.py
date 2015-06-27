@@ -121,8 +121,6 @@ class Events(object):
             # big *HACK* to remove HTML tags
             t = n["title"]["#text"]
             d = n["content"]["#text"]
-            print t
-            print d
             blog_events.append("<h3>"+t+"</h3><h4>"+ d +"</h4>")
 
         # news = xmltodict.parse(requests.get(NEWS_URL).text)
