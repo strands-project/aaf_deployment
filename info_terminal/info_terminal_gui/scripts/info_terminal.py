@@ -15,11 +15,12 @@ import locale
 from mongodb_media_server import MediaClient
 
 #WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q=Vienna,Austria"
-WEATHER_URL = "http://api.worldweatheronline.com/free/v2/weather.ashx?key=c2db94527204450837f1cf7b7772b&q=Vienna,Austria&num_of_days=3&tp=3&format=json"
+WEATHER_URL = "http://api.worldweatheronline.com/free/v2/weather.ashx?key=c2db94527204450837f1cf7b7772b&q=Aachen,Germany&num_of_days=3&tp=3&format=json"
 WEATHER_URL_DE = WEATHER_URL + "&lang=de"
 BBC_NEWS_URL = "http://feeds.bbci.co.uk/news/world/rss.xml"
 HENRY_BLOG_URL = "https://henrystrands.wordpress.com/feed/"
 NEWS_URL = "http://rss.orf.at/wien.xml"
+STRANDS_BLOG_URL = "http://strands-project.blogspot.com/feeds/posts/default"
 
 ### Templates
 TEMPLATE_DIR = roslib.packages.get_pkg_dir('info_terminal_gui') + '/www'
@@ -111,25 +112,28 @@ class Weather(object):
 class Events(object):
     def GET(self):
         app.publish_feedback(Events.id)
-        blog = xmltodict.parse(requests.get(HENRY_BLOG_URL).text)
+        blog = xmltodict.parse(requests.get(STRANDS_BLOG_URL).text)
         blog_events = []
-        items = blog['rss']['channel']['item']
+        items = blog['feed']['entry']
         if not type(items) is list:
             items = [items]		
         for n in items:
             # big *HACK* to remove HTML tags
-            d = n["content:encoded"]
-            blog_events.append("<h3>"+n["title"]+"</h3><h4>"+ d +"</h4>")
+            t = n["title"]["#text"]
+            d = n["content"]["#text"]
+            print t
+            print d
+            blog_events.append("<h3>"+t+"</h3><h4>"+ d +"</h4>")
 
-        news = xmltodict.parse(requests.get(NEWS_URL).text)
-        events = []
-        items = news['rdf:RDF']['item']
-        if not type(items) is list:
-            items = [items]
-        for n in items:
-            events.append((None,
-                           "<h3>"+n["title"]+"</h3><h4>"+ n["description"] +"</h4>"))
-        return render.events(blog_events[:2], app.strings, events[:3])
+        # news = xmltodict.parse(requests.get(NEWS_URL).text)
+        # events = []
+        # items = news['rdf:RDF']['item']
+        # if not type(items) is list:
+        #     items = [items]
+        # for n in items:
+        #     events.append((None,
+        #                    "<h3>"+n["title"]+"</h3><h4>"+ n["description"] +"</h4>"))
+        return render.events(blog_events[:3], app.strings, None)
 
 
 class GoAway(object):
