@@ -95,9 +95,9 @@ class WalkingGroupStateMachine(object):
         self.han_dyn_client = DynClient(
             "/human_aware_navigation"
         )
-        self.mov_dyn_client = DynClient(
-            "/human_aware_navigation/DWAPlannerROS"
-        )
+#        self.mov_dyn_client = DynClient(
+#            "/human_aware_navigation/DWAPlannerROS"
+#        )
         rospy.loginfo(" ...done")
         self.get_current_dyn_settings()
 
@@ -113,13 +113,13 @@ class WalkingGroupStateMachine(object):
             'detection_angle': angle
         }
         rospy.loginfo("Found following default values for human_aware_navigation: %s", self.han_param)
-        max_vel_x = round(rospy.get_param("/human_aware_navigation/DWAPlannerROS/max_vel_x"), 2)
-        max_trans_vel = round(rospy.get_param("/human_aware_navigation/DWAPlannerROS/max_trans_vel"),2)
-        self.mov_param = {
-            "max_vel_x": max_vel_x,
-            "max_trans_vel": max_trans_vel
-        }
-        rospy.loginfo("Found following default values for human_aware_navigation/DWAPlannerROS: %s", self.mov_param)
+#        max_vel_x = round(rospy.get_param("/human_aware_navigation/DWAPlannerROS/max_vel_x"), 2)
+#        max_trans_vel = round(rospy.get_param("/human_aware_navigation/DWAPlannerROS/max_trans_vel"),2)
+#        self.mov_param = {
+#            "max_vel_x": max_vel_x,
+#            "max_trans_vel": max_trans_vel
+#        }
+#        rospy.loginfo("Found following default values for human_aware_navigation/DWAPlannerROS: %s", self.mov_param)
 
     def execute(self, goal):
         rospy.loginfo("Starting state machine")
@@ -160,10 +160,10 @@ class WalkingGroupStateMachine(object):
             'max_vel_x': config[goal.group]["speed"],
             'max_trans_vel': config[goal.group]["speed"]
         }
-        try:
-            self.mov_dyn_client.update_configuration(dyn_param)
-        except rospy.ServiceException as e:
-            rospy.logerr("Caught service exception: %s", e)
+#        try:
+#            self.mov_dyn_client.update_configuration(dyn_param)
+#        except rospy.ServiceException as e:
+#            rospy.logerr("Caught service exception: %s", e)
 
         try:
             rospy.loginfo("Creating waypoint sound service proxy and waiting ...")
@@ -215,7 +215,7 @@ class WalkingGroupStateMachine(object):
                     'reached_final_point': 'succeeded',
                     'key_card': 'GUIDE_INTERFACE',
                     'killall': 'preempted'
-                },
+               },
                 remapping={'waypoints' : 'waypoints', 'play_music' : 'play_music'}
             )
             smach.StateMachine.add(
@@ -252,10 +252,10 @@ class WalkingGroupStateMachine(object):
             self.han_dyn_client.update_configuration(self.han_param)
         except rospy.ServiceException as e:
             rospy.logerr("Caught service exception: %s", e)
-        try:
-            self.mov_dyn_client.update_configuration(self.mov_param)
-        except rospy.ServiceException as e:
-            rospy.logerr("Caught service exception: %s", e)
+#        try:
+#            self.mov_dyn_client.update_configuration(self.mov_param)
+#        except rospy.ServiceException as e:
+#            rospy.logerr("Caught service exception: %s", e)
         try:
             rospy.loginfo("Creating waypoint sound service proxy and waiting ...")
             s = rospy.ServiceProxy('aaf_waypoint_sounds_service', WaypointSoundsService)
