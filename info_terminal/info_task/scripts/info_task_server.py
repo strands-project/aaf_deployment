@@ -4,7 +4,7 @@
 import rospy
 import actionlib
 
-from std_msgs.msg import Int32, Float64
+from std_msgs.msg import Int32, Float64, String
 from info_task.msg import EmptyAction, Clicks
 from info_task.utils import Gaze, Head, PTU
 from strands_executive_msgs.abstract_task_server import AbstractTaskServer
@@ -21,13 +21,15 @@ class InfoTaskServer(AbstractTaskServer):
         self.head = Head()
 #        self.ptu = PTU()
         self.information = Float64()
+	self.node = String()
 
         # interaction storage
         self.interaction_times = []
         self.pages = []
 
         # Creating activity subscriber and publisher
-        rospy.Subscriber("info_terminal/active_screen", Int32, self.button_pressed_callback)
+        rospy.Subscriber("/current_node", String, self.node_callback)
+	rospy.Subscriber("info_terminal/active_screen", Int32, self.button_pressed_callback)
         self.pub = rospy.Publisher("/info_terminal/task_outcome", Clicks, queue_size=10, latch=True)
         
         self.client = actionlib.SimpleActionClient(
@@ -56,30 +58,31 @@ class InfoTaskServer(AbstractTaskServer):
         pose.orientation.w = 1.0
         
         exploration_goal = ExecutionActionGoal()
-
-        exploration_goal.goal.navigation = 0
-        exploration_goal.goal.locations.poses.append(pose)
-        self.client.send_goal(exploration_goal.goal)
-        #wait and get information
+	
+	if self.node != 'ChargingPoint':
+            exploration_goal.goal.navigation = 0
+            exploration_goal.goal.locations.poses.append(pose)
+            self.client.send_goal(exploration_goal.goal)
+            #wait and get information
 
         # Showing info terminal webserver
         strands_webserver.client_utils.display_url(0, 'http://localhost:8080')
 
         rate = rospy.Rate(1)
 
-        self.client.wait_for_result()
-        self.information = self.client.get_result()
+	if self.node != 'ChargingPoint':
+            self.client.wait_for_result()
+            self.information = self.client.get_result()
 
-	clicks = Clicks()
-        #clicks.time_array = self.interaction_times
-        #clicks.page_array = self.pages
-        clicks.information = self.information.information
+	    clicks = Clicks()
+            #clicks.time_array = self.interaction_times
+            #clicks.page_array = self.pages
+            clicks.information = self.information.information
+	    self.pub.publish(clicks)
 
 
         self.interaction_times = []
         self.pages = []
-
-        self.pub.publish(clicks)
         
         #preempt will not be requested while activity is happening
         while not rospy.is_shutdown() and not self.server.is_preempt_requested():
@@ -103,6 +106,9 @@ class InfoTaskServer(AbstractTaskServer):
         if task.priority == 0:
             task.priority = 1
         return task
+
+    def node_callback(self, current_node): 
+	self.node = current_node.data
 
     def button_pressed_callback(self, active_screen):
         # reset timeout
