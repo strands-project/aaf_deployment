@@ -34,7 +34,7 @@ using namespace mongodb_store;
 using namespace std;
 
 //FIXED parameters
-int windowDuration = 300;
+int windowDuration = 180;//300;
 int rescheduleInterval = 86400;
 
 //standard parameters
@@ -43,15 +43,16 @@ string scheduleDirectory;
 
 //runtine parameters
 float explorationRatio = 0.5;
-int8_t   minimalBatteryLevel = 80;
+int8_t   minimalBatteryLevel = 10;
 int32_t   minimalBatteryLevelTime = 0;
 int interactionTimeout = 30;
-int maxTaskNumber = 5;
-int taskDuration = 180;	
+int maxTaskNumber = 1;
+int taskDuration = 60;//180;
 int taskPriority = 1;	
 bool debug = true;
 int taskStartDelay = 5;
 int rescheduleCheckTime = 5;
+float entropyThreshold = 25000;
 
 //ROS communication
 ros::NodeHandle *n;
@@ -89,8 +90,8 @@ int nodes[10000];
 int taskIDs[10000];
 int numNodes = 0;
 
-float info_array[100000];
-unsigned int info_index = 0;
+float info;
+//unsigned int info_index = 0;
 
 uint32_t getMidnightTime(uint32_t givenTime)
 {
@@ -110,6 +111,7 @@ void reconfigureCallback(infremen::infremenConfig &config, uint32_t level)
 	debug = config.verbose;
 	taskStartDelay = config.taskStartDelay;
 	rescheduleCheckTime = config.rescheduleCheckTime;
+	entropyThreshold = config.entropyThreshold;
 }
 
 //listen to battery and set forced charging if necessary
@@ -384,30 +386,37 @@ int getNextTimeSlot(int lookAhead)
 /*creates a task for the given slot*/
 int createTask(int slot)
 {
-    char dummy[1000];
+	char dummy[1000];
 	char testTime[1000];
 	time_t timeInfo = timeSlots[slot];
 	strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
 
-    int chargeNodeID = frelementSet.find("ChargingPoint");
-    /*charge when low on battery*/
-    if (chargeNodeID != -1 && forceCharging){
-        nodes[slot]=chargeNodeID;
-        ROS_INFO("Task %i should be changed to charging.",taskIDs[slot]);
-    }
+	int chargeNodeID = frelementSet.find("ChargingPoint");
+	/*charge when low on battery*/
+	if (chargeNodeID != -1 && forceCharging){
+		nodes[slot]=chargeNodeID;
+		ROS_INFO("Task %i should be changed to charging.",taskIDs[slot]);
+	}
+
+	int lastNodeID = frelementSet.find(nodeName.c_str());
+	if (lastNodeID != -1 && (timeSlots[slot] - lastInteractionTime) < interactionTimeout || info >entropyThreshold)
+	{
+		nodes[slot]=lastNodeID;
+		ROS_INFO("Task %i was changed to last waypoint - information gain was %f.",taskIDs[slot],info);
+	}
 
 	strands_executive_msgs::CreateTask srv;
-        taskCreator.waitForExistence();
+	taskCreator.waitForExistence();
 	if (taskCreator.call(srv))
 	{
 		strands_executive_msgs::Task task=srv.response.task;
-        task.start_node_id = frelementSet.frelements[nodes[slot]]->id;
-        task.end_node_id = frelementSet.frelements[nodes[slot]]->id;
+		task.start_node_id = frelementSet.frelements[nodes[slot]]->id;
+		task.end_node_id = frelementSet.frelements[nodes[slot]]->id;
 		task.priority = taskPriority;
 
-  		task.start_after =  ros::Time(timeSlots[slot]+taskStartDelay,0);
+		task.start_after =  ros::Time(timeSlots[slot]+taskStartDelay,0);
 		task.end_before = ros::Time(timeSlots[slot]+windowDuration - 2,0);
-                task.max_duration = task.end_before - task.start_after;
+		task.max_duration = task.end_before - task.start_after;
 		strands_executive_msgs::AddTask taskAdd;
 		taskAdd.request.task = task;
 		if (taskAdder.call(taskAdd))
@@ -436,7 +445,7 @@ int modifyNextTask(int slot)
 		 ROS_INFO("Task %i should be changed to charging.",taskIDs[slot]);
 	}
 	/*do not run away during interactions*/
-	if (lastNodeID != -1 && (timeSlots[slot] - lastInteractionTime) < interactionTimeout)
+	if (lastNodeID != -1 && (timeSlots[slot] - lastInteractionTime) < interactionTimeout || info >25000)
 	{
 		 nodes[slot]=lastNodeID;
 		 changeTaskFlag = true;
@@ -461,8 +470,8 @@ int modifyNextTask(int slot)
 /*records interaction to mongodb*/
 void guiCallBack(const info_task::Clicks &msg)
 {
-    info_array[info_index] = msg.information;
-
+	if (msg.information >= 0)  info =  msg.information;
+	ROS_INFO("Infremen: Received infroration %f",info);
 	static bool firstGuiCallBack = true;
 	if (firstGuiCallBack==false)
 	{
@@ -478,7 +487,6 @@ void guiCallBack(const info_task::Clicks &msg)
 	}else{
 		firstGuiCallBack = false;
 	}
-    info_index++;
 
 }
 
@@ -532,7 +540,7 @@ int main(int argc,char* argv[])
 	server.setCallback(dynSer);
 
 	//to get the robot position
-    robotPoseSub = n->subscribe("/robot_pose", 1, poseCallback);
+	robotPoseSub = n->subscribe("/robot_pose", 1, poseCallback);
 	//to get the current node 
 	currentNodeSub = n->subscribe("/closest_node", 1, getCurrentNode);
 	//to determine if charging is required
@@ -573,17 +581,18 @@ int main(int argc,char* argv[])
 	strands_executive_msgs::SetExecutionStatus runExec;
 	runExec.request.status = true;
 	if (taskStart.call(runExec)) ROS_INFO("Task execution enabled.");*/
+	maxTaskNumber = 1;
 	while (ros::ok())
 	{
 		ros::spinOnce();
 		sleep(1);
 		if (debug) ROS_INFO("Infremen tasks: %i %i",numCurrentTasks,maxTaskNumber);
 		currentTimeSlot = getNextTimeSlot(0);
-        if (currentTimeSlot!=lastTimeSlot){
-//			modifyNextTask(currentTimeSlot);
-            numCurrentTasks--;
-            if (numCurrentTasks < 0) numCurrentTasks = 0;
-        }
+		if (currentTimeSlot!=lastTimeSlot){
+			//			modifyNextTask(currentTimeSlot);
+			numCurrentTasks--;
+			if (numCurrentTasks < 0) numCurrentTasks = 0;
+		}
 		if (numCurrentTasks < maxTaskNumber)
 		{
 			lastTimeSlot=currentTimeSlot;

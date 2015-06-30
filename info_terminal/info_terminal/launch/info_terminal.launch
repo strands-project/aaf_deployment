@@ -1,9 +1,13 @@
 <launch>
-    <arg name="schedule_directory" default="/home/strands/infremen"/>
+    <arg name="schedule_directory" default="/home/review/infremen"/>
     <arg name="collection_name" default="AAFBetaTests"/>
-    <arg name="language" default="DE"/>
+    <arg name="language" default="EN"/>
+    <!--<arg name="machine" default="localhost"/>-->
+    <!--<arg name="user" default=""/>-->
 
     <!-- This will be inside .ros unless provided with full path -->
+   
+    <!--<machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER)" user="$(arg user)" default="true"/>-->
 
     <node pkg="info_task" type="info_task_server.py" name="info_task_server" output="screen"/>
     <node pkg="infremen" type="infremen" name="infremen" output="screen">

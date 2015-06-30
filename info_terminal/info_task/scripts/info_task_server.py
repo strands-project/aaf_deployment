@@ -69,6 +69,17 @@ class InfoTaskServer(AbstractTaskServer):
 
         self.client.wait_for_result()
         self.information = self.client.get_result()
+
+	clicks = Clicks()
+        #clicks.time_array = self.interaction_times
+        #clicks.page_array = self.pages
+        clicks.information = self.information.information
+
+
+        self.interaction_times = []
+        self.pages = []
+
+        self.pub.publish(clicks)
         
         #preempt will not be requested while activity is happening
         while not rospy.is_shutdown() and not self.server.is_preempt_requested():
@@ -103,7 +114,7 @@ class InfoTaskServer(AbstractTaskServer):
         clicks = Clicks()
         clicks.time_array = self.interaction_times
         clicks.page_array = self.pages
-        clicks.information = self.information.information
+        clicks.information = -1.0
 
         self.interaction_times = []
         self.pages = []
