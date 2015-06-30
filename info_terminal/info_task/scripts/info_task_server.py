@@ -59,7 +59,7 @@ class InfoTaskServer(AbstractTaskServer):
         
         exploration_goal = ExecutionActionGoal()
 	
-	if self.node == 'ChargingPoint':
+	if self.node != 'ChargingPoint':
             exploration_goal.goal.navigation = 0
             exploration_goal.goal.locations.poses.append(pose)
             self.client.send_goal(exploration_goal.goal)
@@ -70,7 +70,7 @@ class InfoTaskServer(AbstractTaskServer):
 
         rate = rospy.Rate(1)
 
-	if self.node == 'ChargingPoint':
+	if self.node != 'ChargingPoint':
             self.client.wait_for_result()
             self.information = self.client.get_result()
 
