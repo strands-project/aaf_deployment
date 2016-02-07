@@ -63,10 +63,10 @@ export AAF_TOPICS="
     /strands_webserver/display_4/page
     /strands_webserver/display_5/page
     /strands_webserver/display_6/page
-    /strands_webserver/display_7/page
+    /strands_webserver/display_7/pagez
     /strands_webserver/display_8/page
     /strands_webserver/display_9/page
 "
 
 
-rosrun mongodb_log mongodb_log.py --nodename-prefix=aaf_logger_ $AAF_TOPICS > $HOME/.ros/mongodb_log.log 2>&1
+rosrun mongodb_log mongodb_log.py --nodename-prefix=aaf_logger_ $AAF_TOPICS > /storage/.ros/mongodb_log.log 2>&1
