@@ -1,6 +1,15 @@
 #!/bin/bash
 
 export AAF_TOPICS="
+    /tf
+    /scan
+    /odom
+    /amcl_pose
+    /robot_pose
+    /current_node
+    /current_edge
+    /map
+    /topological_map
     /rosout_filtered
     /diagnostics_agg
     /topological_navigation/Route
