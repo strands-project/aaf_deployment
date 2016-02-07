@@ -8,7 +8,6 @@ export AAF_TOPICS="
     /robot_pose
     /current_node
     /current_edge
-    /map
     /topological_map
     /rosout_filtered
     /diagnostics_agg
@@ -69,4 +68,4 @@ export AAF_TOPICS="
 "
 
 
-rosrun mongodb_log mongodb_log.py --nodename-prefix=aaf_logger_ $AAF_TOPICS > /storage/.ros/mongodb_log.log 2>&1
+rosrun mongodb_log mongodb_log.py --nodename-prefix=aaf_logger_ $AAF_TOPICS #> ~/.ros/mongodb_log.log 2>&1
