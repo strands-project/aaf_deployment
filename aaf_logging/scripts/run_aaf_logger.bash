@@ -1,7 +1,6 @@
 #!/bin/bash
 
 export AAF_TOPICS="
-    /tf
     /scan
     /odom
     /amcl_pose
@@ -62,7 +61,7 @@ export AAF_TOPICS="
     /strands_webserver/display_4/page
     /strands_webserver/display_5/page
     /strands_webserver/display_6/page
-    /strands_webserver/display_7/pagez
+    /strands_webserver/display_7/page
     /strands_webserver/display_8/page
     /strands_webserver/display_9/page
 "
