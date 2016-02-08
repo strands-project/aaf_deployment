@@ -1,5 +1,10 @@
 <launch>
 
+<arg name="machine" default="localhost"/>
+<arg name="user" default=""/>
+
+<machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="true"/>
+
 <node pkg="mongodb_log" type="mongodb_log.py" name="scan_logger" output="screen" respawn="true" args="/scan"/>
 <node pkg="mongodb_log" type="mongodb_log.py" name="odom_logger" output="screen" respawn="true" args="/odom"/>
 <node pkg="mongodb_log" type="mongodb_log.py" name="amcl_pose_logger" output="screen" respawn="true" args="/amcl_pose"/>
