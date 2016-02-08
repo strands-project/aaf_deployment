@@ -63,5 +63,8 @@
     </group>
 
     <!-- <node name="mongodb_log_topics" pkg="aaf_logging" type="run_aaf_logger.bash" respawn="true" /> -->
+    <include file="$(find aaf_logging)/launch/topics_launch.launch">
+
+    </include>
 
 </launch>
