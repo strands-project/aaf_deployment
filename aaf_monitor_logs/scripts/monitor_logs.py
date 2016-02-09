@@ -25,8 +25,8 @@ class MonitorLogs(object):
         #self.topics_to_check = rospy.get_param("topics", "/tf \
         #                                                  /scan \
         #                                                  /odom \
+        #                                                  /robot_pose \
         self.topics_to_check = rospy.get_param("topics", "/amcl_pose \
-                                                          /robot_pose \
                                                           /current_node \
                                                           /current_edge \
                                                           /map \
