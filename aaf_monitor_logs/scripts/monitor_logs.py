@@ -22,10 +22,10 @@ class MonitorLogs(object):
         self._mongo_client=pymongo.MongoClient(rospy.get_param("mongodb_host"),
                                                rospy.get_param("mongodb_port"))
 
-        self.topics_to_check = rospy.get_param("topics", "/tf \
-                                                          /scan \
-                                                          /odom \
-                                                          /amcl_pose \
+        #self.topics_to_check = rospy.get_param("topics", "/tf \
+        #                                                  /scan \
+        #                                                  /odom \
+        self.topics_to_check = rospy.get_param("topics", "/amcl_pose \
                                                           /robot_pose \
                                                           /current_node \
                                                           /current_edge \
@@ -92,16 +92,18 @@ class MonitorLogs(object):
         self.topics_map = {}
 
         self.pub = rospy.Publisher('monitored_logs', String, queue_size=10)
-        self.timer = rospy.Timer(rospy.Duration(10), self.timer_callback)
+        self.timer = rospy.Timer(rospy.Duration(30), self.timer_callback)
 
     def timer_callback(self, time):
         for topic in self.topic_list:
+            #print "Getting messages for " + topic
             nbr_messages = bridge.find_nbr_entries("roslog", dc_util.topic_name_to_collection_name(topic))
             if topic in self.topics_map:
                 old_count = self.topics_map[topic]
                 self.topics_map[topic] = (nbr_messages-old_count[1], nbr_messages)
             else:
                 self.topics_map[topic] = (0, nbr_messages)
+            #print "Got them"
         message_string = json.dumps(self.topics_map)
         self.pub.publish(message_string)
 
