@@ -7,6 +7,7 @@ from roslaunch_axserver.msg import launchAction, launchGoal
 from aaf_logging.msg import EmptyAction
 from strands_executive_msgs.abstract_task_server import AbstractTaskServer
 import time
+import signal as sig
 
 
 class Logger():
@@ -53,6 +54,10 @@ class Logger():
     def is_running(self):
         return self.running
 
+    def signal_handler(self, signal, frame):
+        self.stop_logging()
+        rospy.signal_shutdown("Shutdown requested by signal")
+
 class LoggingServer(AbstractTaskServer):
     def __init__(self, name, llauncher):
         self.name = name
@@ -98,5 +103,9 @@ if __name__ == "__main__":
     l  = Logger()
     l1 = LoggingServer(rospy.get_name()+"_start", l)
     l2 = LoggingServer(rospy.get_name()+"_stop", l)
+    signals = [sig.SIGINT, sig.SIGTERM] # SIGKILL cannot be caught...
+    for i in signals:
+        print i
+        sig.signal(i, l.signal_handler)
     rospy.spin()
 
