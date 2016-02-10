@@ -105,7 +105,6 @@ if __name__ == "__main__":
     l2 = LoggingServer(rospy.get_name()+"_stop", l)
     signals = [sig.SIGINT, sig.SIGTERM] # SIGKILL cannot be caught...
     for i in signals:
-        print i
         sig.signal(i, l.signal_handler)
     rospy.spin()
 
