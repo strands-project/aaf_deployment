@@ -26,7 +26,7 @@ class CFrelementSet
 		  - if the name (ID) is not in the collection of states and createNew is true, the new state is added to the collection
 		  - if not, the measurements are added to the state with the given ID 
 		  - the function returns -1 if the state does not exist (and was not created), otherwise it returne the number of added states*/
-		int add(const char *name,uint32_t times[],unsigned char states[],int length,bool createNew=true);
+		int add(const char *name,uint32_t times[],unsigned char states[],int length,bool createNew);
 
 		/*estimate probabilities of the given state for the given times - the probs array is an output
 		  returns false if the state with the given ID is not present in the collection
