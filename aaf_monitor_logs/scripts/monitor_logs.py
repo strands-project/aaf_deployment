@@ -27,6 +27,7 @@ class MonitorLogs(object):
         #                                                  /odom \
         #                                                  /robot_pose \
         self.topics_to_check = rospy.get_param("topics", "/amcl_pose \
+                                                          /wifiscanner \
                                                           /current_node \
                                                           /current_edge \
                                                           /map \

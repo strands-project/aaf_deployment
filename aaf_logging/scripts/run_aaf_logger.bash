@@ -5,6 +5,7 @@ export AAF_TOPICS="
     /odom
     /amcl_pose
     /robot_pose
+    /wifiscanner
     /current_node
     /current_edge
     /topological_map
