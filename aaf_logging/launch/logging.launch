@@ -43,6 +43,9 @@
 
     <node pkg="aaf_monitor_logs" type="monitor_logs.py" name="monitor_logs" output="screen" respawn="true"/>
 
+    <!-- published the current wifi AP scan every 5 seconds on /wifiscanner, a diagnosis_msgs/DiagnosticArray -->
+    <node pkg="wifiscanner" type="wifiscanner.py" name="wifiscanner" respawn="true"/>
+
     <!--
     <include file="$(find aaf_logging)/launch/topics.launch">
         <arg name="machine" value="$(arg machine)"/>
