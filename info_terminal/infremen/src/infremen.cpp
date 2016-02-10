@@ -29,9 +29,19 @@
 #include <boost/foreach.hpp>
 #include <sstream>
 #include <cassert>
+#include "graph.h"
+#include "modelmultigt.h"
+#include "worldsimulator.h"
 
 using namespace mongodb_store;
 using namespace std;
+
+//Topological map representation for infremen movement planning
+imr::Graph graph;
+imr::CWorldSimulator *simulator;
+
+bool topologyKnown = false;
+bool closestNodeKnown = false;
 
 //FIXED parameters
 int windowDuration = 300;
@@ -43,11 +53,11 @@ string scheduleDirectory;
 
 //runtine parameters
 float explorationRatio = 0.5;
-int8_t   minimalBatteryLevel = 80;
+int8_t   minimalBatteryLevel = 60;
 int32_t   minimalBatteryLevelTime = 0;
 int interactionTimeout = 30;
-int maxTaskNumber = 5;
-int taskDuration = 180;	
+int maxTaskNumber = 1;
+int taskDuration = 150;	
 int taskPriority = 1;	
 bool debug = true;
 int taskStartDelay = 5;
@@ -62,7 +72,9 @@ ros::Subscriber interfaceSub;
 ros::Subscriber batterySub;
 ros::Subscriber infoTaskSub;
 ros::Subscriber guiSub; 
+ros::Subscriber mapSub; 
 ros::ServiceClient nodeListClient;
+ros::ServiceClient orderedNodeListClient;
 ros::ServiceClient taskAdder;
 ros::ServiceClient taskCreator;
 ros::ServiceClient taskCancel;
@@ -84,8 +96,8 @@ bool forceCharging = false;
 int timeOffset = 0;
 
 //times and nodes of schedule
-uint32_t timeSlots[10000];
-int nodes[10000];
+uint32_t timeSlots[10000];		//times of slot starts
+int nodes[10000];			//where to perform
 int taskIDs[10000];
 int numNodes = 0;
 
@@ -113,7 +125,7 @@ void reconfigureCallback(infremen::infremenConfig &config, uint32_t level)
 void batteryCallBack(const scitos_msgs::BatteryState &msg)
 {
 	/*TODO learn from experience about energy consumption, plan ahead*/
-	ROS_DEBUG("Infremen: Battery level %i %i",msg.lifePercent,minimalBatteryLevel);
+	ROS_DEBUG("Infremen: Battery level: current %i, minimal %i.",msg.lifePercent,minimalBatteryLevel);
 	if (minimalBatteryLevel > msg.lifePercent) forceCharging = true; else forceCharging = false;
 }	
 
@@ -123,6 +135,22 @@ void poseCallback(const geometry_msgs::Pose::ConstPtr& msg)
 	lastPose = *msg;
 	//if (debug) ROS_INFO("Infremen: Robot at %lf %lf %lf.",lastPose.position.x,lastPose.position.y,lastPose.position.z);
 }
+
+void mapCallback(const strands_navigation_msgs::TopologicalMapConstPtr& msg)
+{
+        ROS_INFO("Got Topological Map");
+        ROS_INFO("  Name:         %s", msg->name.c_str());
+        ROS_INFO("  Map:          %s", msg->map.c_str());
+        ROS_INFO("  Pointset:     %s", msg->pointset.c_str());
+        ROS_INFO("  Last updated: %s", msg->last_updated.c_str());
+        ROS_INFO("  Num nodes: %ld", msg->nodes.size());
+
+        graph.loadFile("/home/strands/aaf_deployment.txt");
+        simulator->initFremen();
+	frelementSet.print(0);
+	topologyKnown = true;
+}
+  
 
 /*detailed info on interation*/
 void interacted(const std_msgs::Int32::ConstPtr& msg)
@@ -156,6 +184,15 @@ void getCurrentNode(const std_msgs::String::ConstPtr& msg)
 	closestNode = msg->data;
 	if (frelementSet.find(msg->data.c_str())>-1){
 		nodeName = msg->data;
+
+		/*if (frelementSet.find(nodeName.c_str())>-1)
+		{
+			simulator->setCurrentNode(nodeName);
+			ROS_INFO("Closest node set to %s\n",nodeName.c_str());
+			closestNodeKnown = true;
+		}else{
+			ROS_INFO("Closest node is %s, but that is not an infoterminal node\n",nodeName.c_str());
+		}*/
 		if (debug) ROS_INFO("Closest InfoTerminal node switched to %s.",nodeName.c_str());
 	}else{
 		if (debug) ROS_INFO("Closest node %s - however, it's not an Infoterminal node.",msg->data.c_str());
@@ -188,13 +225,15 @@ int getRelevantNodes()
 /*get closest node*/
 void getClosestNode()
 {
-	return;//TODO Nodes will be ordered in the future
+	//nodes will be ordered in the future
 	strands_navigation_msgs::GetTaggedNodes srv;
 	srv.request.tag = "InfoTerminal";
-	if (nodeListClient.call(srv))
+	if (orderedNodeListClient.call(srv))
 	{
 		if (srv.response.nodes.size() > 0 ) nodeName = srv.response.nodes[0];
-		if (debug) ROS_INFO("The closest InfoTerminal node is %s.",nodeName.c_str());
+		ROS_INFO("The closest InfoTerminal node is %s.",nodeName.c_str());
+		simulator->setCurrentNode(nodeName);
+		closestNodeKnown = true;
 	}
 	else
 	{
@@ -381,30 +420,30 @@ int getNextTimeSlot(int lookAhead)
 /*creates a task for the given slot*/
 int createTask(int slot)
 {
-    char dummy[1000];
+	char dummy[1000];
 	char testTime[1000];
 	time_t timeInfo = timeSlots[slot];
 	strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
 
-    int chargeNodeID = frelementSet.find("ChargingPoint");
-    /*charge when low on battery*/
-    if (chargeNodeID != -1 && forceCharging){
-        nodes[slot]=chargeNodeID;
-        ROS_INFO("Task %i should be changed to charging.",taskIDs[slot]);
-    }
+	int chargeNodeID = frelementSet.find("ChargingPoint");
+	/*charge when low on battery*/
+	if (chargeNodeID != -1 && forceCharging){
+		nodes[slot]=chargeNodeID;
+		ROS_INFO("Task %i should be changed to charging.",taskIDs[slot]);
+	}
 
 	strands_executive_msgs::CreateTask srv;
-        taskCreator.waitForExistence();
+	taskCreator.waitForExistence();
 	if (taskCreator.call(srv))
 	{
 		strands_executive_msgs::Task task=srv.response.task;
-        task.start_node_id = frelementSet.frelements[nodes[slot]]->id;
-        task.end_node_id = frelementSet.frelements[nodes[slot]]->id;
+		task.start_node_id = frelementSet.frelements[nodes[slot]]->id;
+		task.end_node_id = frelementSet.frelements[nodes[slot]]->id;
 		task.priority = taskPriority;
 
-  		task.start_after =  ros::Time(timeSlots[slot]+taskStartDelay,0);
+		task.start_after =  ros::Time(timeSlots[slot]+taskStartDelay,0);
 		task.end_before = ros::Time(timeSlots[slot]+windowDuration - 2,0);
-                task.max_duration = task.end_before - task.start_after;
+		task.max_duration = task.end_before - task.start_after;
 		strands_executive_msgs::AddTask taskAdd;
 		taskAdd.request.task = task;
 		if (taskAdder.call(taskAdd))
@@ -423,21 +462,21 @@ int createTask(int slot)
 /*drops and reschedules the following task on special conditions*/
 int modifyNextTask(int slot)
 {
-    int lastNodeID = frelementSet.find(nodeName.c_str());
+	int lastNodeID = frelementSet.find(nodeName.c_str());
 	int chargeNodeID = frelementSet.find("ChargingPoint");
 	bool changeTaskFlag = false;
 	/*charge when low on battery*/
 	if (chargeNodeID != -1 && forceCharging){
-		 nodes[slot]=chargeNodeID;
-		 changeTaskFlag = true;
-		 ROS_INFO("Task %i should be changed to charging.",taskIDs[slot]);
+		nodes[slot]=chargeNodeID;
+		changeTaskFlag = true;
+		ROS_INFO("Task %i should be changed to charging.",taskIDs[slot]);
 	}
 	/*do not run away during interactions*/
 	if (lastNodeID != -1 && (timeSlots[slot] - lastInteractionTime) < interactionTimeout)
 	{
-		 nodes[slot]=lastNodeID;
-		 changeTaskFlag = true;
-		 ROS_INFO("Task %i should be changed to last waypoint.",taskIDs[slot]);
+		nodes[slot]=lastNodeID;
+		changeTaskFlag = true;
+		ROS_INFO("Task %i should be changed to last waypoint.",taskIDs[slot]);
 	}
 	/*do not run away during interactions*/
 	if (changeTaskFlag)
@@ -495,8 +534,43 @@ void printAllInteractions(uint32_t lastTime)
 	{
 		time_t timeInfo = a->time;
 		strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
-		ROS_INFO("Screen switched to %d interaction at %s at waypoint %s(%s) - robot pose %f %f %f.",a->screen,testTime,a->infoWaypoint.c_str(),a->waypoint.c_str(),a->robotPoseX,a->robotPoseY,a->robotPosePhi);
+//		ROS_INFO("Screen switched to %d interaction at %s at waypoint %s(%s) - robot pose %f %f %f.",a->screen,testTime,a->infoWaypoint.c_str(),a->waypoint.c_str(),a->robotPoseX,a->robotPoseY,a->robotPosePhi);
 	}
+}
+
+//path planning component
+int planning_init()
+{
+	std::string modelName;
+	std::string methodName;
+	std::string subName;
+	double A;
+	double B;
+	int planningHorizon;
+	int order;
+
+	//n->param<std::string>("model", modelName,"/localhome/linda/storage/order_2.sim");
+	n->param<std::string>("method", methodName,"horizon");
+	n->param<std::string>("method", subName,"exploitation");
+	n->param<double>("paramA", A, 0.5);
+	n->param<double>("paramB", B, 100.0);
+	n->param<int>("planningHorizon", planningHorizon, 30.0);
+	n->param<int>("fremenOrder", order, 2);
+	n->param<std::string>("subname", subName, "exploitation");
+
+	ROS_INFO("Model: %s",modelName.c_str());
+	ROS_INFO("Method: %s",methodName.c_str());
+	ROS_INFO("A: %lf",A);
+	ROS_INFO("B: %lf",B);
+	ROS_INFO("planningHorizon: %d",planningHorizon);
+	ROS_INFO("fremen order: %d",order);
+	ROS_INFO("Submethod name: %s",subName.c_str());
+
+	simulator = new imr::CWorldSimulator(graph,&frelementSet);
+	graph.setPlanningHorizon(planningHorizon);
+	simulator->setMethod(methodName,subName,A,B);
+	simulator->setOrder(order);
+	//simulator->loadModel(modelName);
 }
 
 int main(int argc,char* argv[])
@@ -529,15 +603,19 @@ int main(int argc,char* argv[])
 	//to get the current node 
 	currentNodeSub = n->subscribe("/closest_node", 1, getCurrentNode);
 	//to determine if charging is required
-	batterySub = n->subscribe("battery_state", 1, batteryCallBack);
+	batterySub = n->subscribe("/battery_state", 1, batteryCallBack);
 	//to receive feedback from task_info
 	infoTaskSub = n->subscribe("/info_terminal/task_outcome", 1, guiCallBack);
 	//to receive feedback about the task outcome 
 //	infoTaskSub = n->subscribe("/info_terminal/task_outcome", 1, guiCallBack);
 	//to receive feedback from the gui itself 
 	guiSub = n->subscribe("/info_terminal/active_screen", 1, interacted);
+	//to obtain topology for planning 
+	mapSub = n->subscribe("/topological_map", 1000, mapCallback);
+
 	//to get relevant nodes
 	nodeListClient = n->serviceClient<strands_navigation_msgs::GetTaggedNodes>("/topological_map_manager/get_tagged_nodes");
+	orderedNodeListClient = n->serviceClient<strands_navigation_msgs::GetTaggedNodes>("/topological_localisation/get_nodes_with_tag");
 	//to create task objects
 	taskCreator = n->serviceClient<strands_executive_msgs::CreateTask>("/info_task_server_create");
 	//to add tasks to the schedule
@@ -557,26 +635,45 @@ int main(int argc,char* argv[])
 	}
 	//generate schedule
 	ros::Time currentTime = ros::Time::now();
+	planning_init();
 	//buildModels(currentTime.sec);
 	generateSchedule(currentTime.sec);
 
 	//to start scheduler - for standalone testing 
 	/*ros::ServiceClient taskStart;
-	/taskStart = n->serviceClient<strands_executive_msgs::SetExecutionStatus>("/task_executor/set_execution_status");
-	strands_executive_msgs::SetExecutionStatus runExec;
-	runExec.request.status = true;
-	if (taskStart.call(runExec)) ROS_INFO("Task execution enabled.");*/
+	  /taskStart = n->serviceClient<strands_executive_msgs::SetExecutionStatus>("/task_executor/set_execution_status");
+	  strands_executive_msgs::SetExecutionStatus runExec;
+	  runExec.request.status = true;
+	  if (taskStart.call(runExec)) ROS_INFO("Task execution enabled.");*/
+	getClosestNode();
+	while (ros::ok() && (topologyKnown == false || closestNodeKnown == false)){
+		ros::spinOnce();
+		sleep(1);
+		if (topologyKnown == false) printf("Waiting for topology\n");
+		if (closestNodeKnown == false) printf("Waiting for closest node\n");
+	}
 	while (ros::ok())
 	{
 		ros::spinOnce();
 		sleep(1);
 		if (debug) ROS_INFO("Infremen tasks: %i %i",numCurrentTasks,maxTaskNumber);
 		currentTimeSlot = getNextTimeSlot(0);
-        if (currentTimeSlot!=lastTimeSlot){
-//			modifyNextTask(currentTimeSlot);
-            numCurrentTasks--;
-            if (numCurrentTasks < 0) numCurrentTasks = 0;
-        }
+		if (currentTimeSlot!=lastTimeSlot)
+		{	
+			//mirek's planning
+			if (topologyKnown){
+				uint32_t delta = 0;
+				currentTime = ros::Time::now();
+				getClosestNode();
+				string retez = simulator->nextGoal(currentTime.sec,delta);
+				int mirekNodeID = frelementSet.find(retez.c_str());
+				if (mirekNodeID != -1) nodes[currentTimeSlot] = mirekNodeID;
+				cout << "Planning to go to " << retez << ", which has ID " << nodes[currentTimeSlot] << endl;
+			}
+			modifyNextTask(currentTimeSlot);
+			numCurrentTasks--;
+			if (numCurrentTasks < 0) numCurrentTasks = 0;
+		}
 		if (numCurrentTasks < maxTaskNumber)
 		{
 			lastTimeSlot=currentTimeSlot;
