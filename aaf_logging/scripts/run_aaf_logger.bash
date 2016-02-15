@@ -1,6 +1,14 @@
 #!/bin/bash
 
 export AAF_TOPICS="
+    /scan
+    /odom
+    /amcl_pose
+    /robot_pose
+    /wifiscanner
+    /current_node
+    /current_edge
+    /topological_map
     /rosout_filtered
     /diagnostics_agg
     /topological_navigation/Route
@@ -60,4 +68,4 @@ export AAF_TOPICS="
 "
 
 
-rosrun mongodb_log mongodb_log.py --nodename-prefix=aaf_logger_ $AAF_TOPICS > $HOME/.ros/mongodb_log.log 2>&1
+rosrun mongodb_log mongodb_log.py --nodename-prefix=aaf_logger_ $AAF_TOPICS #> ~/.ros/mongodb_log.log 2>&1

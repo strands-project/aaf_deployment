@@ -41,9 +41,11 @@
     <node pkg="aaf_logging" type="filter_rosout.py" name="filter_rosout" output="screen" respawn="true"/>
     <node pkg="mongodb_log" type="mongodb_log_tf" name="tf_logger" output="screen" respawn="true" args="-t /tf -m $(arg mongodb_host):$(arg mongodb_port) -n tf_logger -c roslog.tf -k 0.1 -l 0.1 -g 60 -a"/>
 
+    <node pkg="aaf_monitor_logs" type="monitor_logs.py" name="monitor_logs" output="screen" respawn="true"/>
+
     <!-- published the current wifi AP scan every 5 seconds on /wifiscanner, a diagnosis_msgs/DiagnosticArray -->
     <node pkg="wifiscanner" type="wifiscanner.py" name="wifiscanner" respawn="true"/>
-    
+
     <!--
     <include file="$(find aaf_logging)/launch/topics.launch">
         <arg name="machine" value="$(arg machine)"/>

@@ -19,7 +19,7 @@ tmux new-window -t $SESSION:11 -n 'bell_bot'
 tmux new-window -t $SESSION:12 -n 'walking_group'
 tmux new-window -t $SESSION:13 -n 'scheduler'
 tmux new-window -t $SESSION:14 -n 'control'
-
+tmux new-window -t $SESSION:15 -n 'logging_script'
 
 tmux select-window -t $SESSION:0
 tmux split-window -v
@@ -70,6 +70,9 @@ tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_routine.launch calendar:=he
 
 tmux select-window -t $SESSION:14
 tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_deployment_control.launch"
+
+tmux select-window -t $SESSION:15
+tmux send-keys "DISPLAY=:0 rosrun aaf_logging run_aaf_logger.bash"
 
 # Set default window
 tmux select-window -t $SESSION:0
