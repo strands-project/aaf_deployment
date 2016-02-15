@@ -4,9 +4,9 @@ project(aaf_monitor_logs)
 # include our own cmake files
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 
-find_package(catkin REQUIRED COMPONENTS roscpp message_generation rospy std_msgs std_srvs mongodb_store_msgs)
+find_package(catkin REQUIRED COMPONENTS message_generation rospy std_msgs std_srvs mongodb_store mongodb_store_msgs)
 
-find_package(MongoClient REQUIRED)
+#find_package(MongoClient REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed

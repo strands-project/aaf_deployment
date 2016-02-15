@@ -98,7 +98,7 @@ class MonitorLogs(object):
     def timer_callback(self, time):
         for topic in self.topic_list:
             #print "Getting messages for " + topic
-            nbr_messages = bridge.find_nbr_entries("roslog", dc_util.topic_name_to_collection_name(topic))
+            nbr_messages = self.find_nbr_entries("roslog", dc_util.topic_name_to_collection_name(topic))
             if topic in self.topics_map:
                 old_count = self.topics_map[topic]
                 self.topics_map[topic] = (nbr_messages-old_count[1], nbr_messages)
