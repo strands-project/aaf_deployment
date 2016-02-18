@@ -1,0 +1,4 @@
+0 * * * * /home/strands/check-disk.sh
+
+# every minute check if connection is still alive and try reconnecting if it's not
+*/1 * * * * /home/strands/network-recover.sh
