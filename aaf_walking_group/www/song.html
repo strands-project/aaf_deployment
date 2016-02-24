@@ -10,28 +10,34 @@
 	<body style="width: 1000px; height: 750px; background-repeat:no-repeat;">
 
 	<!-- Go back to the main page -->
-	<a class="button-style liste-button" onclick="javascript:exit_page()" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
+	<button type="button" onmousedown="javascript:exit_page(); location.href='entertainment.html'"
+            class="button-style liste-button" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;"></button>
 
 	<div id="soundDiv" style="position: absolute; width:700px; left: 150px; top: 65px;">
 		<img id="imgElem" src="img/sheetmusic.png" />
 	</div>
+	
+	<button type="button" onmousedown="javascript:quieter()"
+            class="button-style music-quieter" style="position: absolute; left: 252px; top: 314px; width: 220px; height: 187px;"></button>
+   <button type="button" onmousedown="javascript:louder()"
+            class="button-style music-louder" style="position: absolute; left: 488px; top: 314px; width: 220px; height: 187px;"></button>
   
 	<div id="prevDiv">
-		<button type="button" onclick="javascript:prev()"
+		<button type="button" onmousedown="javascript:prev()"
             class="button-style back-button" style="position: absolute; left: 80px; top: 480px; width: 300px; height: 255px;"></button>
 	</div>
 
 	<div id="pauseDiv">
-      <button type="button" onclick="javascript:playPause()"
+      <button type="button" onmousedown="javascript:playPause()"
             class="button-style stopp-button" style="position: absolute; left: 350px; top: 480px; width: 300px; height: 255px;"></button>
 	</div>
 	<div id="playDiv">
-      <button type="button" onclick="javascript:playPause()"
+      <button type="button" onmousedown="javascript:playPause()"
             class="button-style start-button" style="position: absolute; left: 350px; top: 480px; width: 300px; height: 255px;"></button>
 	</div>
 
 	<div id="nextDiv">
-      <button type="button" onclick="javascript:next()"
+      <button type="button" onmousedown="javascript:next()"
             class="button-style next-button" style="position: absolute; left: 620px; top: 480px; width: 300px; height: 255px;"></button>
 	</div>
   
@@ -81,6 +87,20 @@
 			var result = aafMusicPlayerService(1);
 			
 		}
+		
+		function quieter() {
+      console.log('Quieter Called');
+		var service_button = new ROSLIB.Service({ros : ros, name : '/walking_group/guide_interface/volume_quieter', serviceType : 'strands_webserver/CallButton'}); 
+        var request_button = new ROSLIB.ServiceRequest({});  
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 
+	} 
+	
+	function louder() {
+      console.log('Louder Called');
+		var service_button = new ROSLIB.Service({ros : ros, name : '/walking_group/guide_interface/volume_louder', serviceType : 'strands_webserver/CallButton'}); 
+        var request_button = new ROSLIB.ServiceRequest({});  
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 
+	} 
 
         function showHideButtons() {
             if (playing == true) {
