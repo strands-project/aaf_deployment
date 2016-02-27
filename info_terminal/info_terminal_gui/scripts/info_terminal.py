@@ -11,6 +11,8 @@ from std_msgs.msg import Int32
 import xmltodict
 import signal
 import locale
+from facebook import FacebookNews
+from dateutil.parser import parse
 
 from mongodb_media_server import MediaClient
 
@@ -109,8 +111,15 @@ class Weather(object):
 
 
 class Events(object):
-    def GET(self):
-        app.publish_feedback(Events.id)
+    # make sure to make the app_secret available via rosparam
+    # get it from https://developers.facebook.com/apps/548519798650746/dashboard/
+    #   rosparam set /infoterminal_gui/facebook/app_secret "<app_secret_here>"    
+    #   rosservice call /config_manager/save_param "param: '/infoterminal_gui/facebook/app_secret'"
+
+    def __init__(self):
+        self.fb = None
+        
+    def get_blog_news(self):
         blog = xmltodict.parse(requests.get(HENRY_BLOG_URL).text)
         blog_events = []
         items = blog['rss']['channel']['item']
@@ -120,7 +129,9 @@ class Events(object):
             # big *HACK* to remove HTML tags
             d = n["content:encoded"]
             blog_events.append("<h3>"+n["title"]+"</h3><h4>"+ d +"</h4>")
+        return blog_events
 
+    def get_orf_news(self):
         news = xmltodict.parse(requests.get(NEWS_URL).text)
         events = []
         items = news['rdf:RDF']['item']
@@ -129,7 +140,34 @@ class Events(object):
         for n in items:
             events.append((None,
                            "<h3>"+n["title"]+"</h3><h4>"+ n["description"] +"</h4>"))
-        return render.events(blog_events[:2], app.strings, events[:3])
+        return events
+
+    def get_facebook_news(self):
+        if self.fb is None:
+            self.fb = FacebookNews(app_secret=rospy.get_param('~facebook/app_secret',''))    
+            self.fb.login()
+
+        news = self.fb.get()
+        #print news
+        events = []
+        items = news['data']
+        for n in items:
+            if 'message' in n:
+                dt = parse(n['created_time'])
+                ds = dt.strftime('%d.%m.%Y')
+                events.append("<h3>" + ds + "</h3><h4>"+n['message']+"</h4>")
+        return events
+
+    def GET(self):
+        app.publish_feedback(Events.id)
+
+        blog_events = self.get_blog_news()
+        
+        orf_news = self.get_orf_news()
+
+        facebook_news = self.get_facebook_news()
+
+        return render.events(facebook_news[:3], app.strings, orf_news[:3])
 
 
 class GoAway(object):
