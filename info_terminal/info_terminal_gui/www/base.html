@@ -27,10 +27,54 @@ $def with (page)
     <!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->
     <script type="text/javascript" src="/static/coolclock.js"></script> 
     <script type="text/javascript" src="/static/moreskins.js"></script>
+
+    <script src="webtools/roslibjs/include/EventEmitter2/eventemitter2.js" type="text/javascript"></script> 
+    <script src="webtools/ros2djs/include/EaselJS/easeljs.js" type="text/javascript"></script> 
+    <script src="webtools/roslibjs/build/roslib.js" type="text/javascript"></script>
+    <script src="webtools/ros2djs/build/ros2d.js" type="text/javascript"></script>
+    <script src="webtools/nav2djs/build/nav2d.js" type="text/javascript"></script>
+    <script src="webtools/mjpegcanvasjs/build/mjpegcanvas.min.js" type="text/javascript"></script>
+
     
   </head>
   <body onload="CoolClock.findAndCreateClocks()">
     
     $:page
+
+  <script type="text/javascript">
+    hostname = location.hostname;
+    rosws_suffix = "$:html_config['rosws_suffix']"
+    rosws_protocol = "$:html_config['rosws_protocol']"
+    rosws_url = rosws_protocol+'://'+hostname+rosws_suffix
+
+    console.log(hostname);
+    var ros = new ROSLIB.Ros({
+      url : rosws_url
+    });
+    
+    ros.on('connection', function() {
+      console.log('Connected to websocket server.');
+      
+    });
+
+  </script>
+
+
+  <div class="modal fade" id="notification_dlg">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Title</h4>
+        </div>
+        <div class="modal-body">
+          <p>Notification text</p>
+        </div>
+<!--         <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">Hide</button>
+        </div>
+ -->      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+
   </body>
 </html>

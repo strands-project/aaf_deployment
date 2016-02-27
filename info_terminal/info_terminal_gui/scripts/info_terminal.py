@@ -13,6 +13,7 @@ import signal
 import locale
 from facebook import FacebookNews
 from dateutil.parser import parse
+from os.path import join
 
 from mongodb_media_server import MediaClient
 
@@ -23,10 +24,33 @@ BBC_NEWS_URL = "http://feeds.bbci.co.uk/news/world/rss.xml"
 HENRY_BLOG_URL = "https://henrystrands.wordpress.com/feed/"
 NEWS_URL = "http://rss.orf.at/wien.xml"
 
-### Templates
+html_config = {
+    'rosws_suffix': ':9090',
+    'mjpeg_suffix': ':8181',
+    'rosws_protocol': 'ws'
+}
+
+# Templates
 TEMPLATE_DIR = roslib.packages.get_pkg_dir('info_terminal_gui') + '/www'
-render = web.template.render(TEMPLATE_DIR, base='base', globals={})
-os.chdir(TEMPLATE_DIR) # so that the static content can be served from here.
+WEBTOOLS_DIR = roslib.packages.get_pkg_dir('strands_webtools')
+
+render = web.template.render(TEMPLATE_DIR, base='base', globals=globals())
+os.chdir(TEMPLATE_DIR)  # so that the static content can be served from here.
+
+
+class Webtools(object):
+    """
+    proxies all requests to strands_webtools
+    """
+    def GET(self, f):
+        try:
+            p = join(WEBTOOLS_DIR, f)
+            rospy.logdebug("trying to serve %s from %s", f, p)
+            if f.endswith('.js'):
+                web.header('Content-Type', 'text/javascript')
+            return open(p, 'r').read()
+        except:
+            web.application.notfound(app)  # file not found
 
 
 class TranslatedStrings(object):
@@ -43,7 +67,7 @@ class TranslatedStrings(object):
                 self.translations[s] = s
 
     def __getitem__(self, string):
-        if not string in self.translations:
+        if string not in self.translations:
             rospy.logwarn("String '%s' not translatable" % string)
             return string
         return self.translations[string]
@@ -58,6 +82,8 @@ class InfoTerminalGUI(web.application):
             '/events', 'Events',
             '/go_away', 'GoAway',
             '/photo_album/(.*)',  'PhotoAlbum',
+            '/webtools/(.*)', 'Webtools'
+
         )
         web.application.__init__(self, self.urls, globals())
         signal.signal(signal.SIGINT, self._signal_handler)
@@ -82,7 +108,7 @@ class InfoTerminalGUI(web.application):
     def publish_feedback(self, page_id):
         self._active_screen_pub.publish(page_id)
 
-app =  InfoTerminalGUI()
+app = InfoTerminalGUI()
 
 
 class MasterPage(object):
@@ -104,8 +130,8 @@ class Weather(object):
             if language in ["DE", "DE_de", "de", "DE_at"]:
                 weather = json.loads(requests.get(WEATHER_URL_DE).text)
             else:
-	        weather = json.loads(requests.get(WEATHER_URL).text)
-	except:
+                weather = json.loads(requests.get(WEATHER_URL).text)
+        except:
             return render.index(app.strings, datetime)
         return render.weather(weather, app.strings)
 
@@ -118,17 +144,17 @@ class Events(object):
 
     def __init__(self):
         self.fb = None
-        
+
     def get_blog_news(self):
         blog = xmltodict.parse(requests.get(HENRY_BLOG_URL).text)
         blog_events = []
         items = blog['rss']['channel']['item']
         if not type(items) is list:
-            items = [items]		
+            items = [items]
         for n in items:
             # big *HACK* to remove HTML tags
             d = n["content:encoded"]
-            blog_events.append("<h3>"+n["title"]+"</h3><h4>"+ d +"</h4>")
+            blog_events.append("<h3>" + n["title"] + "</h3><h4>" + d + "</h4>")
         return blog_events
 
     def get_orf_news(self):
@@ -139,16 +165,16 @@ class Events(object):
             items = [items]
         for n in items:
             events.append((None,
-                           "<h3>"+n["title"]+"</h3><h4>"+ n["description"] +"</h4>"))
+                           "<h3>" + n["title"] + "</h3><h4>" + n["description"] + "</h4>"))
         return events
 
     def get_facebook_news(self):
         if self.fb is None:
-            self.fb = FacebookNews(app_secret=rospy.get_param('~facebook/app_secret',''))    
+            self.fb = FacebookNews(
+                app_secret=rospy.get_param('~facebook/app_secret', ''))
             self.fb.login()
 
         news = self.fb.get()
-        #print news
         events = []
         items = news['data']
         for n in items:
@@ -161,8 +187,7 @@ class Events(object):
     def GET(self):
         app.publish_feedback(Events.id)
 
-        blog_events = self.get_blog_news()
-        
+        # blog_events = self.get_blog_news()
         orf_news = self.get_orf_news()
 
         facebook_news = self.get_facebook_news()
