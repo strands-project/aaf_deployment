@@ -1,4 +1,8 @@
 nodes:
+- WayPoint71
+- WayPoint72
+- WayPoint73
+- WayPoint74
 - Cafeteria
 - ChargingPoint
 - Eingang
@@ -9,6 +13,7 @@ nodes:
 - Lift1
 - Lift2
 - Rezeption
+- Seminarraum
 - Station
 - Teekueche
 - WayPoint12
@@ -23,6 +28,11 @@ nodes:
 - WayPoint34
 - WayPoint35
 - WayPoint39
+- WayPoint52
+- WayPoint60
+- WayPoint62
+- WayPoint63
+- WayPoint81
 - WayPoint43
 - WayPoint45
 - WayPoint47
@@ -30,7 +40,6 @@ nodes:
 - WayPoint49
 - WayPoint50
 - WayPoint51
-- WayPoint52
 - WayPoint53
 - WayPoint54
 - WayPoint55
@@ -38,15 +47,11 @@ nodes:
 - WayPoint57
 - WayPoint58
 - WayPoint59
-- WayPoint60
 - WayPoint61
-- WayPoint62
-- WayPoint63
 - WayPoint66
 - WayPoint7
 - WayPoint76
 - WayPoint8
-- WayPoint81
 - WayPoint82
 - WayPoint83
 - WayPoint84
@@ -54,3 +59,4 @@ nodes:
 - WayPoint86
 - WayPoint87
 - WayPoint90
+- WayPoint91
