@@ -73,7 +73,8 @@ tmux select-window -t $SESSION:14
 tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_deployment_control.launch"
 
 tmux select-window -t $SESSION:15
-tmux send-keys "DISPLAY=:0 rosrun aaf_logging run_aaf_logger.bash"
+tmux send-keys "ssh werner-left-cortex" C-m
+tmux send-keys "rosrun aaf_logging run_aaf_logger.bash"
 
 # Set default window
 tmux select-window -t $SESSION:0
