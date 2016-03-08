@@ -1,5 +1,5 @@
 #!/bin/bash
-ssh werner-left-cortex
+ssh werner-left-cortex << EOF
 
 export AAF_TOPICS="
     /scan
@@ -66,7 +66,8 @@ export AAF_TOPICS="
     /strands_webserver/display_7/page
     /strands_webserver/display_8/page
     /strands_webserver/display_9/page
-"
-
+";
 
 rosrun mongodb_log mongodb_log.py --nodename-prefix=aaf_logger_ --mongodb-host=werner-left-cortex --mongodb-port=62345 $AAF_TOPICS #> ~/.ros/mongodb_log.log 2>&1
+
+EOF
