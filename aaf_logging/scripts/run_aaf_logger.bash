@@ -68,4 +68,4 @@ export AAF_TOPICS="
 "
 
 
-rosrun mongodb_log mongodb_log.py --nodename-prefix=aaf_logger_ --mongodb_host=werner-left-cortex --mongodb_port=62345 $AAF_TOPICS #> ~/.ros/mongodb_log.log 2>&1
+rosrun mongodb_log mongodb_log.py --nodename-prefix=aaf_logger_ --mongodb-host=werner-left-cortex --mongodb-port=62345 $AAF_TOPICS #> ~/.ros/mongodb_log.log 2>&1
