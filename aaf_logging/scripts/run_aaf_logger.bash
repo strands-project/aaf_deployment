@@ -1,4 +1,5 @@
 #!/bin/bash
+ssh werner-left-cortex
 
 export AAF_TOPICS="
     /scan
