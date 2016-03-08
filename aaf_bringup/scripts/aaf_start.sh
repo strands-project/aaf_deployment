@@ -54,7 +54,7 @@ tmux select-window -t $SESSION:8
 tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_launch_server.launch"
 
 tmux select-window -t $SESSION:9
-tmux send-keys "DISPLAY=:0 roslaunch aaf_logging logging.launch"
+tmux send-keys "DISPLAY=:0 roslaunch aaf_logging logging.launch mongodb_host:=werner-right-cortex"
 
 tmux select-window -t $SESSION:10
 tmux send-keys "DISPLAY=:0  roslaunch info_terminal info_terminal.launch"
