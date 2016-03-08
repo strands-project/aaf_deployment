@@ -1,6 +1,6 @@
 <launch>
 	<!-- Remote Launching -->
-    <arg name="machine" default="werner-right-cortex" />
+    <arg name="machine" default="werner-left-cortex" />
     <arg name="user" default="strands" />
 
     <!-- Datacentre -->
