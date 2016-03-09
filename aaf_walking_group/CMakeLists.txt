@@ -46,12 +46,14 @@ generate_dynamic_reconfigure_options(
 add_service_files(
   FILES
   GetMediaId.srv
+  Button.srv
 )
 
 add_action_files(
   DIRECTORY action
   FILES
   Interface.action
+  MapInterface.action
   Empty.action
   Guiding.action
   StateMachine.action
