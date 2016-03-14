@@ -20,6 +20,7 @@ tmux new-window -t $SESSION:12 -n 'walking_group'
 tmux new-window -t $SESSION:13 -n 'scheduler'
 tmux new-window -t $SESSION:14 -n 'control'
 tmux new-window -t $SESSION:15 -n 'logging_script'
+tmux new-window -t $SESSION:16 -n 'pred_map_bags'
 
 tmux select-window -t $SESSION:0
 tmux split-window -v
@@ -54,7 +55,7 @@ tmux select-window -t $SESSION:8
 tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_launch_server.launch"
 
 tmux select-window -t $SESSION:9
-tmux send-keys "DISPLAY=:0 roslaunch aaf_logging logging.launch"
+tmux send-keys "DISPLAY=:0 roslaunch aaf_logging logging.launch mongodb_host:=werner-left-cortex"
 
 tmux select-window -t $SESSION:10
 tmux send-keys "DISPLAY=:0  roslaunch info_terminal info_terminal.launch"
@@ -66,7 +67,8 @@ tmux select-window -t $SESSION:12
 tmux send-keys "DISPLAY=:0 roslaunch aaf_walking_group task_servers.launch"
 
 tmux select-window -t $SESSION:13
-tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_routine.launch calendar:=henry.strands%40hanheide.net machine:=werner-right-cortex user:=strands"
+tmux send-keys "ssh werner-right-cortex" C-m
+tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_routine.launch calendar:=henry.strands%40hanheide.net"
 
 tmux select-window -t $SESSION:14
 tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_deployment_control.launch"
@@ -74,6 +76,11 @@ tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_deployment_control.launch"
 tmux select-window -t $SESSION:15
 tmux send-keys "ssh werner-left-cortex" C-m
 tmux send-keys "rosrun aaf_logging run_aaf_logger.bash"
+
+tmux select-window -t $SESSION:16
+tmux send-keys "ssh werner-left-cortex" C-m
+tmux send-keys "cd /storage" C-m
+tmux send-keys "rosbag record --split --duration=1h /tf /scan /odom /amcl_pose /robot_pose /current_node /current_edge /map /topological_map /infoterminal/active_screen"
 
 # Set default window
 tmux select-window -t $SESSION:0
