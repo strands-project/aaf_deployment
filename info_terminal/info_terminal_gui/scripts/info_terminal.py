@@ -54,6 +54,7 @@ class InfoTerminalGUI(web.application):
         self.urls = (
             '/', 'MasterPage',
             '/menu',  'Menu',
+            '/menu-res',  'MenuRes',
             '/weather', 'Weather',
             '/events', 'Events',
             '/go_away', 'GoAway',
@@ -95,6 +96,11 @@ class Menu(object):
     def GET(self):
         app.publish_feedback(Menu.id)
         return render.menu({}, app.strings)
+
+class MenuRes(object):
+    def GET(self):
+        app.publish_feedback(Menu.id)
+        return render.menu_res({}, app.strings)
 
 
 class Weather(object):

@@ -1,6 +1,6 @@
 {
 "Hello": {"DE": "Hallo", "EN": "Hello"},
-"Caffateria Menu": {"DE":"Tagesmenü","EN":"Caffateria Menu"},
+"Caffateria Menu": {"DE":"Tagesmenüs","EN":"Caffateria Menu"},
 "hrs": {"DE":"Uhr","EN":"hrs"},
 "back to menu": {"DE": "Zurück", "EN":"Back to Menu"},
 "coming events": {"DE": "Neuigkeiten", "EN": "News"},
@@ -15,5 +15,7 @@
 "delete image" : {"DE":"Bild löschen", "EN":"Delete this image"},
 "remove existing images" : {"DE":"Bestehendes Bild löschen", "EN":"Remove existing image"},
 "previous photo" : {"DE":"Vorheriges Bild", "EN":"Previous Photo"},
-"next photo" : {"DE": "Nächstes Photo", "EN": "Next Photo"}
+"next photo" : {"DE": "Nächstes Photo", "EN": "Next Photo"},
+"to SANA Menu": {"DE": "Zum SANA Tages-Menü"},
+"to Residents Menu": {"DE": "Zum Bewohner Tages-Menü"}
 }
