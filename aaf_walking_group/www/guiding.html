@@ -18,20 +18,20 @@
   
   	<!-- interaction buttons -->
   	<div id="pauseDiv">
-      <button type="button" onclick="javascript:playPause()"
+      <button type="button" onmousedown="javascript:playPause()"
             class="button-style music-off-button" style="position: absolute; left: 16px; top: 250px; width: 220px; height: 187px;"></button>
 	</div>
 	<div id="playDiv">
-      <button type="button" onclick="javascript:playPause()"
+      <button type="button" onmousedown="javascript:playPause()"
             class="button-style music-on-button" style="position: absolute; left: 16px; top: 250px; width: 220px; height: 187px;"></button>
 	</div>
-	<button type="button" onclick="javascript:quieter()"
+	<button type="button" onmousedown="javascript:quieter()"
             class="button-style music-quieter" style="position: absolute; left: 252px; top: 250px; width: 220px; height: 187px;"></button>
-   <button type="button" onclick="javascript:louder()"
+   <button type="button" onmousedown="javascript:louder()"
             class="button-style music-louder" style="position: absolute; left: 488px; top: 250px; width: 220px; height: 187px;"></button>
 
 	
-  	  <button type="button" onclick="javascript:waypointList()"
+  	  <button type="button" onmousedown="javascript:waypointList()"
             class="button-style liste-txt-button" style="position: absolute; left: 16px; top: 428px; width: 220px; height: 187px;"></button>
         
      <div id="textLeft" style="position: absolute; left: -186px; top: 600px;
@@ -39,7 +39,7 @@
         <textarea class="speechout" id="stop">Liste aller Rastpunkte</textarea>
     </div>       
        
-    <button type="button" onclick="javascript:abort()"
+    <button type="button" onmousedown="javascript:abort()"
             class="button-style film-button" style="position: absolute; left: 252px; top: 428px; width: 220px; height: 187px;"></button>
     
     <div id="textMiddleLeft" style="position: absolute; left: 48px; top: 600px;
@@ -47,7 +47,7 @@
         <textarea class="speechout" id="stop">Unterhaltung</textarea>
     </div>       
 
-    <!--<button type="button" onclick="javascript:killall()"
+    <!--<button type="button" onmousedown="javascript:killall()"
             class="button-style abbruch-button" style="position: absolute; left: 488px; top: 428px; width: 220px; height: 187px;"></button>
     
      <div id="textMiddleRight" style="position: absolute; left: 283px; top: 600px;
@@ -55,7 +55,7 @@
         <textarea class="speechout" id="stop">Abbruch der Tour</textarea>
     </div>
 -->
-   <button type="button" onclick="javascript:nextWaypoint()"
+   <button type="button" onmousedown="javascript:nextWaypoint()"
             class="button-style weiter-button" style="position: absolute; left: 724px; top: 428px; width: 220px; height: 187px;"></button>
 
     <div id="textRight" style="position: absolute; left: 522px; top: 600px;

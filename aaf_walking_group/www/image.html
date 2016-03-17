@@ -13,8 +13,9 @@
   <body onload="setImage(0)" style="width: 1000px; height: 750px; background-repeat:no-repeat;">
   
   <!-- Go back to the main page -->
-  <a class="button-style liste-button" onclick="clearInterval(image_loop)" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
-  
+  <button type="button" onmousedown="clearInterval(image_loop); location.href='entertainment.html'"
+            class="button-style liste-button" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;"></button> 
+            
   <div class="landscape" style="position: absolute; left: 63px; top: 1px; width: 873px; height: 655px;">
     <img id="img1" src="">
   </div>
