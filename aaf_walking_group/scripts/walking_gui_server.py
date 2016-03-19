@@ -97,6 +97,7 @@ class WalkingInterfaceServer(object):
                 rospy.loginfo(" ... done")
             except rospy.ROSException as e:
                 rospy.logwarn(e)
+                self.dyn_client = None
         elif not self.indicators:
             self.dyn_client = None
 
