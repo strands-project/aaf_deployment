@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import rospy
-import roslib
+#import roslib
 import actionlib
 from aaf_walking_group.msg import MapInterfaceAction, MapInterfaceResult
 from aaf_walking_group.srv import Button, ButtonResponse
@@ -29,8 +29,8 @@ class MapInterfaceServer(object):
         rospy.loginfo("%s: ...done.", name)
 
         # ONLY FOR TESTING
-        http_root = roslib.packages.get_pkg_dir('aaf_walking_group') + '/www'
-        client_utils.set_http_root(http_root)
+#        http_root = roslib.packages.get_pkg_dir('aaf_walking_group') + '/www'
+#        client_utils.set_http_root(http_root)
 
 
         # Services for buttons
