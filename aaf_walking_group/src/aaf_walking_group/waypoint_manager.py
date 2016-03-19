@@ -1,22 +1,55 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import rospy
+from std_msgs.msg import String
+from strands_navigation_msgs.srv import GetTaggedNodes
+from strands_navigation_msgs.msg import TopologicalMap
+from topological_navigation.route_search import TopologicalRouteSearch
+
 
 class WaypointManager():
+    __resting_node_tag = "walking_group_resting_point"
+
     RESTING = "resting"
     INTERMEDIATE = "intermediate"
     ASKING = "asking"
+    EXCLUDE = "exclude"
+    PAGE = "page"
 
     def __init__(self, waypoints):
+        rospy.loginfo("Waiting for topo map")
+        topo_map = rospy.wait_for_message('/topological_map', TopologicalMap, timeout=10.0)
+        rospy.loginfo("Got topo map")
+        self.rsearch = TopologicalRouteSearch(topo_map)
         self.waypoints = waypoints
-        self.current_waypoint_idx = 0
+        self.chair = ''
+        self.waypoint_names = [w[self.RESTING] for w in self.waypoints]
+        self.goal_waypoint_idx = 0
+        self.current_waypoint_index = 0
         self.route = {"route": [], "idx": 0}
+        rospy.Subscriber("/closest_node", String, self.cb)
+
+    def cb(self, msg):
+        try:
+            s = rospy.ServiceProxy("/topological_localisation/get_nodes_with_tag", GetTaggedNodes)
+            s.wait_for_service()
+            nodes = s(self.__resting_node_tag).nodes
+            if self.get_waypoint(self.current_waypoint_index) not in nodes[:2]:
+                try:
+                    self.current_waypoint_index = self.waypoint_names[self.current_waypoint_index:].index(nodes[0]) + len(self.waypoint_names[:self.current_waypoint_index])
+                except ValueError:
+                    rospy.logwarn("No change in node")
+        except (rospy.ServiceException, rospy.ROSInterruptException) as e:
+            rospy.logwarn(e)
+        print "Current waypoint and index:", self.current_waypoint_index, self.get_waypoint(self.current_waypoint_index)
+
 
     def set_index(self, i):
-        self.current_waypoint_idx = i
+        self.goal_waypoint_idx = i
 
     def get_index(self):
-        return self.current_waypoint_idx
+        return self.goal_waypoint_idx
 
     def get_waypoints(self):
         return self.waypoints
@@ -25,22 +58,31 @@ class WaypointManager():
         return self.get_waypoints()[i]
 
     def get_current_waypoint(self):
-        return self.get_waypoint(self.current_waypoint_idx)
+        return self.get_waypoint(self.goal_waypoint_idx)
+
+    def get_page(self):
+        return self.get_current_waypoint()[self.PAGE]
 
     def get_next_waypoint(self):
-        return self.get_waypoint(self.current_waypoint_idx+1)
+        return self.get_waypoint(self.goal_waypoint_idx+1)
 
     def get_prev_waypoint(self):
-        idx = self.current_waypoint_idx-1 if self.current_waypoint_idx-1 >= 0 else 0
+        idx = self.goal_waypoint_idx-1 if self.goal_waypoint_idx-1 >= 0 else 0
         return self.get_waypoint(idx)
 
     def advance(self):
-        self.current_waypoint_idx += 1
+        self.goal_waypoint_idx += 1
         return self.get_current_waypoint()
 
     def reverse(self):
-        self.current_waypoint_idx = self.current_waypoint_idx-1 if self.current_waypoint_idx-1 >= 0 else 0
+        self.goal_waypoint_idx = self.goal_waypoint_idx-1 if self.goal_waypoint_idx-1 >= 0 else 0
         return self.get_current_waypoint()
+
+    def set_resting_chair(self, chair):
+        self.chair = chair
+
+    def get_resting_chair(self):
+        return self.chair
 
     def get_current_resting_waypoint(self):
         return self.get_current_waypoint()[self.RESTING]
@@ -58,9 +100,47 @@ class WaypointManager():
             r = []
         return r
 
+    def get_all_intermediate_waypoints(self, idx):
+        res = []
+        for i in range(idx+1,self.get_index()+1):
+            try:
+                e = self.get_waypoint(i)[self.EXCLUDE]
+            except KeyError:
+                e = []
+
+            try:
+                r = [w for u,w in sorted(self.get_waypoint(i)[self.INTERMEDIATE].items(),key=lambda to_int: int(to_int[0])) if w not in e]
+            except KeyError:
+                r = []
+            if self.get_waypoint(i)[self.ASKING] not in e:
+                r.append(self.get_waypoint(i)[self.ASKING])
+
+            res.extend(r)
+
+        asking = self.get_current_waypoint()[self.ASKING]
+        if asking not in res:
+            res.append(asking)
+        return res
+
     def create_route(self):
-        r = [x for x in self.get_current_intermediate_waypoints()]
-        r.append(self.get_current_asking_waypoint())
+        idx = self.current_waypoint_index
+        r = [x for x in self.get_all_intermediate_waypoints(idx)]
+        rospy.loginfo("Pruning route")
+        current_node = rospy.wait_for_message("/closest_node", String).data
+        while not rospy.is_shutdown() and r[:-1]:
+            rospy.loginfo("Getting route from %s to %s via %s" % (current_node, r[-1], str(r[:-1])))
+            route = self.rsearch.search_route(current_node, r[0]).source
+            try:
+                route.extend(self.rsearch.search_route(r[0], r[1]).source)
+            except IndexError:
+                pass
+            rospy.loginfo("Found route %s" %str(route))
+            if len(route) != len(set(route)):
+                rospy.loginfo("Found duplicates, pruning first node")
+                r = r[1:]
+            else:
+                rospy.loginfo("Found no duplicates, route is good!")
+                break
         idx = 0 if not self.route["route"] == r else self.route["idx"]
         self.route = {"route": r, "idx": idx}
 

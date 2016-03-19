@@ -57,11 +57,19 @@ class GuideInterface(smach.State):
             result = self._client.get_result()
             rospy.loginfo("Got the chosen next waypoint.")
             next_waypoint = result.chosen_point
-            userdata.waypoints.set_index(result.idx)
+            if result.idx == -1:
+                try:
+                    idx = userdata.waypoints.get_resting_waypoints()[userdata.waypoints.current_waypoint_index+1:].index(next_waypoint) + len(userdata.waypoints.get_resting_waypoints()[:userdata.waypoints.current_waypoint_index+1])
+                except ValueError:
+                    idx = userdata.waypoints.get_resting_waypoints().index(next_waypoint)
+                print "SELECTED IDX", idx
+            else:
+                idx = result.idx
+            userdata.waypoints.set_index(idx)
 
             rospy.loginfo("I will go to: " + next_waypoint)
             userdata.waypoints.create_route()
-            print userdata.waypoints.get_route_to_current_waypoint()
+            print "Following route:", userdata.waypoints.get_route_to_current_waypoint()
             return 'move_to_point'
         elif self._preempt_requested:
             return 'killall'
