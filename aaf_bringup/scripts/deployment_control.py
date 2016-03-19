@@ -7,18 +7,25 @@ from strands_executive_msgs.srv import SetExecutionStatus
 from strands_executive_msgs.msg import TaskEvent
 from mongodb_store.message_store import MessageStoreProxy
 from scitos_msgs.srv import ResetBarrierStop, ResetMotorStop
+from threading import Thread
+from strands_webserver.msg import ModalDlg
 
 
 class DeploymentControl(object):
 
     def __init__(self, name):
         # Variables
+        self.maintenance_thread = None
+        self.show_maintenance = False
+
         rospy.loginfo("Starting %s", name)
         rospy.Service('~start', Empty, self.start_cb)
         rospy.Service('~stop', Empty, self.stop_cb)
         rospy.Service('~pause', Empty, self.pause_cb)
         rospy.Service('~resume', Empty, self.resume_cb)
         rospy.Service('~reset_emergency_stop', Empty, self.reset_cb)
+        rospy.Service('~show_maintenance', Empty, lambda x: self.maintenance_cb(x, True))
+        rospy.Service('~hide_maintenance', Empty, lambda x: self.maintenance_cb(x, False))
 
         self._logging_msg_store = MessageStoreProxy(collection='task_events')
         rospy.on_shutdown(self._log_end)
@@ -80,6 +87,15 @@ class DeploymentControl(object):
         except (rospy.ServiceException, rospy.ROSInterruptException) as e:
             rospy.logwarn(e)
         self.set_execution_status(True)
+        return EmptyResponse()
+
+    def maintenance_cb(self, req, show):
+        pub = rospy.Publisher("/strands_webserver/modal_dialog", ModalDlg, queue_size=1)
+        m = ModalDlg()
+        m.title = "Ausser Betrieb!"
+        m.content = "<b>Wir arbeiten an einer L&ouml;sung. Bitt haben sie etwas Geduld.</b>"
+        m.show = show
+        pub.publish(m)
         return EmptyResponse()
 
     def _log_end(self):
