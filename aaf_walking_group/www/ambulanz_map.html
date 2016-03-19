@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <link rel="stylesheet" type="text/css" href="walking_group.css">
+    <title>Map</title>
+    <script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
+    <script src="roslibjs/build/roslib.js"></script>
+  </head>
+  <body style="width: 1000px; height: 750px; background-repeat:no-repeat;">
+  
+  <!-- Ambulanz 0 -->
+	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/rast_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'ambulanz0'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+            class="button-style sitting-button" style="position: absolute; left: 600px; top: 90px; height: 100px; width: 100px;"></button>
+   <!-- Ambulanz 1 -->
+	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/rast_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'ambulanz1'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+            class="button-style sitting-button" style="position: absolute; left: 600px; top: 190px; height: 100px; width: 100px;"></button>
+   <!-- Ambulanz 2 -->
+	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/rast_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'ambulanz2'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+            class="button-style sitting-button" style="position: absolute; left: 600px; top: 290px; height: 100px; width: 100px;"></button>
+   <!-- Ambulanz 3 -->
+	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/rast_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'ambulanz3'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+            class="button-style sitting-button" style="position: absolute; left: 600px; top: 390px; height: 100px; width: 100px;"></button>
+   <!-- Ambulanz 4 -->
+	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/rast_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'ambulanz7'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+            class="button-style sitting-button" style="position: absolute; left: 400px; top: 90px; height: 100px; width: 100px;"></button>
+   <!-- Ambulanz 5 -->
+	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/rast_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'ambulanz6'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+            class="button-style sitting-button" style="position: absolute; left: 400px; top: 190px; height: 100px; width: 100px;"></button>
+   <!-- Ambulanz 6 -->
+	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/rast_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'ambulanz5'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+            class="button-style sitting-button" style="position: absolute; left: 400px; top: 290px; height: 100px; width: 100px;"></button>
+   <!-- Ambulanz 7 -->
+	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/rast_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'ambulanz4'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+            class="button-style sitting-button" style="position: absolute; left: 400px; top: 390px; height: 100px; width: 100px;"></button>
+		
+	<script type="text/javascript">
+                    
+          var hostname = location.hostname;
+
+          var ros = new ROSLIB.Ros({
+             // this is filled by the ros node when writing this page to the web server, but doesn't currently work
+              // url : '<dynamic>bridge_server</dynamic>'
+              url : 'ws://'+hostname+':9090'
+          });
+
+    </script> 
+    
+  </body>
+</html>
