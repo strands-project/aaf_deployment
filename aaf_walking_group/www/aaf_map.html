@@ -11,21 +11,22 @@
   <div id="logoDiv" style="position: absolute; width:941px; height: 437px; left: 41px; top: 165px;">
 	  		<img id="imgElem" width="941" height="437" src="img/aaf_map.png" />
 		</div>
-		
+	<a class="button-style liste-button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/map_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'KILL'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
+	
 	<!-- Start/End -->
-	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/map_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'start_end'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/map_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'WalkingGruppeStart'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
             class="button-style rast-button" style="position: absolute; left: 95px; top: 481px; height: 45px; width: 45px;"></button>
    <!-- Ambulanz -->
-	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/map_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'ambulanz'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/map_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'Ambulanz'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
             class="button-style rast-button" style="position: absolute; left: 317px; top: 210px; height: 45px; width: 45px;"></button>
    <!-- Cafeteria -->
-	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/map_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'cafeteria'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/map_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'Frisoer'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
             class="button-style rast-button" style="position: absolute; left: 567px; top: 181px; height: 45px; width: 45px;"></button>
    <!-- Kapelle -->
-	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/map_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'kapelle'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/map_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'Kapelle'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
             class="button-style rast-button" style="position: absolute; left: 727px; top: 181px; height: 45px; width: 45px;"></button>
    <!-- Tee Kueche -->
-	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/map_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'tee_kuech'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/map_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'Teekueche'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
             class="button-style rast-button" style="position: absolute; left: 850px; top: 181px; height: 45px; width: 45px;"></button>
 		
 	<script type="text/javascript">
