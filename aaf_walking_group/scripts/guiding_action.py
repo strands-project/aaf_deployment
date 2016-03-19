@@ -103,6 +103,9 @@ class GuidingServer():
         self.navgoal = topological_navigation.msg.GotoNodeGoal()
         self.navgoal.target = goal.waypoint
         self.navgoal.no_orientation = goal.no_orientation
+        if self.server.is_preempt_requested(): # In case the card was seen immediately this would get lost otherwise
+            self.server.set_preempted()
+            return
         self.client.send_goal(self.navgoal)
         while not self.current_node == goal.waypoint and not rospy.is_shutdown() and not self.server.is_preempt_requested():
             rospy.sleep(1)
@@ -121,7 +124,7 @@ class GuidingServer():
         if data.data == self.navgoal.target and self.navgoal.no_orientation: # For intermediate nodes, being in the influence are is enough
             self.client.cancel_all_goals()
 #            self.client_move_base.cancel_all_goals()
-        if data.data in self.pause_points:
+        if data.data in self.pause_points and not self.pause:
             rospy.loginfo("Pausing...")
             self.show_web_page(False)
             client_utils.display_relative_page(self.display_no, 'warte.html')
