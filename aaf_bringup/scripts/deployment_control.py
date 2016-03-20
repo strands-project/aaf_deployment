@@ -7,7 +7,6 @@ from strands_executive_msgs.srv import SetExecutionStatus
 from strands_executive_msgs.msg import TaskEvent
 from mongodb_store.message_store import MessageStoreProxy
 from scitos_msgs.srv import ResetBarrierStop, ResetMotorStop
-from threading import Thread
 from strands_webserver.msg import ModalDlg
 
 
@@ -24,8 +23,8 @@ class DeploymentControl(object):
         rospy.Service('~pause', Empty, self.pause_cb)
         rospy.Service('~resume', Empty, self.resume_cb)
         rospy.Service('~reset_emergency_stop', Empty, self.reset_cb)
-        rospy.Service('~show_maintenance', Empty, lambda x: self.maintenance_cb(x, True))
-        rospy.Service('~hide_maintenance', Empty, lambda x: self.maintenance_cb(x, False))
+        rospy.Service('~show_maintenance', Empty, lambda _: self.maintenance_cb(_, True))
+        rospy.Service('~hide_maintenance', Empty, lambda _: self.maintenance_cb(_, False))
 
         self._logging_msg_store = MessageStoreProxy(collection='task_events')
         rospy.on_shutdown(self._log_end)
@@ -89,11 +88,26 @@ class DeploymentControl(object):
         self.set_execution_status(True)
         return EmptyResponse()
 
-    def maintenance_cb(self, req, show):
+    def walking_group_feedback(self, enable):
+        services = [
+            "/walking_group_recovery_feedback/disable",
+            "/walking_group_recovery_feedback/enable"
+        ]
+        try:
+            s = rospy.ServiceProxy(services[enable], Empty)
+            s.wait_for_service(timeout=1)
+            s()
+        except (rospy.ServiceException, rospy.ROSInterruptException, rospy.ROSException) as e:
+            rospy.logwarn(e)
+
+
+    def maintenance_cb(self, _, show):
+        self.walking_group_feedback(not show)
+        rospy.sleep(1) # Not nice but have to wait until there is no one publishing any more.
         pub = rospy.Publisher("/strands_webserver/modal_dialog", ModalDlg, queue_size=1)
         m = ModalDlg()
         m.title = "Ausser Betrieb!"
-        m.content = "<b>Wir arbeiten an einer L&ouml;sung. Bitt haben sie etwas Geduld.</b>"
+        m.content = "<b>Wir arbeiten an einer L&ouml;sung. Bitte haben sie etwas Geduld.</b>"
         m.show = show
         pub.publish(m)
         return EmptyResponse()
