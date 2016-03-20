@@ -52,6 +52,7 @@
   <node pkg="music_player" type="music_player_server.py" name="music_player_server" output="screen" respawn="true">
     <param name="music_set" type="string" value="$(arg music_set_group)"/>
     <param name="priority" type="double" value="0.8"/>
+    <param name="shuffle" type="bool" value="true"/>
   </node>
   <include file="$(find sound_player_server)/launch/sound_player.launch">
     <arg name="music_set" value="$(arg music_set_jingles)"/>
