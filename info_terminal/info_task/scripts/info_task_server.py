@@ -50,6 +50,7 @@ class InfoTaskServer(AbstractTaskServer):
             # loop for duration
             if self.reset_time < rospy.Time.now().to_sec():
                 self.interruptible = True
+            rospy.logdebug("Info task active with interruptable: %s" % str(self.interruptible))
             rate.sleep()
 
         # Reset ptu, head and gaze
@@ -76,7 +77,8 @@ class InfoTaskServer(AbstractTaskServer):
         self.interaction_times.append(rospy.Time.now())
         self.pages.append(active_screen.data)
         self.reset_time = rospy.Time.now().to_sec() + self.extension_time
-        self.interruptible = False
+        if self.server.is_active():
+            self.interruptible = False
 
     def preempt_cb(self):
         clicks = Clicks()

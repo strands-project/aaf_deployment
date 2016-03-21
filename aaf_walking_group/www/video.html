@@ -13,8 +13,9 @@
   <body onload="setVideo(0)" style="width: 1000px; height: 750px; background-repeat:no-repeat;">
   
   <!-- Go back to the main page -->
-  <a class="button-style liste-button" onclick="clearInterval(video_loop)" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;" href="entertainment.html"></a>
-  
+  <button type="button" onmousedown="clearInterval(video_loop); location.href='entertainment.html'"
+            class="button-style liste-button" style="position: absolute; left: 900px; top: 660px; width: 90px; height: 80px;"></button>
+            
   <div id="videoDiv" style="position: absolute; left: 63px; top: 1px; width: 873px; height: 655px;">
 	   <video id="videoplayer" width="873" height="655" >
 			<source id="mp4" src="" />
