@@ -10,8 +10,8 @@
   <body style="width: 1000px; height: 750px; background-repeat:no-repeat;">
   
   <!-- Frisoer -->
-	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/rast_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'teekueche4'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
-            class="button-style sitting-button" style="position: absolute; left: 160px; top: 300px; height: 100px; width: 100px;"></button>
+	<!-- <button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/rast_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'teekueche4'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
+            class="button-style sitting-button" style="position: absolute; left: 160px; top: 300px; height: 100px; width: 100px;"></button> -->
 	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/rast_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'teekueche3'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
             class="button-style sitting-button" style="position: absolute; left: 260px; top: 300px; height: 100px; width: 100px;"></button>
 	<button type="button" onclick="var service_button = new ROSLIB.Service({ros : ros, name : '/rast_interface_server/button', serviceType : 'aaf_walking_group/Button'}); var request_button = new ROSLIB.ServiceRequest({identifier : 'teekueche2'});  service_button .callService(request_button, function(result) {console.log('Called service'); }); console.log('Called')"
