@@ -22,6 +22,7 @@ class AAFWaypointPlayer(object):
     def __init__(self):
         rospy.init_node('aaf_waypoint_player')
         self.music_set = rospy.get_param('~music_set', '')
+        rospy.loginfo(self.music_set)
         if len(self.music_set) == 0:
             rospy.logwarn('No music set provided!')
             return
@@ -48,7 +49,7 @@ class AAFWaypointPlayer(object):
                 object_id = s[2]
 
         if object_id is None:
-            rospy.logwarn('Could not find any set in database matching music_set')
+            rospy.logwarn('Could not find any set in database matching %s' % self.music_set)
             return
 
         file_set = self.mc.get_set(object_id)

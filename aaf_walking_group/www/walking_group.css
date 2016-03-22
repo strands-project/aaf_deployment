@@ -67,6 +67,9 @@ p {font-size:200%}
 .liste-txt-button {
   background: url('img/button_liste.png') left center / 100% no-repeat;
 }
+.map-button {
+  background: url('img/button_map.png') left center / 100% no-repeat;
+}
 .abbruch-button {
   background: url('img/button_abbruch.png') left center / 100% no-repeat;
 }
@@ -78,6 +81,9 @@ p {font-size:200%}
 }
 .rast-button {
   background: url('img/button_rast.png') left center / 100% no-repeat;
+}
+.sitting-button {
+  background: url('img/sitting_person.png') left center / 100% no-repeat;
 }
 .music-on-button {
   background: url('img/button_musik_on.png') left center / 100% no-repeat;

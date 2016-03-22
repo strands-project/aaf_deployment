@@ -61,12 +61,12 @@ class Guiding(smach.State):
         print userdata.waypoints.get_route_to_current_waypoint()
         next_waypoint = userdata.waypoints.get_current_waypoint_in_route()
 
+        goal = GuidingGoal()
+        goal.no_orientation = True
         while not rospy.is_shutdown() and not self.preempt_requested():
             rospy.loginfo("I am going to: " + next_waypoint)
 
-            goal = GuidingGoal()
             goal.waypoint = next_waypoint
-            goal.no_orientation = True
 
             self.nav_client.send_goal(goal)
             # Necessary to account for seeing the card immediately after the goal was sent.
@@ -76,7 +76,6 @@ class Guiding(smach.State):
             while self.nav_client.get_state() == GoalStatus.PENDING:
                 rospy.sleep(0.01)
             rospy.loginfo("Subscribing")
-            print self.card, self.preempt_requested()
             self.sub = rospy.Subscriber("/socialCardReader/commands", String, callback=self.callback)
             self.nav_client.wait_for_result()
             state = self.nav_client.get_state()

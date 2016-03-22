@@ -17,6 +17,7 @@
   <machine name="$(arg head_machine)" address="$(arg head_machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg head_user)" default="false"/>
 
   <node pkg="aaf_walking_group" type="wait_for_participant.py" name="wait_for_participant" output="screen" respawn="true"/>
+  <node pkg="aaf_walking_group" type="map_interface_server.py" name="map_interface_server" output="screen" respawn="true"/>
   <node pkg="aaf_walking_group" type="guiding_action.py" name="guiding_server" output="screen" respawn="true"/>
   <node pkg="aaf_walking_group" type="media_server.py" name="image_server" output="screen" respawn="true">
     <param name="media_set" type="string" value="$(arg image_set)"/>
@@ -27,6 +28,7 @@
     <param name="media_set_type" type="string" value="Video"/>
   </node>
   <node pkg="aaf_walking_group" type="interface_server.py" name="interface_server" output="screen" respawn="true"/>
+  <node pkg="aaf_walking_group" type="walking_group_recovery_feedback.py" name="walking_group_recovery_feedback" output="screen" respawn="true"/>
   <node pkg="aaf_walking_group" type="aaf_walking_group_state_machine.py" name="walking_group_smach" output="screen" respawn="true">
     <param name="mongodb_params/waypointset_name" type="string" value="$(arg waypoint_set)"/>
     <param name="mongodb_params/waypointset_collection" type="string" value="$(arg collection_name)"/>
@@ -49,7 +51,7 @@
     <arg name="music_set" value="$(arg music_set_waypoints)"/>
     <arg name="waypoint_sounds_file" value="$(arg waypoint_sounds_file)"/>
   </include>
-  <node pkg="music_player" type="music_player_server.py" name="music_player_server" output="screen" respawn="true">
+  <node pkg="music_player" type="music_player_server.py" name="music_player_server" output="log" respawn="true">
     <param name="music_set" type="string" value="$(arg music_set_group)"/>
     <param name="priority" type="double" value="0.8"/>
     <param name="shuffle" type="bool" value="true"/>
