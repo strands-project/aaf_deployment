@@ -41,6 +41,8 @@
             <remap from="image" to="interaction_camera/image_annotated" />
             <param name="fps" value="1" />
             <param name="codec" value="fmp4" />
+            <param name="min_depth_range" value="0" />
+            <param name="max_depth_range" value="0" />
             <param name="filename" value="$(arg logging_dir)/interaction_camera_$(arg logging_tag).avi" />
         </node>
     </group>
@@ -58,6 +60,8 @@
             <remap from="image" to="/head_xtion/rgb/image_annotated" />
             <param name="fps" value="1" />
             <param name="codec" value="fmp4" />
+            <param name="min_depth_range" value="0" />
+            <param name="max_depth_range" value="0" />
             <param name="filename" value="$(arg logging_dir)/head_camera_$(arg logging_tag).avi" />
         </node>
     </group>
