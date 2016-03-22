@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+   <head>
+		<meta content="text/html; charset=windows-1252" http-equiv="content-type">
+		<title></title>
+		<script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
+		<script src="roslibjs/build/roslib.js"></script>
+		<link rel="stylesheet" type="text/css" href="walking_group.css">
+	</head>
+	<body style="width: 1000px; height: 750px; background-repeat:no-repeat;">
+
+	<button type="button" onmousedown="javascript:quieter()"
+            class="button-style music-quieter" style="position: absolute; left: 252px; top: 5px; width: 220px; height: 187px;"></button>
+   <button type="button" onmousedown="javascript:louder()"
+            class="button-style music-louder" style="position: absolute; left: 488px; top: 5px; width: 220px; height: 187px;"></button>
+  
+	<div id="indicator" style="position: absolute; left: 282px; top: 220px; width: 400px; height: 400px;">
+		<img id="image" style="width: 400px; height: 400px;" title="Recht" alt="Recht" src="img/stop.png"> 
+	</div>
+  
+	<script>
+		var hostname = location.hostname;
+
+		var ros = new ROSLIB.Ros({
+		   url : 'ws://'+hostname+':9090'
+		});
+		
+		function quieter() {
+	      console.log('Quieter Called');
+			var service_button = new ROSLIB.Service({ros : ros, name : '/walking_group/guide_interface/volume_quieter', serviceType : 'strands_webserver/CallButton'}); 
+         var request_button = new ROSLIB.ServiceRequest({});  
+         service_button.callService(request_button, function(result) {console.log('Called service'); }); 
+	   } 
+	
+		function louder() {
+	      console.log('Louder Called');
+			var service_button = new ROSLIB.Service({ros : ros, name : '/walking_group/guide_interface/volume_louder', serviceType : 'strands_webserver/CallButton'}); 
+	      var request_button = new ROSLIB.ServiceRequest({});  
+	      service_button.callService(request_button, function(result) {console.log('Called service'); }); 
+		}
+		
+		var imageTopic = new ROSLIB.Topic({
+              ros         : ros,
+              name        : '/walking_interface_server/direction',
+              messageType : 'std_msgs/String'
+	   });
+		imageTopic.subscribe(function(message) {
+	      // Formats the pose for outputting.
+	      var image = message.data;
+		   console.log(message.data);
+	      document.getElementById("image").src="img/" + image + ".png";
+	    }); 
+	</script> 
+  </body>
+</html>

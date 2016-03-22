@@ -9,13 +9,15 @@ import actionlib
 from std_msgs.msg import String
 from std_srvs.srv import Empty
 
-import strands_webserver.page_utils as page_utils
+from aaf_walking_group.msg import MapInterfaceAction, MapInterfaceGoal
 import strands_webserver.client_utils as client_utils
 from strands_webserver.srv import CallButton, CallButtonResponse
 from aaf_walking_group.msg import InterfaceAction, InterfaceResult
+from strands_navigation_msgs.srv import GetTaggedNodes
 
 
 class InterfaceServer(object):
+    __resting_node_tag = "walking_group_resting_point"
 
     def __init__(self, name):
         # Variables
@@ -24,12 +26,13 @@ class InterfaceServer(object):
         self._action_name = name
         self.display_no = rospy.get_param("~display", 0)
 
-        # Done in state machine
-        # tell the webserver where it should look for web files to serve
-        # http_root = os.path.join(
-        #     roslib.packages.get_pkg_dir("aaf_walking_group"),
-        #     "www")
-        # client_utils.set_http_root(http_root)
+        rospy.loginfo("Creating map interface client...")
+        self.client = actionlib.SimpleActionClient(
+            '/map_interface_server',
+            MapInterfaceAction
+        )
+        self.client.wait_for_server()
+        rospy.loginfo(" ... done ")
 
         # Starting server
         rospy.loginfo("%s: Starting action server", name)
@@ -53,80 +56,60 @@ class InterfaceServer(object):
             self.pub.publish(self.next_waypoint)
             rate.sleep()
 
+    def get_closest_tagged_nodes(self):
+        s = rospy.ServiceProxy("/topological_localisation/get_nodes_with_tag", GetTaggedNodes)
+        s.wait_for_service()
+        return s()
+
     def executeCallback(self, goal):
-        self.request_name = ''
         self.next_waypoint = goal.next_point
-        result = InterfaceResult()
-        client_utils.display_relative_page(self.display_no, 'guiding.html')
-
-        while self.request_name == '' and not rospy.is_shutdown():
-            rospy.sleep(0.1)
-
-        if self.request_name == 'next':
-            result.chosen_point = goal.next_point
-            result.idx = goal.idx
-            rospy.loginfo(result)
-            self._as.set_succeeded(result)
-        elif self.request_name == 'abort':
-            try:
-                s = rospy.ServiceProxy(
-                    '/walking_group/guide_interface/cancel', Empty
-                )
-                s()
-            except rospy.ServiceException as e:
-                rospy.logwarn("Service call failed: %s" % e)
-            self._as.set_preempted()
-        elif self.request_name == 'killall':
-            try:
-                s = rospy.ServiceProxy('/walking_group/cancel', Empty)
-                s()
-            except rospy.ServiceException as e:
-                rospy.logwarn("Service call failed: %s" % e)
-            self._as.set_preempted()
-        else:
+        while not rospy.is_shutdown() and self._as.is_active():
             self.request_name = ''
-            self.listWaypointPage(goal.possible_points)
-            while self.request_name == '':
+            result = InterfaceResult()
+            client_utils.display_relative_page(self.display_no, 'guiding.html')
+
+            while self.request_name == '' and not rospy.is_shutdown():
                 rospy.sleep(0.1)
-            result.idx = int(self.request_name.split(":")[0])
-            result.chosen_point = self.request_name.split(":")[1]
-            rospy.loginfo(result)
-            self._as.set_succeeded(result)
 
-    def listWaypointPage(self, possible_points):
-        notice = 'Wählen Sie den nächsten Routenabschnitt.'
-        buttons = []
-        three_buttons = []
-        for i in range(len(possible_points)):
-            if i % 3 == 0:
-                if three_buttons != []:
-                    buttons.append(three_buttons)
-                three_buttons = []
-            three_buttons.append((str(i)+":"+possible_points[i], 'button'))
-        buttons.append(three_buttons)
-
-        content = ''
-        for i in range(len(buttons)):
-            if i == 0:
-                content += page_utils.generate_named_button_page(
-                    notice, buttons[i], self._action_name)
+            if self.request_name == 'next':
+                result.chosen_point = self.next_waypoint
+                result.idx = goal.idx
+                rospy.loginfo(result)
+                self._as.set_succeeded(result)
+            elif self.request_name == 'abort':
+                try:
+                    s = rospy.ServiceProxy(
+                        '/walking_group/guide_interface/cancel', Empty
+                    )
+                    s()
+                except rospy.ServiceException as e:
+                    rospy.logwarn("Service call failed: %s" % e)
+                self._as.set_preempted()
+            elif self.request_name == 'killall':
+                try:
+                    s = rospy.ServiceProxy('/walking_group/cancel', Empty)
+                    s()
+                except rospy.ServiceException as e:
+                    rospy.logwarn("Service call failed: %s" % e)
+                self._as.set_preempted()
             else:
-                content += "<p></p>"
-                content += page_utils.generate_named_button_page(
-                    '', buttons[i], self._action_name)
-#        content_with_bg = self.createBGWaypointPage(content)
-        client_utils.display_content(self.display_no, content)
+                self.request_name = ''
+                result.chosen_point = self.show_map(goal)
+                result.idx = -1
+                rospy.loginfo(result)
+                if result.chosen_point == "KILL":
+#                    self.request_name = ''
+                    continue
+                self._as.set_succeeded(result)
 
-    def createBGWaypointPage(self, content):
-        bg = '<img style="position: absolute; left: -20px; top: -10px; width: 1000px; height: 750px;">'
-        bg += '<div id="logoDiv" style="position: absolute; width:616px; height: 300px; left: 204px; top: 64px;">'
-        bg += '<img id="imgElem" width="616" height="300" src="img/walkinggroup.png" />'
-        bg += '</div>'
-        return bg + content
+    def show_map(self, goal):
+        self.client.send_goal_and_wait(MapInterfaceGoal())
+        return self.client.get_result().chosen_point
 
     def preemptCallback(self):
         rospy.logwarn("Aborting the goal...")
         self.request_name = 'abort'
+        self.client.cancel_all_goals()
 
     def button(self, request):
         self.request_name = request.name

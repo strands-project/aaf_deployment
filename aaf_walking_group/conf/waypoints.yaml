@@ -13,37 +13,53 @@ slow:
                 "WayPoint4"
             intermediate: 
                 1: "WayPoint88"
+            exclude:
+                - "WayPoint4"
+            page:
+                "ambulanz_map.html"
         3:
             resting:
                 "Frisoer"
             asking:
                 "WayPoint35"
+            exclude:
+                - "WayPoint35"
+            page:
+                "frisoer_map.html"
         4:
             resting:
                 "Kapelle"
             asking:
                 "WayPoint14"
+            page:
+                "kapelle_map.html"
         5:
             resting:
                 "Teekueche"
             asking:
                 "Lift1"
+            page:
+                "teekueche_map.html"
         6:
             resting:
                 "Frisoer"
             asking:
                 "WayPoint26"
             intermediate:
-                1: "WayPoint82"
+                1: "WayPoint48"
                 2: "WayPoint83"
                 3: "WayPoint84"
-                4: "WayPoint28"
-                5: "WayPoint7"
+            page:
+                "frisoer_map.html"
         7:
             resting:
                 "Ambulanz"
             asking:
                 "WayPoint4"
+            exclude:
+                - "WayPoint4"
+            page:
+                "ambulanz_map.html"
         8:
             resting:
                 "WalkingGruppeStart"
@@ -66,37 +82,53 @@ fast:
                 "WayPoint4"
             intermediate: 
                 1: "WayPoint88"
+            exclude:
+                - "WayPoint4"
+            page:
+                "ambulanz_map.html"
         3:
             resting:
                 "Frisoer"
             asking:
                 "WayPoint35"
+            exclude:
+                - "WayPoint35"
+            page:
+                "frisoer_map.html"
         4:
             resting:
                 "Kapelle"
             asking:
                 "WayPoint14"
+            page:
+                "kapelle_map.html"
         5:
             resting:
                 "Teekueche"
             asking:
                 "Lift1"
+            page:
+                "teekueche_map.html"
         6:
             resting:
                 "Frisoer"
             asking:
                 "WayPoint26"
             intermediate:
-                1: "WayPoint82"
+                1: "WayPoint48"
                 2: "WayPoint83"
                 3: "WayPoint84"
-                4: "WayPoint28"
-                5: "WayPoint7"
+            page:
+                "frisoer_map.html"
         7:
             resting:
                 "Ambulanz"
             asking:
                 "WayPoint4"
+            exclude:
+                - "WayPoint4"
+            page:
+                "ambulanz_map.html"
         8:
             resting:
                 "WalkingGruppeStart"

@@ -7,6 +7,7 @@ import actionlib
 from actionlib_msgs.msg import GoalStatus
 from aaf_walking_group.msg import GuidingAction, GuidingGoal
 from sound_player_server.srv import PlaySoundService
+from threading import Thread
 
 
 class FinalApproach(smach.State):
@@ -19,10 +20,18 @@ class FinalApproach(smach.State):
         )
         self.sub = None
         self.card = False
+        self.keep_publishing = False
+        self.pub_thread = None
+        self.pub = rospy.Publisher("/aaf_walking_group/resting_node", String, queue_size=1, latch=True)
         rospy.loginfo("Creating approach client...")
         self.nav_client = actionlib.SimpleActionClient("guiding", GuidingAction)
         self.nav_client.wait_for_server()
         rospy.loginfo(" ... done")
+
+    def publish(self, node):
+        while not rospy.is_shutdown() and self.keep_publishing:
+            self.pub.publish(node)
+            rospy.sleep(0.1)
 
     def execute(self, userdata):
         rospy.loginfo("Approaching resting area")
@@ -36,7 +45,10 @@ class FinalApproach(smach.State):
         rospy.sleep(2) # Magic number :(
         self.card = False
 
-        waypoint = userdata.waypoints.get_current_resting_waypoint()
+        waypoint = userdata.waypoints.get_resting_chair()
+        self.keep_publishing = True
+        self.pub_thread = Thread(target=self.publish, args=(waypoint,))
+        self.pub_thread.start()
 
         rospy.loginfo("I am going to: " + waypoint)
 
@@ -59,6 +71,10 @@ class FinalApproach(smach.State):
 
         self.sub.unregister()
         self.sub = None
+
+        self.keep_publishing = False
+        self.pub_thread.join()
+        self.pub_thread = None
 
         if self.preempt_requested() and not self.card:
             return 'killall'

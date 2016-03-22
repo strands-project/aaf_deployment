@@ -19,32 +19,32 @@
   	<!-- interaction buttons -->
   	<div id="pauseDiv">
       <button type="button" onmousedown="javascript:playPause()"
-            class="button-style music-off-button" style="position: absolute; left: 16px; top: 250px; width: 220px; height: 187px;"></button>
+            class="button-style music-off-button" style="position: absolute; left: 383px; top: 250px; width: 180px; height: 187px;"></button>
 	</div>
 	<div id="playDiv">
       <button type="button" onmousedown="javascript:playPause()"
-            class="button-style music-on-button" style="position: absolute; left: 16px; top: 250px; width: 220px; height: 187px;"></button>
+            class="button-style music-on-button" style="position: absolute; left: 383px; top: 250px; width: 180px; height: 187px;"></button>
 	</div>
 	<button type="button" onmousedown="javascript:quieter()"
-            class="button-style music-quieter" style="position: absolute; left: 252px; top: 250px; width: 220px; height: 187px;"></button>
+            class="button-style music-quieter" style="position: absolute; left: 213px; top: 250px; width: 180px; height: 187px;"></button>
    <button type="button" onmousedown="javascript:louder()"
-            class="button-style music-louder" style="position: absolute; left: 488px; top: 250px; width: 220px; height: 187px;"></button>
+            class="button-style music-louder" style="position: absolute; left: 553px; top: 250px; width: 180px; height: 187px;"></button>
 
 	
   	  <button type="button" onmousedown="javascript:waypointList()"
-            class="button-style liste-txt-button" style="position: absolute; left: 16px; top: 428px; width: 220px; height: 187px;"></button>
+            class="button-style map-button" style="position: absolute; left: 366px; top: 428px; width: 220px; height: 187px;"></button>
         
-     <div id="textLeft" style="position: absolute; left: -186px; top: 600px;
+     <div id="textLeft" style="position: absolute; left: 163px; top: 600px;
         width: 200px; height: 100px; float: left; text-align: center;">
-        <textarea class="speechout" id="stop">Liste aller Rastpunkte</textarea>
-    </div>       
+        <textarea class="speechout" id="stop">Karte aller Rastpunkte</textarea>
+    </div> 
        
     <button type="button" onmousedown="javascript:abort()"
-            class="button-style film-button" style="position: absolute; left: 252px; top: 428px; width: 220px; height: 187px;"></button>
+            class="button-style back-button" style="position: absolute; left: 16px; top: 428px; width: 220px; height: 187px;"></button>
     
-    <div id="textMiddleLeft" style="position: absolute; left: 48px; top: 600px;
+    <div id="textMiddleLeft" style="position: absolute; left: -186px; top: 600px;
         width: 200px; height: 100px; float: left; text-align: center;">
-        <textarea class="speechout" id="stop">Unterhaltung</textarea>
+        <textarea class="speechout" id="stop">Zur&uuml;ck zu: Unterhaltung</textarea>
     </div>       
 
     <!--<button type="button" onmousedown="javascript:killall()"
@@ -60,7 +60,7 @@
 
     <div id="textRight" style="position: absolute; left: 522px; top: 600px;
         width: 200px; height: 100px; float: left; text-align: center;">
-        <textarea class="speechout" id="saytext">Der n&auml;chste Punkt ist </textarea>
+        <textarea class="speechout" id="saytext">Gehe weiter zu: </textarea>
     </div>
   </body>
   
@@ -144,7 +144,7 @@
       // Formats the pose for outputting.
       var say = message.data;
     
-      document.getElementById("saytext").value="Der nächste Punkt ist " + say;
+      document.getElementById("saytext").value="Gehe weiter zu: " + say;
     });
     
     var musicTopic = new ROSLIB.Topic({
