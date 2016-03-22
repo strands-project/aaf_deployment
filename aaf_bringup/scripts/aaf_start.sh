@@ -21,6 +21,7 @@ tmux new-window -t $SESSION:13 -n 'scheduler'
 tmux new-window -t $SESSION:14 -n 'control'
 tmux new-window -t $SESSION:15 -n 'logging_script'
 tmux new-window -t $SESSION:16 -n 'pred_map_bags'
+tmux new-window -t $SESSION:17 -n 'screen_broadcast'
 
 tmux select-window -t $SESSION:0
 tmux split-window -v
@@ -81,6 +82,9 @@ tmux select-window -t $SESSION:16
 tmux send-keys "ssh werner-left-cortex" C-m
 tmux send-keys "cd /storage" C-m
 tmux send-keys "rosbag record --split --duration=1h /tf /scan /odom /amcl_pose /robot_pose /current_node /current_edge /map /topological_map /infoterminal/active_screen"
+
+tmux select-window -t $SESSION:17
+tmux send-keys "DISPLAY=:0 cvlc -vvv --no-audio screen:// --screen-fps 1 --sout '#transcode{vcodec=MJPG,vb=800}:standard{access=http,mux=mpjpeg,dst=:18223/}' --sout-http-mime='multipart/x-mixed-replace;boundary=--7b3cc56e5f51db803f790dad720ed50a'
 
 # Set default window
 tmux select-window -t $SESSION:0
