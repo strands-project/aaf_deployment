@@ -97,7 +97,7 @@ class InterfaceServer(object):
                 result.chosen_point = ''
                 result.idx = self.show_map(goal)
                 rospy.loginfo(result)
-                if result.chosen_point < 0:
+                if result.idx < 0:
 #                    self.request_name = ''
                     continue
                 self._as.set_succeeded(result)
