@@ -6,6 +6,8 @@ slow:
                 "WalkingGruppeStart"
             asking:
                 "WalkingGruppeStart"
+            resting_tag:
+                "Start"
         2: 
             resting:
                 "Ambulanz"
@@ -17,15 +19,19 @@ slow:
                 - "WayPoint4"
             page:
                 "ambulanz_map.html"
+            resting_tag:
+                "Ambulanz"
         3:
             resting:
                 "Frisoer"
             asking:
-                "WayPoint35"
+                "WayPoint26"
             exclude:
                 - "WayPoint35"
             page:
                 "frisoer_map.html"
+            resting_tag:
+                "Frisoer"
         4:
             resting:
                 "Kapelle"
@@ -33,6 +39,8 @@ slow:
                 "WayPoint14"
             page:
                 "kapelle_map.html"
+            resting_tag:
+                "Kapelle"
         5:
             resting:
                 "Teekueche"
@@ -40,17 +48,24 @@ slow:
                 "Lift1"
             page:
                 "teekueche_map.html"
+            intermediate: 
+                1: "WayPoint76"
+            resting_tag:
+                "Teekueche"
         6:
             resting:
                 "Frisoer"
             asking:
                 "WayPoint26"
             intermediate:
-                1: "WayPoint48"
-                2: "WayPoint83"
-                3: "WayPoint84"
+                1: "WayPoint34"
+                2: "WayPoint48"
+                3: "WayPoint83"
+                4: "WayPoint84"
             page:
                 "frisoer_map.html"
+            resting_tag:
+                "Frisoer"
         7:
             resting:
                 "Ambulanz"
@@ -60,6 +75,8 @@ slow:
                 - "WayPoint4"
             page:
                 "ambulanz_map.html"
+            resting_tag:
+                "Ambulanz"
         8:
             resting:
                 "WalkingGruppeStart"
@@ -67,6 +84,8 @@ slow:
                 "WalkingGruppeStart"
             intermediate:
                 1: "WayPoint88"
+            resting_tag:
+                "Start"
 fast:
     speed: 0.7
     waypoints:
@@ -75,6 +94,8 @@ fast:
                 "WalkingGruppeStart"
             asking:
                 "WalkingGruppeStart"
+            resting_tag:
+                "Start"
         2: 
             resting:
                 "Ambulanz"
@@ -86,15 +107,19 @@ fast:
                 - "WayPoint4"
             page:
                 "ambulanz_map.html"
+            resting_tag:
+                "Ambulanz"
         3:
             resting:
                 "Frisoer"
             asking:
-                "WayPoint35"
+                "WayPoint26"
             exclude:
                 - "WayPoint35"
             page:
                 "frisoer_map.html"
+            resting_tag:
+                "Frisoer"
         4:
             resting:
                 "Kapelle"
@@ -102,6 +127,8 @@ fast:
                 "WayPoint14"
             page:
                 "kapelle_map.html"
+            resting_tag:
+                "Kapelle"
         5:
             resting:
                 "Teekueche"
@@ -109,6 +136,8 @@ fast:
                 "Lift1"
             page:
                 "teekueche_map.html"
+            resting_tag:
+                "Teekueche"
         6:
             resting:
                 "Frisoer"
@@ -120,6 +149,8 @@ fast:
                 3: "WayPoint84"
             page:
                 "frisoer_map.html"
+            resting_tag:
+                "Frisoer"
         7:
             resting:
                 "Ambulanz"
@@ -129,6 +160,8 @@ fast:
                 - "WayPoint4"
             page:
                 "ambulanz_map.html"
+            resting_tag:
+                "Ambulanz"
         8:
             resting:
                 "WalkingGruppeStart"
@@ -136,3 +169,5 @@ fast:
                 "WalkingGruppeStart"
             intermediate:
                 1: "WayPoint88"
+            resting_tag:
+                "Start"

@@ -82,6 +82,15 @@ p {font-size:200%}
 .rast-button {
   background: url('img/button_rast.png') left center / 100% no-repeat;
 }
+.rast-button-left {
+  background: url('img/button_rast_left.png') left center / 100% no-repeat;
+}
+.rast-button-right {
+  background: url('img/button_rast_right.png') left center / 100% no-repeat;
+}
+.ende-button {
+  background: url('img/button_ende.png') left center / 100% no-repeat;
+}
 .sitting-button {
   background: url('img/sitting_person.png') left center / 100% no-repeat;
 }

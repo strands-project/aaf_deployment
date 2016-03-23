@@ -95,7 +95,7 @@ class Guiding(smach.State):
         if self.preempt_requested() and not self.card:
             return 'killall'
         elif self.preempt_requested() and self.card:
-            userdata.waypoints.reverse()
+#            userdata.waypoints.reverse()
             return 'key_card'
         else:
             if state == GoalStatus.SUCCEEDED and not goal.waypoint == last_waypoint:

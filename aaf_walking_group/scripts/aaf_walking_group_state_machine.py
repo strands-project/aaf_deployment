@@ -142,7 +142,7 @@ class WalkingGroupStateMachine(object):
         http_root = roslib.packages.get_pkg_dir('aaf_walking_group') + '/www'
         strands_webserver.client_utils.set_http_root(http_root)
 
-        self.ptu.turnPTU(-180, 10)
+        self.ptu.turnPTU(-180, 15)
         dyn_param = {
             'timeout': 0.0,
             'gaze_type': 1,
