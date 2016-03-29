@@ -2,15 +2,19 @@
     <arg name="schedule_directory" default="/home/strands/infremen"/>
     <arg name="collection_name" default="AAFBetaTests"/>
     <arg name="language" default="DE"/>
+    <arg name="tasks_config_file" default="$(find info_task)/cfg/tasks.yaml" />
 
     <!-- This will be inside .ros unless provided with full path -->
 
-    <node pkg="info_task" type="info_task_server.py" name="info_task_server" output="screen"/>
-    <node pkg="infremen" type="infremen" name="infremen" output="screen">
+    <node pkg="info_task" type="start_stop_info_terminal.py" name="start_stop_info_terminal" output="screen" respawn="true">
+        <param name="config_file" value="$(arg tasks_config_file)" />
+    </node>
+    <node pkg="info_task" type="info_task_server.py" name="info_task_server" output="screen" respawn="true"/>
+    <node pkg="infremen" type="infremen" name="infremen" output="screen" respawn="true">
 		<param name="scheduleDirectory" value="$(arg schedule_directory)" />
 		<param name="collectionName" value="$(arg collection_name)" />
     </node>
-    <node pkg="info_terminal_gui" type="info_terminal.py" name="info_terminal_gui" output="screen">
+    <node pkg="info_terminal_gui" type="info_terminal.py" name="info_terminal_gui" output="screen" respawn="true">
         <param name="language" value="$(arg language)" type="string" />
     </node>
 
