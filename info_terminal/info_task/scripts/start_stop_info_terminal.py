@@ -42,7 +42,7 @@ class Server(AbstractTaskServer):
             rospy.logerr(e)
             rospy.logwarn("Retrying dynamic reconfigure for infremen")
             rospy.sleep(1.)
-            if not rospy.is_shutdown():
+            if not rospy.is_shutdown() and not self.server.is_preempt_requested():
                 self.update_configureation(client, parameters)
 
     def execute(self, goal):
