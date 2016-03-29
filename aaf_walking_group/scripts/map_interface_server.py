@@ -44,8 +44,8 @@ class MapInterfaceServer(object):
         self._as.set_preempted()
 
     def button(self, req):
-        self._result.chosen_point = str(req.identifier)
-        rospy.loginfo("Selected '%s' via map interface."%self._result)
+        identifier = -1 if req.identifier == "KILL" else req.identifier
+        self._result.chosen_point = str(int(identifier)-1)
         self._as.set_succeeded(self._result)
         return ButtonResponse()
 

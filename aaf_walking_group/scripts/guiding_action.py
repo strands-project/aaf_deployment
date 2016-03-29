@@ -130,9 +130,8 @@ class GuidingServer():
 
     def preempt_callback(self):
         rospy.logwarn("Guiding action preempt requested")
-        self.client.cancel_all_goals()
         self.empty_client.cancel_all_goals()
-
+        self.client.cancel_all_goals()
 
     def _on_node_shutdown(self):
         self.client.cancel_all_goals()
@@ -144,7 +143,8 @@ class GuidingServer():
                 rospy.loginfo("Therapist is close enough. Show continue button")
                 self.empty_client.send_goal_and_wait(EmptyActionGoal())
                 try:
-
+                    if self.server.is_preempt_requested():
+                        return
                     self.client.send_goal(self.navgoal)
                     self.pause = 0
                     s = rospy.ServiceProxy('/sound_player_server/sound_player_service', PlaySoundService)

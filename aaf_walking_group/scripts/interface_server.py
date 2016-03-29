@@ -94,17 +94,17 @@ class InterfaceServer(object):
                 self._as.set_preempted()
             else:
                 self.request_name = ''
-                result.chosen_point = self.show_map(goal)
-                result.idx = -1
+                result.chosen_point = ''
+                result.idx = self.show_map(goal)
                 rospy.loginfo(result)
-                if result.chosen_point == "KILL":
+                if result.idx < 0:
 #                    self.request_name = ''
                     continue
                 self._as.set_succeeded(result)
 
     def show_map(self, goal):
         self.client.send_goal_and_wait(MapInterfaceGoal())
-        return self.client.get_result().chosen_point
+        return int(self.client.get_result().chosen_point)
 
     def preemptCallback(self):
         rospy.logwarn("Aborting the goal...")

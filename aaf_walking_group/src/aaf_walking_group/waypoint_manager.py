@@ -3,7 +3,6 @@
 
 import rospy
 from std_msgs.msg import String
-from strands_navigation_msgs.srv import GetTaggedNodes
 from strands_navigation_msgs.msg import TopologicalMap
 from topological_navigation.route_search import TopologicalRouteSearch
 
@@ -16,6 +15,7 @@ class WaypointManager():
     ASKING = "asking"
     EXCLUDE = "exclude"
     PAGE = "page"
+    RESTING_TAG = "resting_tag"
 
     def __init__(self, waypoints):
         rospy.loginfo("Waiting for topo map")
@@ -28,22 +28,6 @@ class WaypointManager():
         self.goal_waypoint_idx = 0
         self.current_waypoint_index = 0
         self.route = {"route": [], "idx": 0}
-        rospy.Subscriber("/closest_node", String, self.cb)
-
-    def cb(self, msg):
-        try:
-            s = rospy.ServiceProxy("/topological_localisation/get_nodes_with_tag", GetTaggedNodes)
-            s.wait_for_service()
-            nodes = s(self.__resting_node_tag).nodes
-            if self.get_waypoint(self.current_waypoint_index) not in nodes[:2]:
-                try:
-                    self.current_waypoint_index = self.waypoint_names[self.current_waypoint_index:].index(nodes[0]) + len(self.waypoint_names[:self.current_waypoint_index])
-                except ValueError:
-                    rospy.logwarn("No change in node")
-        except (rospy.ServiceException, rospy.ROSInterruptException) as e:
-            rospy.logwarn(e)
-        print "Current waypoint and index:", self.current_waypoint_index, self.get_waypoint(self.current_waypoint_index)
-
 
     def set_index(self, i):
         self.goal_waypoint_idx = i
@@ -59,6 +43,9 @@ class WaypointManager():
 
     def get_current_waypoint(self):
         return self.get_waypoint(self.goal_waypoint_idx)
+
+    def get_current_resting_tag(self):
+        return self.get_current_waypoint()[self.RESTING_TAG]
 
     def get_page(self):
         return self.get_current_waypoint()[self.PAGE]
@@ -100,9 +87,9 @@ class WaypointManager():
             r = []
         return r
 
-    def get_all_intermediate_waypoints(self, idx):
+    def get_all_intermediate_waypoints(self):
         res = []
-        for i in range(idx+1,self.get_index()+1):
+        for i in range(self.get_index()+1):
             try:
                 e = self.get_waypoint(i)[self.EXCLUDE]
             except KeyError:
@@ -112,8 +99,6 @@ class WaypointManager():
                 r = [w for u,w in sorted(self.get_waypoint(i)[self.INTERMEDIATE].items(),key=lambda to_int: int(to_int[0])) if w not in e]
             except KeyError:
                 r = []
-            if self.get_waypoint(i)[self.ASKING] not in e:
-                r.append(self.get_waypoint(i)[self.ASKING])
 
             res.extend(r)
 
@@ -123,8 +108,7 @@ class WaypointManager():
         return res
 
     def create_route(self):
-        idx = self.current_waypoint_index
-        r = [x for x in self.get_all_intermediate_waypoints(idx)]
+        r = self.get_all_intermediate_waypoints()
         rospy.loginfo("Pruning route")
         current_node = rospy.wait_for_message("/closest_node", String).data
         while not rospy.is_shutdown() and r[:-1]:
