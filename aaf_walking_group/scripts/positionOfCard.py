@@ -26,7 +26,7 @@ class generate_QSR:
 
         if position != []:
             distance = np.sqrt((position.pose.position.x)**2 + (position.pose.position.y)**2 + (position.pose.position.z)**2)
-            result = 'far' if distance > 2 else 'near'
+            result = 'far' if distance > 4 else 'near'
             rospy.logdebug("the card is %s" %result)
 
         # Publish qsr
