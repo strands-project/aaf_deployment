@@ -15,8 +15,7 @@ slow:
                 "WayPoint4"
             intermediate: 
                 1: "WayPoint88"
-            exclude:
-                - "WayPoint4"
+                2: "WayPoint4"
             page:
                 "ambulanz_map.html"
             resting_tag:
@@ -26,8 +25,6 @@ slow:
                 "Frisoer"
             asking:
                 "WayPoint26"
-            exclude:
-                - "WayPoint35"
             page:
                 "frisoer_map.html"
             resting_tag:
@@ -62,6 +59,7 @@ slow:
                 2: "WayPoint48"
                 3: "WayPoint83"
                 4: "WayPoint84"
+                5: "WayPoint85"
             page:
                 "frisoer_map.html"
             resting_tag:
@@ -71,8 +69,8 @@ slow:
                 "Ambulanz"
             asking:
                 "WayPoint4"
-            exclude:
-                - "WayPoint4"
+            intermediate: 
+                1: "WayPoint4"
             page:
                 "ambulanz_map.html"
             resting_tag:
