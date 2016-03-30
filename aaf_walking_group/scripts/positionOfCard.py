@@ -15,7 +15,7 @@ class generate_QSR:
     def __init__(self):
         '''Initialize ros publisher, ros subscriber'''
         # topic where we publish
-        self.qsr_pub = rospy.Publisher("/socialCardReader/QSR_generator", String, queue_size=10)
+        self.qsr_pub = rospy.Publisher("/socialCardReader/QSR_generator", String, queue_size=1)
         # subscribed Topic
         self.Subscriber = rospy.Subscriber("/socialCardReader/cardposition", PoseStamped, self.callback,  queue_size = 1)
         rospy.logdebug("subscribed to /socialCardReader/cardposition")

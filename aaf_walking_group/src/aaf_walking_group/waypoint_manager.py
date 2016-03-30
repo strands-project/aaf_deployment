@@ -27,7 +27,29 @@ class WaypointManager():
         self.waypoint_names = [w[self.RESTING] for w in self.waypoints]
         self.goal_waypoint_idx = 0
         self.current_waypoint_index = 0
-        self.route = {"route": [], "idx": 0}
+        self.route = {"route": [], "idx": 0, "topo_route": []}
+        self.last_node = ''
+        self.current_node = ''
+
+        rospy.Subscriber("/current_node", String, self.node_cb)
+
+    def node_cb(self, msg):
+        if msg.data == 'none': return
+        print msg.data, self.route["topo_route"]
+        if msg.data not in self.route["topo_route"]: return
+        if self.current_node != msg.data:
+            self.last_node = self.current_node
+            self.current_node = msg.data
+        print self.last_node, self.current_node
+
+    def contains(self, small, big):
+        for i in xrange(len(big)-len(small)+1):
+            for j in xrange(len(small)):
+                if big[i+j] != small[j]:
+                    break
+            else:
+                return i, i+len(small)
+        raise ValueError("List not contained")
 
     def set_index(self, i):
         self.goal_waypoint_idx = i
@@ -87,9 +109,10 @@ class WaypointManager():
             r = []
         return r
 
-    def get_all_intermediate_waypoints(self):
+    def get_all_intermediate_waypoints(self, idx=None):
+        idx = self.get_index()+1 if idx == None else idx
         res = []
-        for i in range(self.get_index()+1):
+        for i in range(idx):
             try:
                 e = self.get_waypoint(i)[self.EXCLUDE]
             except KeyError:
@@ -111,7 +134,9 @@ class WaypointManager():
         r = self.get_all_intermediate_waypoints()
         rospy.loginfo("Pruning route")
         current_node = rospy.wait_for_message("/closest_node", String).data
+
         while not rospy.is_shutdown() and r[:-1]:
+            rospy.loginfo("Testing route for doubling back")
             rospy.loginfo("Getting route from %s to %s via %s" % (current_node, r[-1], str(r[:-1])))
             route = self.rsearch.search_route(current_node, r[0]).source
             try:
@@ -125,8 +150,35 @@ class WaypointManager():
             else:
                 rospy.loginfo("Found no duplicates, route is good!")
                 break
+
+        while not rospy.is_shutdown() and r[:-1]:
+            rospy.loginfo("Testing route for already completed parts")
+            rospy.loginfo("Getting route from %s to %s via %s" % (current_node, r[-1], str(r[:-1])))
+            route = []
+            for r1, r2 in zip(r[:-1],r[1:]):
+                route.extend(self.rsearch.search_route(r1, r2).source)
+            route_from_robot = [self.last_node, self.current_node]
+            print "Robot route:", route_from_robot
+            rospy.loginfo("Found route %s" %str(route))
+            try:
+                self.contains(route_from_robot, route)
+            except ValueError:
+                rospy.loginfo("Found no completed parts, route is good!")
+                break
+            else:
+                rospy.loginfo("Found already completed parts, pruning first node")
+                r = r[1:]
         idx = 0 if not self.route["route"] == r else self.route["idx"]
-        self.route = {"route": r, "idx": idx}
+        route = []
+        tmp = [current_node]
+        tmp.extend(r)
+        print tmp
+        for r1, r2 in zip(tmp[:-1],tmp[1:]):
+            print r1, r2
+            route.extend(self.rsearch.search_route(r1, r2).source)
+            print route
+        if route[-1] != r[-1]: route.append(r[-1])
+        self.route = {"route": r, "idx": idx, "topo_route": route}
 
     def get_route_to_current_waypoint(self):
         return self.route
