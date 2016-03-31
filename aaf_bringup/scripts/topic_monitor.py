@@ -34,7 +34,7 @@ class CheckScheduler(object):
                 rospy.wait_for_message(self.topic, self.ttype, timeout=10.)
             except rospy.ROSException:
                 if self.ok:
-                    rospy.logerr("/current_schedule is not published")
+                    rospy.logerr("%s is not published" % self.topic)
                     self.message.text = self.text % str(time.asctime(time.localtime(time.time())))
 #                    print self.message
                     self.client.send_goal(self.message)
