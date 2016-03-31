@@ -24,7 +24,7 @@ class CheckScheduler(object):
         rospy.loginfo("... done")
         self.message = SendEmailGoal()
         self.message.to_address = "henry.strands@hanheide.net"
-        self.message.subject = "Scheduler stopped working"
+        self.message.subject = "%s stopped working" % self.topic
         self.text = "The topic '"+self.topic+"' is not published any more. Last published at %s."
         rospy.loginfo("... all done")
 
