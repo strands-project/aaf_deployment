@@ -156,13 +156,18 @@ class Events(object):
         news = self.fb.get()
         #print news
         events = []
-        items = news['data']
-        for n in items:
-            if 'message' in n:
-                dt = parse(n['created_time'])
-                ds = dt.strftime('%d.%m.%Y')
-                events.append("<h3>" + ds + "</h3><h4>"+n['message']+"</h4>")
-        return events
+	try:
+            items = news['data']
+        except KeyError as e:
+            rospy.logerr(e)
+        else:
+            for n in items:
+                if 'message' in n:
+                    dt = parse(n['created_time'])
+                    ds = dt.strftime('%d.%m.%Y')
+                    events.append("<h3>" + ds + "</h3><h4>"+n['message']+"</h4>")
+        finally:
+            return events
 
     def GET(self):
         app.publish_feedback(Events.id)
