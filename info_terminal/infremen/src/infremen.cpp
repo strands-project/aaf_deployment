@@ -43,7 +43,7 @@ string scheduleDirectory;
 
 //runtine parameters
 float explorationRatio = 0.5;
-int8_t   minimalBatteryLevel = 80;
+int8_t   minimalBatteryLevel = 60;
 int32_t   minimalBatteryLevelTime = 0;
 int interactionTimeout = 30;
 int maxTaskNumber = 5;
