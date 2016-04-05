@@ -204,6 +204,7 @@ class WalkingGroupStateMachine(object):
                 transitions={
                     'move_to_point': 'GUIDING',
                     'aborted': 'ENTERTAIN',
+                    'select_chair': 'RESTING_CHAIR',
                     'killall': 'preempted'
                 },
                 remapping={'waypoints' : 'waypoints', 'play_music' : 'play_music'}

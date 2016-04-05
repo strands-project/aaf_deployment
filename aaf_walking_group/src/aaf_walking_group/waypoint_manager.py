@@ -30,6 +30,7 @@ class WaypointManager():
         self.route = {"route": [], "idx": 0, "topo_route": []}
         self.last_node = ''
         self.current_node = ''
+        self.last_page = None
 
         rospy.Subscriber("/current_node", String, self.node_cb)
 
@@ -70,7 +71,7 @@ class WaypointManager():
         return self.get_current_waypoint()[self.RESTING_TAG]
 
     def get_page(self):
-        return self.get_current_waypoint()[self.PAGE]
+        return self.get_current_waypoint()[self.PAGE] if self.last_page == None else self.last_page
 
     def get_next_waypoint(self):
         return self.get_waypoint(self.goal_waypoint_idx+1)
