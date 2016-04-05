@@ -14,7 +14,7 @@ class GuideInterface(smach.State):
     def __init__(self):
         smach.State.__init__(
             self,
-            outcomes=['move_to_point', 'aborted', 'killall'],
+            outcomes=['move_to_point', 'aborted', 'select_chair', 'killall'],
             input_keys=['waypoints', 'play_music'],
             output_keys=['waypoints', 'play_music']
         )
@@ -60,6 +60,7 @@ class GuideInterface(smach.State):
         goal.possible_points = userdata.waypoints.get_resting_waypoints()
         goal.next_point = next_waypoint
         goal.idx = userdata.waypoints.get_index()
+        goal.show_select = userdata.waypoints.last_page != None
         rospy.loginfo("Sending a goal to interface server...")
         self._client.send_goal_and_wait(goal)
         state = self._client.get_state()
@@ -67,11 +68,15 @@ class GuideInterface(smach.State):
         userdata.play_music = self.play_music
         if state == GoalStatus.SUCCEEDED:
             result = self._client.get_result()
-            rospy.loginfo("Got the chosen next waypoint.")
-            userdata.waypoints.set_index(result.idx)
-            userdata.waypoints.create_route()
-            rospy.loginfo("Following route: %s" % str(userdata.waypoints.get_route_to_current_waypoint()))
-            return 'move_to_point'
+            if result.command == "select":
+                return 'select_chair'
+            else:
+                rospy.loginfo("Got the chosen next waypoint.")
+                userdata.waypoints.set_index(result.idx)
+                userdata.waypoints.create_route()
+                userdata.waypoints.last_page = None
+                rospy.loginfo("Following route: %s" % str(userdata.waypoints.get_route_to_current_waypoint()))
+                return 'move_to_point'
         elif self._preempt_requested:
             return 'killall'
         else:

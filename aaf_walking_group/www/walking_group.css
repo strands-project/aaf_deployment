@@ -88,6 +88,9 @@ p {font-size:200%}
 .rast-button-right {
   background: url('img/button_rast_right.png') left center / 100% no-repeat;
 }
+.rast-button-select {
+  background: url('img/button_rast_select.png') left center / 100% no-repeat;
+}
 .ende-button {
   background: url('img/button_ende.png') left center / 100% no-repeat;
 }

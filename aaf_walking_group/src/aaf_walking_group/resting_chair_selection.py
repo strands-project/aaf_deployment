@@ -41,18 +41,20 @@ class SelectRestingChair(smach.State):
         self._result = ''
         sub_key = rospy.Subscriber("/socialCardReader/commands", String, callback=self.key_callback)
         rospy.loginfo("Showing chair selection interface.")
+        userdata.waypoints.last_page = userdata.waypoints.get_page()
         strands_webserver.client_utils.display_relative_page(self.display_no, userdata.waypoints.get_page())
         while self._result == '' and not rospy.is_shutdown() and not self.preempt_requested():
             rospy.sleep(1)
         sub_key.unregister()
         sub_key = None
-        userdata.waypoints.set_resting_chair(self.get_node(self._result))
 
         if self.preempt_requested():
             if self.card:
                 return 'key_card'
             else:
                 return 'killall'
+
+        userdata.waypoints.set_resting_chair(self.get_node(self._result))
         return 'continue'
 
     def key_callback(self, data):

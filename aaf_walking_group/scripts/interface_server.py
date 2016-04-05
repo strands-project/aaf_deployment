@@ -66,7 +66,10 @@ class InterfaceServer(object):
         while not rospy.is_shutdown() and self._as.is_active():
             self.request_name = ''
             result = InterfaceResult()
-            client_utils.display_relative_page(self.display_no, 'guiding.html')
+            if goal.show_select:
+                client_utils.display_relative_page(self.display_no, 'guiding_chair.html')
+            else:
+                client_utils.display_relative_page(self.display_no, 'guiding.html')
 
             while self.request_name == '' and not rospy.is_shutdown():
                 rospy.sleep(0.1)
@@ -92,6 +95,9 @@ class InterfaceServer(object):
                 except rospy.ServiceException as e:
                     rospy.logwarn("Service call failed: %s" % e)
                 self._as.set_preempted()
+            elif self.request_name == 'select':
+                result.command = self.request_name
+                self._as.set_succeeded(result)
             else:
                 self.request_name = ''
                 result.chosen_point = ''
