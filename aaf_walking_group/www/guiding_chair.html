@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252" http-equiv="content-type">
+    <link rel="stylesheet" type="text/css" href="walking_group.css">
+    <title></title>
+    <script src="roslibjs/include/EventEmitter2/eventemitter2.js"></script>
+    <script src="roslibjs/build/roslib.js"></script>    
+  </head>
+  <body style="width: 1000px; height: 750px; background-repeat:no-repeat;">
+  
+	<div id="logoDiv" style="position: absolute; width:616px; height: 300px; left: 272px; top: 50px;">
+  		<img id="imgElem" width="416" height="200" src="img/walkinggroup.png" />
+  		<audio id="soundplayer">
+  			// TODO: Song to play while walking
+  		</audio>
+	</div>
+  
+  	<!-- interaction buttons -->
+  	<div id="pauseDiv">
+      <button type="button" onmousedown="javascript:playPause()"
+            class="button-style music-off-button" style="position: absolute; left: 383px; top: 250px; width: 180px; height: 187px;"></button>
+	</div>
+	<div id="playDiv">
+      <button type="button" onmousedown="javascript:playPause()"
+            class="button-style music-on-button" style="position: absolute; left: 383px; top: 250px; width: 180px; height: 187px;"></button>
+	</div>
+	<button type="button" onmousedown="javascript:quieter()"
+            class="button-style music-quieter" style="position: absolute; left: 213px; top: 250px; width: 180px; height: 187px;"></button>
+   <button type="button" onmousedown="javascript:louder()"
+            class="button-style music-louder" style="position: absolute; left: 553px; top: 250px; width: 180px; height: 187px;"></button>
+
+	<button type="button" onmousedown="javascript:select()"
+            class="button-style rast-button-select" style="position: absolute; left: 254px; top: 428px; width: 220px; height: 187px;"></button>
+        
+     <div id="textLeft" style="position: absolute; left: 48px; top: 600px;
+        width: 200px; height: 100px; float: left; text-align: center;">
+        <textarea class="speechout" id="stop">Stuhlauswahl</textarea>
+    </div>
+	
+  	  <button type="button" onmousedown="javascript:waypointList()"
+            class="button-style map-button" style="position: absolute; left: 488px; top: 428px; width: 220px; height: 187px;"></button>
+        
+     <div id="textLeft" style="position: absolute; left: 285px; top: 600px;
+        width: 200px; height: 100px; float: left; text-align: center;">
+        <textarea class="speechout" id="stop">Karte aller Rastpunkte</textarea>
+    </div> 
+       
+    <button type="button" onmousedown="javascript:abort()"
+            class="button-style back-button" style="position: absolute; left: 16px; top: 428px; width: 220px; height: 187px;"></button>
+    
+    <div id="textMiddleLeft" style="position: absolute; left: -186px; top: 600px;
+        width: 200px; height: 100px; float: left; text-align: center;">
+        <textarea class="speechout" id="stop">Zur&uuml;ck zu: Unterhaltung</textarea>
+    </div>       
+
+    <!--<button type="button" onmousedown="javascript:killall()"
+            class="button-style abbruch-button" style="position: absolute; left: 488px; top: 428px; width: 220px; height: 187px;"></button>
+    
+     <div id="textMiddleRight" style="position: absolute; left: 283px; top: 600px;
+        width: 200px; height: 100px; float: left; text-align: center;">
+        <textarea class="speechout" id="stop">Abbruch der Tour</textarea>
+    </div>
+-->
+   <button type="button" onmousedown="javascript:nextWaypoint()"
+            class="button-style weiter-button" style="position: absolute; left: 724px; top: 428px; width: 220px; height: 187px;"></button>
+
+    <div id="textRight" style="position: absolute; left: 522px; top: 600px;
+        width: 200px; height: 100px; float: left; text-align: center;">
+        <textarea class="speechout" id="saytext">Gehe weiter zu: </textarea>
+    </div>
+  </body>
+  
+  <script>
+	var hostname = location.hostname;
+
+    var ros = new ROSLIB.Ros({url : 'ws://'+hostname+':9090'});
+    var soundPlayer = document.getElementById("soundplayer"); 
+    var playDiv = document.getElementById("playDiv"); 
+	 var pauseDiv = document.getElementById("pauseDiv");
+	 var playing = false;
+    showHideButtons();
+      
+
+	function waypointList() {
+      console.log('List Called');
+		var service_button = new ROSLIB.Service({ros : ros, name : '/interface_server/button', serviceType : 'strands_webserver/CallButton'}); 
+        var request_button = new ROSLIB.ServiceRequest({name: 'list'});  
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 
+	} 
+
+	function abort() {
+	   console.log('Unterhaltung Called');
+		var service_button = new ROSLIB.Service({ros : ros, name : '/interface_server/button', serviceType : 'strands_webserver/CallButton'}); 
+        var request_button = new ROSLIB.ServiceRequest({name: 'abort'});  
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 	
+    }
+
+    function select() {
+      console.log('Auswahl Called');
+		var service_button = new ROSLIB.Service({ros : ros, name : '/interface_server/button', serviceType : 'strands_webserver/CallButton'}); 
+        var request_button = new ROSLIB.ServiceRequest({name: 'select'});  
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 	
+    }
+
+	function nextWaypoint() {
+	   console.log('Weiter Called');
+		var service_button = new ROSLIB.Service({ros : ros, name : '/interface_server/button', serviceType : 'strands_webserver/CallButton'}); 
+        var request_button = new ROSLIB.ServiceRequest({name:'next'});  
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 	
+    }
+
+    var sayTopic = new ROSLIB.Topic({
+              ros         : ros,
+              name        : '/interface_server/next_waypoint',
+              messageType : 'std_msgs/String'
+    });
+    
+    function showHideButtons() {
+      	if (playing == false) {
+				playDiv.style.display = 'none';
+				pauseDiv.style.display = 'block';
+
+			} else {
+				playDiv.style.display = 'block';
+				pauseDiv.style.display = 'none';
+			}
+      }
+      
+      function playPause() { 
+			var service_button = new ROSLIB.Service({ros : ros, name : '/walking_group/guide_interface/toggle_music', serviceType : 'std_srvs/Empty'}); 
+        var request_button = new ROSLIB.ServiceRequest({});  
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 	
+		}
+		
+		function quieter() {
+      console.log('Quieter Called');
+		var service_button = new ROSLIB.Service({ros : ros, name : '/walking_group/guide_interface/volume_quieter', serviceType : 'strands_webserver/CallButton'}); 
+        var request_button = new ROSLIB.ServiceRequest({});  
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 
+	} 
+	
+	function louder() {
+      console.log('Louder Called');
+		var service_button = new ROSLIB.Service({ros : ros, name : '/walking_group/guide_interface/volume_louder', serviceType : 'strands_webserver/CallButton'}); 
+        var request_button = new ROSLIB.ServiceRequest({});  
+        service_button.callService(request_button, function(result) {console.log('Called service'); }); 
+	} 
+          
+    sayTopic.subscribe(function(message) {
+      // Formats the pose for outputting.
+      var say = message.data;
+    
+      document.getElementById("saytext").value="Gehe weiter zu: " + say;
+    });
+    
+    var musicTopic = new ROSLIB.Topic({
+              ros         : ros,
+              name        : '/walking_group_smach/play_music',
+              messageType : 'std_msgs/Bool'
+    });
+          
+    musicTopic.subscribe(function(message) {
+      // Formats the pose for outputting.
+      var music = message.data;
+    
+      playing = music;
+      showHideButtons();
+    });
+  </script>
+</html>
