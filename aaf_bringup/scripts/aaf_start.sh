@@ -84,7 +84,7 @@ tmux send-keys "cd /storage" C-m
 tmux send-keys "rosbag record --split --duration=1h /tf /scan /odom /amcl_pose /robot_pose /current_node /current_edge /map /topological_map /infoterminal/active_screen"
 
 tmux select-window -t $SESSION:17
-tmux send-keys "DISPLAY=:0 cvlc -vvv --no-audio screen:// --screen-fps 1 --sout '#transcode{vcodec=MJPG,vb=800}:standard{access=http,mux=mpjpeg,dst=:18223/}' --sout-http-mime='multipart/x-mixed-replace;boundary=--7b3cc56e5f51db803f790dad720ed50a'
+tmux send-keys "DISPLAY=:0 cvlc -vvv --no-audio screen:// --screen-fps 1 --sout '#transcode{vcodec=MJPG,vb=800}:standard{access=http,mux=mpjpeg,dst=:18223/}' --sout-http-mime='multipart/x-mixed-replace;boundary=--7b3cc56e5f51db803f790dad720ed50a'"
 
 # Set default window
 tmux select-window -t $SESSION:0
