@@ -34,28 +34,28 @@
       node: WayPoint3
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Ambulanz_WayPoint92
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint92
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Ambulanz_WayPoint93
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint93
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Ambulanz_WayPoint94
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint94
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Ambulanz_WayPoint95
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -228,7 +228,7 @@
       node: WayPoint86
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Eingang_WayPoint90
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -305,7 +305,7 @@
       node: WayPoint85
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Feuerloescher_Seminarraum
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -647,28 +647,28 @@
       node: WayPoint34
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Lift1_WayPoint107
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint107
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Lift1_WayPoint108
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint108
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Lift1_WayPoint109
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint109
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Lift1_WayPoint110
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -744,7 +744,7 @@
       node: WayPoint50
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Lift2_WayPoint111
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -817,7 +817,7 @@
       node: WayPoint80
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Lift3_WayPoint89
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -920,21 +920,21 @@
     - recording_white_list
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Seminarraum_Feuerloescher
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: Feuerloescher
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Seminarraum_WayPoint39
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint39
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Seminarraum_WayPoint85
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -996,7 +996,7 @@
       node: WayPoint2
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: Station_WayPoint91
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1160,7 +1160,7 @@
     - Frisoer
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint100_WayPoint26
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1211,7 +1211,7 @@
     - Frisoer
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint101_WayPoint26
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1269,7 +1269,7 @@
     - Frisoer
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint102_WayPoint26
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1327,7 +1327,7 @@
     - Frisoer
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint103_WayPoint26
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1385,7 +1385,7 @@
     - Frisoer
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint104_WayPoint26
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1443,14 +1443,14 @@
     - Kapelle
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint105_WayPoint14
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint14
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint105_WayPoint76
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1501,14 +1501,14 @@
     - Kapelle
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint106_WayPoint14
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint14
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint106_WayPoint76
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1559,14 +1559,14 @@
     - Teekueche
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint107_WayPoint34
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint34
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint107_Lift1
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1617,14 +1617,14 @@
     - Teekueche
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint108_Lift1
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: Lift1
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint108_WayPoint34
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1675,14 +1675,14 @@
     - Teekueche
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint109_WayPoint34
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint34
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint109_Lift1
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1786,14 +1786,14 @@
     - Teekueche
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint110_Lift1
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: Lift1
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint110_WayPoint34
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1840,14 +1840,14 @@
     pointset: aaf_deployment16
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint111_Lift2
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: Lift2
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint111_WayPoint7
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1896,14 +1896,14 @@
     - kapelle3
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint112_WayPoint14
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint14
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint112_WayPoint76
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1952,14 +1952,14 @@
     - kapelle4
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint113_WayPoint14
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint14
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint113_WayPoint76
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -2149,28 +2149,28 @@
       node: Kapelle
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint14_WayPoint105
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint105
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint14_WayPoint106
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint106
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint14_WayPoint112
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint112
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint14_WayPoint113
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -2232,28 +2232,28 @@
       node: WayPoint67
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint15_WayPoint96
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint96
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint15_WayPoint97
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint97
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint15_WayPoint98
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint98
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint15_WayPoint99
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -2382,7 +2382,7 @@
       node: Frisoer
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint17_WayPoint90
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -2559,7 +2559,7 @@
       node: WayPoint86
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint2_WayPoint91
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -2798,7 +2798,7 @@
       node: Frisoer
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint26_WayPoint90
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -2812,35 +2812,35 @@
       node: WayPoint50
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint26_WayPoint100
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint100
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint26_WayPoint101
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint101
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint26_WayPoint102
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint102
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint26_WayPoint103
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint103
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint26_WayPoint104
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -3297,28 +3297,28 @@
       node: Lift1
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint34_WayPoint107
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint107
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint34_WayPoint108
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint108
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint34_WayPoint109
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint109
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint34_WayPoint110
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -3381,7 +3381,7 @@
       node: Frisoer
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint35_WayPoint90
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -3551,7 +3551,7 @@
       node: WayPoint63
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint39_Seminarraum
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -3620,7 +3620,7 @@
       node: Ambulanz
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint4_WayPoint89
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -5697,7 +5697,7 @@
       node: WayPoint66
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint7_WayPoint111
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -5975,28 +5975,28 @@
       node: Kapelle
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint76_WayPoint105
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint105
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint76_WayPoint106
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint106
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint76_WayPoint112
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint112
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint76_WayPoint113
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -6052,7 +6052,7 @@
       node: WayPoint87
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint8_WayPoint91
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -6174,7 +6174,7 @@
       node: WayPoint86
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint81_WayPoint90
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -6408,7 +6408,7 @@
       node: WayPoint28
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint85_Seminarraum
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -6485,14 +6485,14 @@
       node: Eingang
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint86_WayPoint90
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint90
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint86_WayPoint91
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -6547,14 +6547,14 @@
       node: WayPoint8
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint87_WayPoint89
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint89
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint87_WayPoint91
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -6668,28 +6668,28 @@
     tag: []
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint89_Lift3
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: Lift3
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint89_WayPoint15
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint15
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint89_WayPoint4
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint4
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint89_WayPoint87
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -6811,42 +6811,42 @@
     - recording_white_list
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint90_WayPoint35
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint35
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint90_WayPoint17
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint17
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint90_Eingang
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: Eingang
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint90_WayPoint81
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint81
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint90_WayPoint26
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint26
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint90_WayPoint86
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -6894,35 +6894,35 @@
     - recording_white_list
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint91_WayPoint8
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint8
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint91_Station
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: Station
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint91_WayPoint2
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint2
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint91_WayPoint86
       inflation_radius: 0.0
       map_2d: aaf_winter
       node: WayPoint86
       recovery_behaviours_config: ''
       top_vel: 0.55
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint91_WayPoint87
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -6978,7 +6978,7 @@
     - Ambulanz
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint92_Ambulanz
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -7028,7 +7028,7 @@
     - Ambulanz
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint93_Ambulanz
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -7078,7 +7078,7 @@
     - Ambulanz
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint94_Ambulanz
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -7135,7 +7135,7 @@
     - Ambulanz
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint95_Ambulanz
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -7192,7 +7192,7 @@
     - Ambulanz
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint96_WayPoint15
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -7242,7 +7242,7 @@
     - Ambulanz
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint97_WayPoint15
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -7292,7 +7292,7 @@
     - Ambulanz
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint98_WayPoint15
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -7342,7 +7342,7 @@
     - Ambulanz
   node:
     edges:
-    - action: move_base
+    - action: human_aware_navigation
       edge_id: WayPoint99_WayPoint15
       inflation_radius: 0.0
       map_2d: aaf_winter
