@@ -21,6 +21,7 @@ add_action_files(
   FILES
   Empty.action
   StoreAndWait.action
+  RunNode.action
 )
 
 generate_messages(
@@ -41,6 +42,8 @@ catkin_package()
 
 install(PROGRAMS
   scripts/start_stop_logging.py
+  scripts/logging_script_server.py
+  scripts/run_aaf_logger.bash
   scripts/filter_rosout.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
