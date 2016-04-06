@@ -8,6 +8,8 @@ from aaf_logging.msg import EmptyAction, EmptyGoal
 from strands_executive_msgs.abstract_task_server import AbstractTaskServer
 import time
 import signal as sig
+import subprocess
+import os
 
 
 class Logger():
@@ -40,6 +42,11 @@ class Logger():
             rospy.loginfo("Waiting...")
             while not self.is_running() and not rospy.is_shutdown():
                 rospy.sleep(0.1)
+
+            command = "rosrun aaf_logging run_aaf_logger.bash"
+            self.p = subprocess.Popen(command, stdin=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
+            rospy.loginfo(self.p.pid)
+
             rospy.loginfo(" ... started")
 
     def stop_logging(self):
@@ -50,6 +57,9 @@ class Logger():
             rospy.loginfo(" ... stopping launch server")
             self.set_running(False)
             self.launch_client.cancel_goal()
+
+            rospy.loginfo(self.p.pid)
+            os.killpg(os.getpgid(self.p.pid), sig.SIGINT)
         rospy.loginfo(" ... preempted")
 
     def feedback_cb(self, feed):
@@ -122,4 +132,3 @@ if __name__ == "__main__":
     for i in signals:
         sig.signal(i, l.signal_handler)
     rospy.spin()
-

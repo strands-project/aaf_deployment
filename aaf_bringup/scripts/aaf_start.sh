@@ -19,7 +19,7 @@ tmux new-window -t $SESSION:11 -n 'bell_bot'
 tmux new-window -t $SESSION:12 -n 'walking_group'
 tmux new-window -t $SESSION:13 -n 'scheduler'
 tmux new-window -t $SESSION:14 -n 'control'
-tmux new-window -t $SESSION:15 -n 'logging_script'
+tmux new-window -t $SESSION:15 -n 'logging_server'
 tmux new-window -t $SESSION:16 -n 'pred_map_bags'
 tmux new-window -t $SESSION:17 -n 'screen_broadcast'
 
@@ -76,7 +76,7 @@ tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_deployment_control.launch"
 
 tmux select-window -t $SESSION:15
 tmux send-keys "ssh werner-left-cortex" C-m
-tmux send-keys "rosrun aaf_logging run_aaf_logger.bash"
+tmux send-keys "rosrun aaf_logging start_stop_logging.py"
 
 tmux select-window -t $SESSION:16
 tmux send-keys "ssh werner-left-cortex" C-m
