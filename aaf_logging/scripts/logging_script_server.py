@@ -45,12 +45,13 @@ class LoggingScriptServer(AbstractTaskServer):
             #    return
             self.running = False
 
-        elif goal.command == "stop" and self.running:
-            rospy.loginfo('now the logging should stop')
-            rospy.loginfo(self.p.pid)
-            os.killpg(os.getpgid(self.p.pid), signal.SIGINT)
-            rospy.loginfo("I'm done")
-            self.running = False
+        elif goal.command == "stop":
+            if self.running:
+                rospy.loginfo('now the logging should stop')
+                rospy.loginfo(self.p.pid)
+                os.killpg(os.getpgid(self.p.pid), signal.SIGINT)
+                rospy.loginfo("I'm done")
+                self.running = False
 
         else:
             rospy.loginfo('goal.command is not valid')
