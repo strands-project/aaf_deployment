@@ -22,13 +22,15 @@ class LoggingScriptServer(AbstractTaskServer):
             interruptible=True
         )
         rospy.loginfo('Server is up')
+        self.running = False
 
     def execute(self, goal):
         # decide whether recording should be started or stopped
-        if goal.command == "start":
+        if goal.command == "start" and not self.running:
             rospy.loginfo('now the logging should start')
             command = "rosrun aaf_logging run_aaf_logger.bash"
             self.p = subprocess.Popen(command, stdin=subprocess.PIPE, preexec_fn=os.setsid, shell=True)
+            self.running = True
             rospy.loginfo(self.p.pid)
 
             # check if the goal is preempted
@@ -41,12 +43,14 @@ class LoggingScriptServer(AbstractTaskServer):
             #if rospy.is_shutdown():
             #    self.server.set_preempted()
             #    return
+            self.running = False
 
-        elif goal.command == "stop":
+        elif goal.command == "stop" and self.running:
             rospy.loginfo('now the logging should stop')
             rospy.loginfo(self.p.pid)
             os.killpg(os.getpgid(self.p.pid), signal.SIGINT)
             rospy.loginfo("I'm done")
+            self.running = False
 
         else:
             rospy.loginfo('goal.command is not valid')
