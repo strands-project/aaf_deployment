@@ -34,7 +34,6 @@ class LoggingScriptServer(AbstractTaskServer):
             # check if the goal is preempted
             rate = rospy.Rate(1.0)
             while not rospy.is_shutdown() and not self.server.is_preempt_requested(): # and self.p.poll() is None:
-                rospy.loginfo('Sleeping....')
                 rate.sleep()
 
             rospy.loginfo('Logging is preempted')
