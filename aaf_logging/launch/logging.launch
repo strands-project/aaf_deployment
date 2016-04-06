@@ -16,8 +16,10 @@
 
     <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="false"/>
 
+    <!--
     <node pkg="aaf_logging" type="start_stop_logging.py" name="logging_server" output="screen" respawn="true"/>
-
+    -->
+    
     <node pkg="aaf_logging" type="store_logs_task.py" name="store_logs" output="screen" respawn="true">
 	<param name="database" value="message_store" />
 	<param name="collections" value="[message_store, nav_stats, monitored_nav_events, people_perception, scheduling_problems, task_events, upper_bodies]" />
