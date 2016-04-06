@@ -21,6 +21,7 @@ add_action_files(
   FILES
   Empty.action
   StoreAndWait.action
+  RunNode.action
 )
 
 generate_messages(
