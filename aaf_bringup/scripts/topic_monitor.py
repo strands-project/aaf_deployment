@@ -31,7 +31,7 @@ class CheckScheduler(object):
     def spin(self):
         while not rospy.is_shutdown():
             try:
-                rospy.wait_for_message(self.topic, self.ttype, timeout=10.)
+                rospy.wait_for_message(self.topic, self.ttype, timeout=60.)
             except rospy.ROSException:
                 if self.ok:
                     rospy.logerr("%s is not published" % self.topic)
