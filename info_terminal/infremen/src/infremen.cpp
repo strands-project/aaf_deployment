@@ -98,10 +98,10 @@ uint32_t getMidnightTime(uint32_t givenTime)
 //parameter reconfiguration
 void reconfigureCallback(infremen::infremenConfig &config, uint32_t level) 
 {
-    ROS_INFO("Reconfigure Request: %lf %d %d %d %d %d", config.explorationRatio, config.minimalBatteryLevel, config.batteryUndockLevel, config.interactionTimeout, config.maxTaskNumber, config.taskDuration);
+	ROS_INFO("Reconfigure Request: %lf %d %d %d %d %d", config.explorationRatio, config.minimalBatteryLevel, config.batteryUndockLevel, config.interactionTimeout, config.maxTaskNumber, config.taskDuration);
 	explorationRatio = config.explorationRatio;
 	minimalBatteryLevel = config.minimalBatteryLevel;
-    batteryUndockLevel = config.batteryUndockLevel;
+	batteryUndockLevel = config.batteryUndockLevel;
 	interactionTimeout = config.interactionTimeout;
 	maxTaskNumber = config.maxTaskNumber;
 	taskDuration = config.taskDuration;
@@ -116,12 +116,12 @@ void batteryCallBack(const scitos_msgs::BatteryState &msg)
 {
 	/*TODO learn from experience about energy consumption, plan ahead*/
 	ROS_DEBUG("Infremen: Battery level %i %i",msg.lifePercent,minimalBatteryLevel);
-    if (!forceCharging){
-        if (minimalBatteryLevel > msg.lifePercent) forceCharging = true;
-    }
-    else{
-        if (batteryUndockLevel < msg.lifePercent) forceCharging = false;
-    }
+	if (!forceCharging){
+		if (minimalBatteryLevel > msg.lifePercent) forceCharging = true;
+	}
+	else{
+		if (batteryUndockLevel < msg.lifePercent) forceCharging = false;
+	}
 }	
 
 /*get robot pose*/
