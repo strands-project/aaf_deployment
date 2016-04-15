@@ -30,7 +30,7 @@ class Server(AbstractTaskServer):
             task.start_node_id = self.location
         task.end_node_id = task.start_node_id
         if task.max_duration.secs == 0.0:
-            task.max_duration = task.end_before - task.start_after
+            task.max_duration.secs = 60 # Default execution time: 1min
         if task.priority == 0:
             task.priority = 3
         return task
