@@ -31,7 +31,7 @@ $def with (language, strings, datetime)
 
 <div class="row">
   <!-- left column -->
-  <div class="col-md-4">
+  <div class="col-md-3">
     <div class="row text-center">
       <a href="weather">
         <img src="static/weather-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
@@ -39,7 +39,7 @@ $def with (language, strings, datetime)
       </a>
     </div>
  
-  <div class="row">&nbsp;</div>
+    <div class="row">&nbsp;</div>
     <div class="row text-center">
       <a href="menu">
         <img src="static/food-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
@@ -49,7 +49,7 @@ $def with (language, strings, datetime)
   </div>
   
   <!-- central clock -->
-  <div class="col-md-4 text-center vcenter">
+  <div class="col-md-6 text-center vcenter">
     <canvas id="clockid" class="CoolClock:classic:150"></canvas>  
     
     <script type="text/javascript">startTime();</script>
@@ -59,11 +59,19 @@ $def with (language, strings, datetime)
         <h1><b>$datetime.date.strftime(datetime.date.today(),"%d. %B")</b></h1>
     $else:
         <h1><b>$datetime.date.strftime(datetime.date.today(),"%d %B")</b></h1>
-    <h1><b>$datetime.date.strftime(datetime.date.today(),"%Y")</b></h1>
+<!--     <h1><b>$datetime.date.strftime(datetime.date.today(),"%Y")</b></h1> -->
+    <div style="padding: 2px;" class="row text-center">
+    <div align="center" class="embed-responsive embed-responsive-16by9">
+      <video autoplay width="100%" loop="loop" class="embed-responsive-item">
+        <source src="static/strands-aaf-video.mp4" type="video/mp4">
+        <track label="German" kind="subtitles" srclang="de" src="static/video.vtt" default>
+      </video>
+    </div>
+    </div>
   </div>
   
   <!-- right column -->
-  <div class="col-md-4">
+  <div class="col-md-3">
     <div class="row text-center">
        <a href="events">
         <img src="static/events-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
