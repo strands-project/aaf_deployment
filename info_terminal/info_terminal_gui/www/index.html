@@ -24,6 +24,11 @@ $def with (language, strings, datetime)
       }
     return i;
     }
+    $('video').on('ended', function () {
+      this.load();
+      console.log('restart video')
+      this.play();
+    });
 </script>
 
 
@@ -63,7 +68,9 @@ $def with (language, strings, datetime)
     <div style="padding: 2px;" class="row text-center">
     <div align="center" class="embed-responsive embed-responsive-16by9">
       <video autoplay width="100%" loop="loop" class="embed-responsive-item">
-        <source src="static/strands-aaf-video.mp4" type="video/mp4">
+        <source src="static/strands-aaf-video.mp4">
+        <source src="static/strands-aaf-video.webm">
+        <source src="static/strands-aaf-video.ogv">
         <track label="German" kind="subtitles" srclang="de" src="static/video.vtt" default>
       </video>
     </div>
