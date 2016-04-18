@@ -4,8 +4,9 @@
 }
 
 ::cue {
-	font-size: 14px;
+	font-size: 30px;
 	color: white;
-	background-color: #88444444;
+	line-height: 150%;
+	background-color: #99444444;
 }
 
