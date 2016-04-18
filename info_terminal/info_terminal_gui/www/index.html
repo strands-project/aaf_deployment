@@ -9,9 +9,9 @@ $def with (language, strings, datetime)
     var s=today.getSeconds();
      
     // add a zero in front of numbers<10
-    m=checkTime(m);
-    s=checkTime(s);
-    document.getElementById('clock').innerHTML=h+":"+m+" " + "Uhr";
+    // m=checkTime(m);
+    // s=checkTime(s);
+    // document.getElementById('clock').innerHTML=h+":"+m+" " + "Uhr";
 
     t=setTimeout('startTime()',500);
     }
@@ -24,11 +24,15 @@ $def with (language, strings, datetime)
       }
     return i;
     }
-    $('video').on('ended', function () {
-      this.load();
-      console.log('restart video')
-      this.play();
+    $$(window).load(function(){ 
+        console.log('add video handler.') 
+        $$('video').on('ended', function () {
+          this.load();
+          console.log('restart video')
+          this.play();
+        });
     });
+
 </script>
 
 
@@ -67,9 +71,9 @@ $def with (language, strings, datetime)
 <!--     <h1><b>$datetime.date.strftime(datetime.date.today(),"%Y")</b></h1> -->
     <div style="padding: 2px;" class="row text-center">
     <div align="center" class="embed-responsive embed-responsive-16by9">
-      <video autoplay width="100%" loop="loop" class="embed-responsive-item">
-        <source src="static/strands-aaf-video.mp4">
+      <video autoplay width="100%" class="embed-responsive-item">
         <source src="static/strands-aaf-video.webm">
+        <source src="static/strands-aaf-video.mp4">
         <source src="static/strands-aaf-video.ogv">
         <track label="German" kind="subtitles" srclang="de" src="static/video.vtt" default>
       </video>
