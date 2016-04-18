@@ -9,9 +9,9 @@ $def with (language, strings, datetime)
     var s=today.getSeconds();
      
     // add a zero in front of numbers<10
-    m=checkTime(m);
-    s=checkTime(s);
-    document.getElementById('clock').innerHTML=h+":"+m+" " + "Uhr";
+    // m=checkTime(m);
+    // s=checkTime(s);
+    // document.getElementById('clock').innerHTML=h+":"+m+" " + "Uhr";
 
     t=setTimeout('startTime()',500);
     }
@@ -30,46 +30,36 @@ $def with (language, strings, datetime)
 <div class="container-fluid">
 
 <div class="row">
-  <!-- left column -->
+  <!-- first row -->
   <div class="col-md-4">
     <div class="row text-center">
       <a href="weather">
-        <img src="static/weather-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
+        <img src="static/weather-icon.png" class="img-thumbnail img-responsive" style="background-color: #eeeeff; border:5px solid black;max-height:300px"><br>
         <h1>$strings["weather information"]</h1>
       </a>
     </div>
- 
-  <div class="row">&nbsp;</div>
-    <div class="row text-center">
-      <a href="menu">
-        <img src="static/food-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
-        <h1>$strings["Caffateria Menu"]</h1>
-      </a>
-    </div>
   </div>
-  
-  <!-- central clock -->
   <div class="col-md-4 text-center vcenter">
     <canvas id="clockid" class="CoolClock:classic:150"></canvas>  
     
     <script type="text/javascript">startTime();</script>
     <br><br>
-    <h1><b>$datetime.date.strftime(datetime.date.today(),"%A")</b></h1>
+    <h1><b>$datetime.date.strftime(datetime.date.today(),"%A")
     $if language in ["DE", "DE_de", "de", "DE_at"]:
-        <h1><b>$datetime.date.strftime(datetime.date.today(),"%d. %B")</b></h1>
+        $datetime.date.strftime(datetime.date.today(),"%d. %B")</b></h1>
     $else:
-        <h1><b>$datetime.date.strftime(datetime.date.today(),"%d %B")</b></h1>
-    <h1><b>$datetime.date.strftime(datetime.date.today(),"%Y")</b></h1>
+        $datetime.date.strftime(datetime.date.today(),"%d %B")</b></h1>
+    <!-- <h1><b>$datetime.date.strftime(datetime.date.today(),"%Y")</b></h1> -->
   </div>
-  
-  <!-- right column -->
   <div class="col-md-4">
     <div class="row text-center">
        <a href="events">
-        <img src="static/events-icon.png" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
+        <img src="static/events-icon.png" class="img-thumbnail img-responsive" style="background-color: #eeeeff; border:5px solid black;max-height:300px"><br>
         <h1>$strings["coming events"] </h1>
       </a>
     </div>
+  </div>
+</div>
  
   <!--<div class="row">&nbsp;</div>-->
     <!--<div class="row text-center">-->
@@ -89,15 +79,33 @@ $def with (language, strings, datetime)
     <!--</div>-->
   <!--</div>-->
   
-  <div class="row">&nbsp;</div>
+<div class="row">
+  <div class="col-md-4">
     <div class="row text-center">
-       <a href="/photo_album/">
-        <img src="static/photos-icon.jpeg" class="img-thumbnail img-responsive" style="border:5px solid black;max-height:300px"><br>
-        <h1>$strings["view photo album"]</h1>
+      <a href="menu">
+        <img src="static/food-icon.png" class="img-thumbnail img-responsive" style="background-color: #eeeeff; border:5px solid black;max-height:300px"><br>
+        <h1>$strings["Caffateria Menu"]</h1>
       </a>
     </div>
   </div>
-  
+
+  <div class="col-md-4">
+    <div class="row text-center">
+      <a href="video">
+        <img src="static/info.png" class="img-thumbnail img-responsive" style="background-color: #eeeeff; border:5px solid black;max-height:300px"><br>
+        <h1>$strings["Info Video"]</h1>
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="row text-center">
+       <a href="/photo_album/">
+        <img src="static/photos-icon.jpeg" class="img-thumbnail img-responsive" style="background-color: #eeeeff; border:5px solid black;max-height:300px"><br>
+        <h1>$strings["view photo album"]</h1>
+      </a>
+    </div>
+  </div>  
 </div>
 
 
