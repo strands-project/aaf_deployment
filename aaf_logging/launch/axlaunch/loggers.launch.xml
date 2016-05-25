@@ -12,11 +12,11 @@
     <machine name="$(arg head_machine)" address="$(arg head_machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg head_user)" default="false"/>
     <machine name="$(arg usb_machine)" address="$(arg usb_machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg usb_user)" default="false"/>
 
-    <include file="$(find vision_people_logging)/launch/logging_ubd.launch">
+    <!-- include file="$(find vision_people_logging)/launch/logging_ubd.launch">
         <arg name="machine" value="$(arg head_machine)"/>
         <arg name="user" value="$(arg head_user)"/>
         <arg name="manager_topic" value="$(arg bool_stamped_publisher_topic)"/>
-    </include>
+    </include -->
 
     <include file="$(find bayes_people_tracker_logging)/launch/logging.launch">
         <arg name="machine" value="$(arg head_machine)"/>
