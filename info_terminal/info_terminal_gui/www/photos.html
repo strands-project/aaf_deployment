@@ -1,9 +1,11 @@
 $def with (strings, current_image, next_image, prev_image)
+
+$def title:photos
 <!-- Optimized for a resolution of 1024x720-->
 <center><h1>Photoalbum</h1></center>
 <div class="row text-center">
         <div class="col-md-2">
-            <a href="/photo_album/$prev_image">
+            <a href="/photos/$prev_image">
                     <img src="/static/prev-icon.png" class="img-thumbnail img-responsive"
                         style="border:5px solid black"><br>
                     <h3>$strings["previous photo"]</h3>
@@ -13,7 +15,7 @@ $def with (strings, current_image, next_image, prev_image)
             <img src="http://localhost:8027/get_media_by_name/$current_image" class="img-thumbnail img-responsive">
         </div>
 		<div class="col-md-2">
-			<a href="/photo_album/$next_image">
+			<a href="/photos/$next_image">
 				<img src="/static/next-icon.png" class="img-thumbnail img-responsive" 
 					style="border:5px solid black"><br>
 				<h3>$strings["next photo"]</h3>

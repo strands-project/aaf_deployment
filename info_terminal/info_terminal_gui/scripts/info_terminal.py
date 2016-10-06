@@ -63,7 +63,8 @@ class InfoTerminalGUI(web.application):
             '/weather', 'Weather',
             '/news', 'Events',
             '/go_away', 'GoAway',
-            '/photo_album/(.*)',  'PhotoAlbum',
+            '/photos/(.*)',  'PhotoAlbum',
+            '/photos',  'PhotoAlbum'
         )
         self.strings = TranslatedStrings(language)
         web.application.__init__(self, self.urls, globals())
@@ -198,7 +199,7 @@ class GoAway(object):
 class PhotoAlbum(object):
     photos = None
 
-    def GET(self, image_id):
+    def GET(self, image_id=""):
         if PhotoAlbum.photos is None or image_id == "":
             # Rescan the info-terminal photo album in the media server.
             print "Rescanning info-terminal photo set."
@@ -217,8 +218,7 @@ class PhotoAlbum(object):
         prev_image = image_id - 1
         if prev_image < 0:
             prev_image = count - 1
-        return render.photos(app.strings, PhotoAlbum.photos[current_image][0],
-                             next_image, prev_image)
+        return render.photos(app.strings, PhotoAlbum.photos[current_image][0], next_image, prev_image)
 
 # Give each URL a unique number so that we can feedback which screen is active
 # as a ROS message
