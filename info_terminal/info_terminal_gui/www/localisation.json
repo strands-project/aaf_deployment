@@ -1,12 +1,14 @@
 {
 "Hello": {"DE": "Hallo", "EN": "Hello"},
-"Caffateria Menu": {"DE":"Tagesmenüs","EN":"Caffateria Menu"},
+"Caffateria Menu": {"DE":"Tagesmenüs","EN":"Cafeteria Menu"},
 "hrs": {"DE":"Uhr","EN":"hrs"},
 "back to menu": {"DE": "Zurück", "EN":"Back to Menu"},
 "coming events": {"DE": "Neuigkeiten", "EN": "News"},
 "view photo album": {"DE": "Photos", "EN":"View Photo Album"},
 "weather information" : {"DE":"Wetter", "EN":"Weather Information"},
 "news" : {"DE":"Aktuelles", "EN":"News"},
+"weather" : {"DE":"Wetter", "EN":"Weather"},
+"menu" : {"DE":"Tagesmenüs", "EN":"Cafeteria Menu"},
 "current weather" : {"DE":"Aktuelles Wetter", "EN":"Current Weather"},
 "today" : {"DE":"Heute", "EN":"Today"},
 "tomorrow" : {"DE":"Morgen", "EN":"Tomorrow"},
@@ -18,5 +20,6 @@
 "next photo" : {"DE": "Nächstes Photo", "EN": "Next Photo"},
 "to SANA Menu": {"DE": "Zum SANA Tages-Menü"},
 "to Residents Menu": {"DE": "Zum Bewohner Tages-Menü"},
-"Info Video": {"DE": "Informationen zu Henry"}
+"Info Video": {"DE": "Informationen zu Henry"},
+"info": {"EN": "about Henry", "DE": "Ueber Henry"}
 }

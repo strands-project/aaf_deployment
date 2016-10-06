@@ -1,4 +1,4 @@
-$def with (page)
+$def with (page, vars=None)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,7 +6,7 @@ $def with (page)
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>INFO-TERMINAL</title>
+    <title>$page.title</title>
 
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
@@ -33,5 +33,51 @@ $def with (page)
   <body onload="CoolClock.findAndCreateClocks()">
     
     $:page
+
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+  <div class="container-fluid">
+<!--     <div class="navbar-header">
+      <a class="navbar-brand" href="#"></a>
+    </div>
+ -->    
+ 		<ul class="nav navbar-nav">
+ 		  $for item in ["menu", "weather", "news", "info"]:
+		      <li>
+		      		<a id="nav-$item" ontouch role="button" class="btn navbar-btn" href="/$item">
+				      	<div class="text-center">
+									<img src="static/$item-icon.png" class="img-thumbnail img-responsive"
+								 		 style="max-height:150px"><h2>$(translated_strings[item])</h2>
+								</div>
+					 		</a>
+		      </li>
+<!-- 
+      <li>
+      		<a id="nav-weather" ontouch role="button" class="btn navbar-btn" href="/weather">
+		      	<div class="text-center">
+							<img src="static/weather-icon.png" class="img-thumbnail img-responsive"
+						 		 style="max-height:150px"><h2>Weather</h2>
+						</div>
+			 		</a>
+      </li>
+
+      <li>
+      		<a id="nav-news" ontouch role="button" class="btn navbar-btn" href="/events">
+		      	<div class="text-center">
+							<img src="static/events-icon.png" class="img-thumbnail img-responsive"
+						 		 style="max-height:150px"><h2>News</h2>
+						</div>
+			 		</a>
+      </li>
+ -->
+    </ul>
+  </div>
+</nav>
+<script  type="text/javascript">
+$$(document).ready(function() {
+	console.log('onload');
+	$$('a#nav-$page.title').addClass("btn-success");
+})
+</script>
+
   </body>
 </html>
