@@ -3,33 +3,39 @@ $def with (weather, strings)
 $var title:weather
 
 
-<div style="font-size:28pt;padding:24px">
-    <div class="row text-center" style="font-weight:bold">
-      <div class="col-md-3">&nbsp;</div>
-        <div class="col-md-3">$strings["today"]</div>
-        <div class="col-md-3">$strings["tomorrow"]</div>
-        <div class="col-md-3">$strings["day after tomorrow"]</div>
-    </div>
-    <div class="row text-center">
-        <div class="col-md-3">&nbsp;</div>
-        <div class="col-md-3"><img width="180" height="180" src="$weather['data']['weather'][0]['hourly'][4]['weatherIconUrl'][0]['value']"></div>
-        <div class="col-md-3"><img width="180" height="180" src="$weather['data']['weather'][1]['hourly'][4]['weatherIconUrl'][0]['value']"></div>
-        <div class="col-md-3"><img width="180" height="180" src="$weather['data']['weather'][2]['hourly'][4]['weatherIconUrl'][0]['value']"></div>
-    </div>
-    <div class="row text-center">
-        <div class="col-md-3" style="font-weight:bold">min. Temp.</div>
-        <div class="col-md-3">$weather['data']['weather'][0]['mintempC']&deg; C</div>
-        <div class="col-md-3">$weather['data']['weather'][1]['mintempC']&deg; C</div>
-        <div class="col-md-3">$weather['data']['weather'][2]['mintempC']&deg; C</div>
-    </div>
-    <div class="row text-center">
-        <div class="col-md-3" style="font-weight:bold">max. Temp.</div>
-        <div class="col-md-3">$weather['data']['weather'][0]['maxtempC']&deg; C</div>
-        <div class="col-md-3">$weather['data']['weather'][1]['maxtempC']&deg; C</div>
-        <div class="col-md-3">$weather['data']['weather'][2]['maxtempC']&deg; C</div>
-    </div>
-</div>
+<div style="font-size:28pt">
+	  $if weather is None:
+		    <div class="row text-center">
+				  	<H1>$strings["noweather"]</H1>
+		  	</div>
 
+    $if weather is not None:
+		    <div class="row text-center" style="font-weight:bold">
+		      <div class="col-md-3">&nbsp;</div>
+		        <div class="col-md-3">$strings["today"]</div>
+		        <div class="col-md-3">$strings["tomorrow"]</div>
+		        <div class="col-md-3">$strings["day after tomorrow"]</div>
+		    </div>
+		    <div class="row text-center">
+		        <div class="col-md-3">&nbsp;</div>
+		        <div class="col-md-3"><img width="180" height="180" src="$weather['data']['weather'][0]['hourly'][4]['weatherIconUrl'][0]['value']"></div>
+		        <div class="col-md-3"><img width="180" height="180" src="$weather['data']['weather'][1]['hourly'][4]['weatherIconUrl'][0]['value']"></div>
+		        <div class="col-md-3"><img width="180" height="180" src="$weather['data']['weather'][2]['hourly'][4]['weatherIconUrl'][0]['value']"></div>
+		    </div>
+		    <div class="row text-center">
+		        <div class="col-md-3" style="font-weight:bold">min. Temp.</div>
+		        <div class="col-md-3">$weather['data']['weather'][0]['mintempC']&deg; C</div>
+		        <div class="col-md-3">$weather['data']['weather'][1]['mintempC']&deg; C</div>
+		        <div class="col-md-3">$weather['data']['weather'][2]['mintempC']&deg; C</div>
+		    </div>
+		    <div class="row text-center">
+		        <div class="col-md-3" style="font-weight:bold">max. Temp.</div>
+		        <div class="col-md-3">$weather['data']['weather'][0]['maxtempC']&deg; C</div>
+		        <div class="col-md-3">$weather['data']['weather'][1]['maxtempC']&deg; C</div>
+		        <div class="col-md-3">$weather['data']['weather'][2]['maxtempC']&deg; C</div>
+		    </div>
+</div>
+<!-- 
 <footer class="footer"  style="height:120px;position:absolute;bottom: 0;width: 100%">
   <div class="container" style="font-size:20pt">
       <a href="/">
@@ -40,3 +46,4 @@ $var title:weather
 </footer>
 
 
+ -->

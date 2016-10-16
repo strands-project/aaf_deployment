@@ -30,23 +30,34 @@ $def with (page, vars=None)
     <script type="text/javascript" src="/static/jquery.min.js"></script>
     
   </head>
-  <body onload="CoolClock.findAndCreateClocks()">
-    
-    $:page
+  <body onload="CoolClock.findAndCreateClocks()" style="max-width:1024px;">
+  
+  $:page
 
-<nav class="navbar navbar-inverse navbar-fixed-bottom">
+<nav class="navbar navbar-inverse navbar-fixed-bottom"
+		 style="max-height:25vh;">
+<!-- navbar-inverse -->
   <div class="container">
 <!--     <div class="navbar-header">
       <a class="navbar-brand" href="#"></a>
     </div>
  -->    
  		<ul class="nav navbar-nav">
- 		  $for item in ["menu", "weather", "news", "info", "photos"]:
+ 		  $for item in ["menu", "menures", "weather", "news", "info", "photos"]:
 		      <li>
-		      		<a style="max-width:180px;max-height:200px" id="nav-$item" ontouch role="button" class="btn navbar-btn" href="/$item">
-				      	<div class="text-center">
-									<img src="static/$item-icon.png" class="img-thumbnail img-responsive"
-								 		 style="max-height:120px"><h3>$(translated_strings[item])</h3>
+		      		<a style="
+		      						max-height:48px;
+		      						max-width:140px;
+		      						max-height:200px;
+		      				    padding-bottom: 0px;
+									    padding-top: 0px;
+									    margin-top: 0px;
+									    margin-bottom: 0px;
+		      						" id="nav-$item" ontouch role="button" class="btn navbar-btn" href="/$item">
+				      	<div >
+									<img src="/static/$item-icon.png" class="img-thumbnail img-responsive"
+								 		 style="max-height:72px">
+								 		 	<p style="line-height:1.5;font-size:18pt;white-space:normal">$(translated_strings[item])</p>
 								</div>
 					 		</a>
 		      </li>

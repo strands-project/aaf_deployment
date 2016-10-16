@@ -4,13 +4,15 @@ $var title:news
 
 <div class="row" style="padding:50px; text-align: justify;text-justify: inter-word;">
 
-    <div class="row" style="color:#00CC00;font-size:20pt; font-weight:bold">
-	    <div class="col-md-6">NEUES AM HdB</div>
-        <div class="col-md-6">WIEN AKTUELL</div>
+    <div class="row" style="font-weight:bold">
+	    <div class="col-md-6"><H1>NEUES AM HdB</H1></div>
+        <div class="col-md-6"><H1>WIEN AKTUELL</H1></div>
     </div>
-    <hr>
+    <hr/>
     <div class="row">
         <div class="col-md-6">
+        		$if not blog_events:
+        				<h3>$strings["nonews"]</h3>
             $for event in blog_events:
                 <div class="row">
                     <!--<div class="col-md-3">-->
@@ -22,6 +24,8 @@ $var title:news
                 </div>
         </div>
         <div class="col-md-6">
+        		$if not events:
+        				<h3>$strings["nonews"]</h3>
             $for event in events:
                 <div class="row">
                     <!--if event[0] is not None:-->

@@ -54,17 +54,18 @@ class TranslatedStrings(object):
 
 class InfoTerminalGUI(web.application):
     global translated_strings
+
     def __init__(self, language):
         self.urls = (
             '/', 'MasterPage',
-            '/menu',  'Menu',
-            '/info',  'Video',
-            '/menu-res',  'MenuRes',
+            '/menu', 'Menu',
+            '/info', 'Video',
+            '/menures', 'MenuRes',
             '/weather', 'Weather',
             '/news', 'Events',
             '/go_away', 'GoAway',
-            '/photos/(.*)',  'PhotoAlbum',
-            '/photos',  'PhotoAlbum'
+            '/photos/(.*)', 'PhotoAlbum',
+            '/photos', 'PhotoAlbum'
         )
         self.strings = TranslatedStrings(language)
         web.application.__init__(self, self.urls, globals())
@@ -101,14 +102,16 @@ class Menu(object):
         app.publish_feedback(Menu.id)
         return render.menu({}, app.strings)
 
+
 class MenuRes(object):
     def GET(self):
         app.publish_feedback(Menu.id)
-        return render.menu_res({}, app.strings)
+        return render.menures({}, app.strings)
+
 
 class Video(object):
     def GET(self):
-        app.publish_feedback(Menu.id)
+        app.publish_feedback(Video.id)
         return render.info(app.strings)
 
 
@@ -121,7 +124,7 @@ class Weather(object):
             else:
                 weather = json.loads(requests.get(WEATHER_URL).text)
         except:
-            return render.index(app.strings, datetime)
+            weather = None
         return render.weather(weather, app.strings)
 
 
@@ -181,13 +184,15 @@ class Events(object):
     def GET(self):
         app.publish_feedback(Events.id)
 
-        blog_events = self.get_blog_news()
-        
-        orf_news = self.get_orf_news()
+        ##blog_events = self.get_blog_news()
 
-        facebook_news = self.get_facebook_news()
+        try:
+            orf_news = self.get_orf_news()
+            facebook_news = self.get_facebook_news()
+            return render.events(facebook_news[:1], app.strings, orf_news[:1])
+        except:
+            return render.events([], app.strings, [])
 
-        return render.events(facebook_news[:3], app.strings, orf_news[:3])
 
 
 class GoAway(object):
@@ -203,22 +208,28 @@ class PhotoAlbum(object):
         if PhotoAlbum.photos is None or image_id == "":
             # Rescan the info-terminal photo album in the media server.
             print "Rescanning info-terminal photo set."
-            mc = MediaClient(rospy.get_param('mongodb_host'),
-                             rospy.get_param('mongodb_port'))
-            PhotoAlbum.photos = mc.get_set(set_type_name="Photo/info-terminal")
+            try:
+                mc = MediaClient(rospy.get_param('mongodb_host'),
+                                 rospy.get_param('mongodb_port'))
+                PhotoAlbum.photos = mc.get_set(set_type_name="Photo/info-terminal")
+            except:
+                PhotoAlbum.photos = None
         app.publish_feedback(PhotoAlbum.id)
-        if image_id == "":
-            image_id = 0
-        image_id = int(image_id)
-        current_image = image_id
-        count = len(PhotoAlbum.photos)
-        next_image = image_id + 1
-        if next_image == count:
-            next_image = 0
-        prev_image = image_id - 1
-        if prev_image < 0:
-            prev_image = count - 1
-        return render.photos(app.strings, PhotoAlbum.photos[current_image][0], next_image, prev_image)
+        if PhotoAlbum.photos is not None:
+            if image_id == "":
+                image_id = 0
+            image_id = int(image_id)
+            current_image = image_id
+            count = len(PhotoAlbum.photos)
+            next_image = image_id + 1
+            if next_image == count:
+                next_image = 0
+            prev_image = image_id - 1
+            if prev_image < 0:
+                prev_image = count - 1
+            return render.photos(app.strings, PhotoAlbum.photos[current_image][0], next_image, prev_image)
+        else:
+            return render.photos(app.strings, None, 0, 0)
 
 # Give each URL a unique number so that we can feedback which screen is active
 # as a ROS message

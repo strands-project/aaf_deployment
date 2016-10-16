@@ -4,11 +4,12 @@
 "hrs": {"DE":"Uhr","EN":"hrs"},
 "back to menu": {"DE": "Zurück", "EN":"Back to Menu"},
 "coming events": {"DE": "Neuigkeiten", "EN": "News"},
-"view photo album": {"DE": "Photos", "EN":"View Photo Album"},
+"photos": {"DE": "Fotoalbum", "EN":"View Photos"},
 "weather information" : {"DE":"Wetter", "EN":"Weather Information"},
 "news" : {"DE":"Aktuelles", "EN":"News"},
 "weather" : {"DE":"Wetter", "EN":"Weather"},
-"menu" : {"DE":"Tagesmenüs", "EN":"SANA Menu"},
+"menu" : {"DE":"SANA Menü", "EN":"SANA Menu"},
+"menures" : {"DE":"Bewohner Menü", "EN":"Residents Menu"},
 "current weather" : {"DE":"Aktuelles Wetter", "EN":"Current Weather"},
 "today" : {"DE":"Heute", "EN":"Today"},
 "tomorrow" : {"DE":"Morgen", "EN":"Tomorrow"},
@@ -21,5 +22,8 @@
 "to SANA Menu": {"DE": "Zum SANA Tages-Menü"},
 "to Residents Menu": {"DE": "Zum Bewohner Tages-Menü"},
 "Info Video": {"DE": "Informationen zu Henry"},
-"info": {"EN": "about Henry", "DE": "Ueber Henry"}
+"noweather": {"DE": "Wetter-Information leider aktuell nicht verfuegbar. Kommen Sie doch später nochmal vorbei.", "EN": "No Weather at the moment"},
+"nonews": {"DE": "Nachrichten sind aktuell leider nicht verfügbar. Kommen Sie doch später noch einmal vorbei.", "EN": "No News at the moment"},
+"noimage": {"DE": "Aktuell sind kein Bilder verfügbar. Kommen Sie doch später noch einmal vorbei.", "EN": "No Photos at the moment"},
+"info": {"EN": "about Henry", "DE": "Über Henry"}
 }
