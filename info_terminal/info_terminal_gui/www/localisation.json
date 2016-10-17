@@ -25,5 +25,6 @@
 "noweather": {"DE": "Wetter-Information leider aktuell nicht verfuegbar. Kommen Sie doch später nochmal vorbei.", "EN": "No Weather at the moment"},
 "nonews": {"DE": "Nachrichten sind aktuell leider nicht verfügbar. Kommen Sie doch später noch einmal vorbei.", "EN": "No News at the moment"},
 "noimage": {"DE": "Aktuell sind kein Bilder verfügbar. Kommen Sie doch später noch einmal vorbei.", "EN": "No Photos at the moment"},
+"loading": {"DE": "Information wird geladen.", "EN": "Loading..."},
 "info": {"EN": "about Henry", "DE": "Über Henry"}
 }

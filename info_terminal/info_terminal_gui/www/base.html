@@ -28,11 +28,13 @@ $def with (page, vars=None)
     <script type="text/javascript" src="/static/coolclock.js"></script> 
     <script type="text/javascript" src="/static/moreskins.js"></script>
     <script type="text/javascript" src="/static/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap.min.js"></script>
     
   </head>
   <body onload="CoolClock.findAndCreateClocks()" style="max-width:1024px;">
-  
-  $:page
+  <div id="page">
+  	$:page
+  </div>
 
 <nav class="navbar navbar-inverse navbar-fixed-bottom"
 		 style="max-height:25vh;">
@@ -53,7 +55,8 @@ $def with (page, vars=None)
 									    padding-top: 0px;
 									    margin-top: 0px;
 									    margin-bottom: 0px;
-		      						" id="nav-$item" ontouch role="button" class="btn navbar-btn" href="/$item">
+		      						" id="nav-$item" ontouch role="button" class="btn navbar-btn" 
+		      						href="/$item">
 				      	<div >
 									<img src="/static/$item-icon.png" class="img-thumbnail img-responsive"
 								 		 style="max-height:72px">
@@ -83,11 +86,35 @@ $def with (page, vars=None)
     </ul>
   </div>
 </nav>
+
+
+<div class="modal" id="loading" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <H1>$(translated_strings["loading"])</H1>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <script  type="text/javascript">
 $$(document).ready(function() {
 	console.log('onload');
+	$$('.navbar-btn').mousedown(function() {
+			$$(this).css('color', 'black');
+			$$(this).css('background-color', '#5cb85c');
+			$$("#page").html("");
+			$$("div#loading").modal("show");
+			//$$(this).click();
+			window.location.assign($$(this).attr('href'));
+	});
 	$$('a#nav-$page.title').addClass("btn-success");
 })
+
+
+
+
 </script>
 
   </body>
