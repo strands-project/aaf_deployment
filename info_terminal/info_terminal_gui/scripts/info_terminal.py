@@ -7,7 +7,7 @@ import os
 import json
 import requests
 import datetime
-from std_msgs.msg import Int32
+from std_msgs.msg import String
 import xmltodict
 import signal
 import locale
@@ -73,7 +73,9 @@ class InfoTerminalGUI(web.application):
         signal.signal(signal.SIGINT, self._signal_handler)
 
         # A ROS publisher for click-feedback
-        self._active_screen_pub = rospy.Publisher("/info_terminal/active_screen", Int32, queue_size=1)
+        self._active_screen_pub = rospy.Publisher(
+            "/info_terminal/active_screen", String,
+            latch=True, queue_size=1)
         self.string = None
         self.port = 8080
 
@@ -93,31 +95,37 @@ class InfoTerminalGUI(web.application):
 
 class MasterPage(object):
     def GET(self):
-        app.publish_feedback(MasterPage.id)
-        return render.index(language, app.strings, datetime)
+        app.publish_feedback("")
+        user_data = web.input(page="")
+        return render.index(language,
+                            app.strings,
+                            datetime,
+                            user_data.page)
 
 
 class Menu(object):
     def GET(self):
-        app.publish_feedback(Menu.id)
+        app.publish_feedback("menu")
         return render.menu({}, app.strings)
 
 
 class MenuRes(object):
     def GET(self):
-        app.publish_feedback(Menu.id)
+        app.publish_feedback("menures")
         return render.menures({}, app.strings)
 
 
 class Video(object):
     def GET(self):
+        app.publish_feedback("info")
+
         app.publish_feedback(Video.id)
         return render.info(app.strings)
 
 
 class Weather(object):
     def GET(self):
-        app.publish_feedback(Weather.id)
+        app.publish_feedback("weather")
         try:
             if language in ["DE", "DE_de", "de", "DE_at"]:
                 weather = json.loads(requests.get(WEATHER_URL_DE).text)
@@ -182,7 +190,7 @@ class Events(object):
             return events
 
     def GET(self):
-        app.publish_feedback(Events.id)
+        app.publish_feedback("news")
 
         ##blog_events = self.get_blog_news()
 
@@ -197,7 +205,7 @@ class Events(object):
 
 class GoAway(object):
     def GET(self):
-        app.publish_feedback(GoAway.id)
+        app.publish_feedback("go_away")
         return "ok"
 
 
@@ -214,7 +222,7 @@ class PhotoAlbum(object):
                 PhotoAlbum.photos = mc.get_set(set_type_name="Photo/info-terminal")
             except:
                 PhotoAlbum.photos = None
-        app.publish_feedback(PhotoAlbum.id)
+        app.publish_feedback("photos")
         if PhotoAlbum.photos is not None:
             if image_id == "":
                 image_id = 0
