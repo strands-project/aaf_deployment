@@ -25,6 +25,39 @@
 "noweather": {"DE": "Wetter-Information leider aktuell nicht verfuegbar. Kommen Sie doch später nochmal vorbei.", "EN": "No Weather at the moment"},
 "nonews": {"DE": "Nachrichten sind aktuell leider nicht verfügbar. Kommen Sie doch später noch einmal vorbei.", "EN": "No News at the moment"},
 "noimage": {"DE": "Aktuell sind kein Bilder verfügbar. Kommen Sie doch später noch einmal vorbei.", "EN": "No Photos at the moment"},
-"loading": {"DE": "Information wird geladen.", "EN": "Loading..."},
-"info": {"EN": "about Henry", "DE": "Über Henry"}
+"loading": {"DE": "Information wird geladen. Einen Moment bitte...", "EN": "Loading..."},
+"info": {"EN": "about Henry", "DE": "Über Henry"},
+"touch weather": {
+	"EN": "Please touch the screen here to display the weather.",
+	"DE": "Bitte berühren Sie einfach den Bildschirm, um sich das lokale Wetter anzeigen zu lassen."
+	},
+"touch news": {
+	"EN": "Please touch the screen here to display the news.",
+	"DE": "Bitte berühren Sie einfach den Bildschirm, um sich die neuesten Nachrichten anzeigen zu lassen."
+	},
+"touch menu": {
+	"EN": "Please touch the screen here to display the SANA menu.",
+	"DE": "Bitte berühren Sie einfach den Bildschirm, um sich das Tagesmenü im SANA Restaurant anzeigen zu lassen."
+	},
+"touch menures": {
+	"EN": "Please touch the screen here to display the residents menu.",
+	"DE": "Bitte berühren Sie einfach den Bildschirm, um sich das Tagesmenü für Bewohner anzeigen."
+	},
+"touch info": {
+	"EN": "Please touch the screen here to display the info.",
+	"DE": "Bitte berühren Sie einfach den Bildschirm, um sich ein Video über den Roboter 'Henry' im Haus der Barmherzigkeit anzuschauen."
+	},
+"touch photos": {
+	"EN": "Please touch the screen here to display the photos.",
+	"DE": "Bitte berühren Sie einfach den Bildschirm, um eine Foto-Gallerie anzuschauen."
+	},
+"touchalt": {
+	"EN": "Or choose a menu item below.",
+	"DE": "Oder wählen Sie alternativ eine Information-Seite aus dem Menü am unteren Bildschirmrand."
+	},
+"touch": {
+	"EN": "Please choose a menu item at the bottom of the screen.",
+	"DE": "Bitte wählen Sie eine Information-Seite aus dem Menü am unteren Bildschirmrand."
+	}
+
 }

@@ -97,6 +97,7 @@ class MasterPage(object):
     def GET(self):
         app.publish_feedback("")
         user_data = web.input(page="")
+        print user_data
         return render.index(language,
                             app.strings,
                             datetime,
@@ -118,8 +119,6 @@ class MenuRes(object):
 class Video(object):
     def GET(self):
         app.publish_feedback("info")
-
-        app.publish_feedback(Video.id)
         return render.info(app.strings)
 
 
