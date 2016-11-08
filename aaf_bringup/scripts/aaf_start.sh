@@ -69,7 +69,7 @@ tmux send-keys "DISPLAY=:0 roslaunch aaf_walking_group task_servers.launch"
 
 tmux select-window -t $SESSION:13
 tmux send-keys "ssh werner-right-cortex" C-m
-tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_routine.launch calendar:=henry.strands%40hanheide.net"
+tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_routine.launch new_scheduler:=true calendar:=henry.strands%40hanheide.net"
 
 tmux select-window -t $SESSION:14
 tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_deployment_control.launch"
