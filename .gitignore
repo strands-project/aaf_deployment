@@ -58,6 +58,5 @@ target/
 
 .spyder*
 *~
-*.mp4
 *.mp3
 .idea/

@@ -2,3 +2,11 @@
 .vcenter {
     vertical-align: middle;
 }
+
+::cue {
+	font-size: 30px;
+	color: white;
+	line-height: 150%;
+	background-color: #99444444;
+}
+
