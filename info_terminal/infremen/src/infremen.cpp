@@ -132,7 +132,7 @@ void poseCallback(const geometry_msgs::Pose::ConstPtr& msg)
 }
 
 /*detailed info on interation*/
-void interacted(const std_msgs::Int32::ConstPtr& msg)
+void interacted(const std_msgs::String::ConstPtr& msg)
 {
 	char testTime[1000];
 	ros::Time currentTime = ros::Time::now();
@@ -140,7 +140,7 @@ void interacted(const std_msgs::Int32::ConstPtr& msg)
 
 	time_t timeInfo = currentTime.sec;
 	strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
-	if (debug) ROS_INFO("Infremen: Screen %i clicked at %s close to %s on %s.",msg->data,nodeName.c_str(),closestNode.c_str(),testTime);
+	if (debug) ROS_INFO("Infremen: Screen %s clicked at %s close to %s on %s.",msg->data.c_str(),nodeName.c_str(),closestNode.c_str(),testTime);
 
 	infremen::AtomicInteraction lastInteraction;
 
@@ -502,7 +502,7 @@ void printAllInteractions(uint32_t lastTime)
 	{
 		time_t timeInfo = a->time;
 		strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
-		ROS_INFO("Screen switched to %d interaction at %s at waypoint %s(%s) - robot pose %f %f %f.",a->screen,testTime,a->infoWaypoint.c_str(),a->waypoint.c_str(),a->robotPoseX,a->robotPoseY,a->robotPosePhi);
+		ROS_INFO("Screen switched to %s interaction at %s at waypoint %s(%s) - robot pose %f %f %f.",a->screen.c_str(),testTime,a->infoWaypoint.c_str(),a->waypoint.c_str(),a->robotPoseX,a->robotPoseY,a->robotPosePhi);
 	}
 }
 
