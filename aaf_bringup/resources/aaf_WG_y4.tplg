@@ -1,7 +1,7 @@
 - meta:
     map: aaf_winter
     node: Ambulanz
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - walking_group_resting_point
   node:
@@ -34,10 +34,38 @@
       node: WayPoint3
       recovery_behaviours_config: ''
       top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: Ambulanz_WayPoint92
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint92
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: Ambulanz_WayPoint93
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint93
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: Ambulanz_WayPoint94
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint94
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: Ambulanz_WayPoint95
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint95
+      recovery_behaviours_config: ''
+      top_vel: 0.55
     localise_by_topic: ''
     map: aaf_winter
     name: Ambulanz
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.713456988335
@@ -79,7 +107,7 @@
       name: Cafeteria
     map: aaf_winter
     node: Cafeteria
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - InfoTerminal
     - recording_white_list
@@ -102,7 +130,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: Cafeteria
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.999297499657
@@ -135,7 +163,7 @@
 - meta:
     map: aaf_winter
     node: ChargingPoint
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
     - InfoTerminal
@@ -152,7 +180,7 @@
       "localise_anywhere": false}'
     map: aaf_winter
     name: ChargingPoint
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -181,7 +209,7 @@
 - meta:
     map: aaf_winter
     node: Eingang
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -210,7 +238,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: Eingang
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.957854390144
@@ -256,7 +284,7 @@
       name: Seminarraum 1
     map: aaf_winter
     node: Feuerloescher
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - Safety_Point
     - recording_white_list
@@ -280,7 +308,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: Feuerloescher
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.958506166935
@@ -313,7 +341,7 @@
 - meta:
     map: aaf_winter
     node: Frisoer
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - InfoTerminal
     - walking_group_resting_point
@@ -346,7 +374,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: Frisoer
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: -0.719454705715
@@ -379,7 +407,7 @@
 - meta:
     map: aaf_winter
     node: Kapelle
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - walking_group_resting_point
     - recording_white_list
@@ -404,7 +432,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: Kapelle
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.999976634979
@@ -442,7 +470,7 @@
       name: Kindergarten
     map: aaf_winter
     node: Kindergarten
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - InfoTerminal
   node:
@@ -457,7 +485,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: Kindergarten
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.822060406208
@@ -515,7 +543,7 @@
       name: Konferenzraum 2
     map: aaf_winter
     node: Konferenzraum
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -537,7 +565,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: Konferenzraum
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -579,7 +607,7 @@
       name: Lift zu Station St. Jakob, Stiege 1
     map: aaf_winter
     node: Lift1
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -612,10 +640,38 @@
       node: WayPoint34
       recovery_behaviours_config: ''
       top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: Lift1_WayPoint107
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint107
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: Lift1_WayPoint108
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint108
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: Lift1_WayPoint109
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint109
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: Lift1_WayPoint110
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint110
+      recovery_behaviours_config: ''
+      top_vel: 0.55
     localise_by_topic: ''
     map: aaf_winter
     name: Lift1
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -661,7 +717,7 @@
       name: Lift zu Station St. Aaron, Stiege 1
     map: aaf_winter
     node: Lift2
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -683,7 +739,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: Lift2
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.999961316586
@@ -729,7 +785,7 @@
       name: Lift zu Station St. Anton, Stiege 1
     map: aaf_winter
     node: Lift3
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -756,7 +812,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: Lift3
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.711562395096
@@ -789,7 +845,7 @@
 - meta:
     map: aaf_winter
     node: Rezeption
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -811,7 +867,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: Rezeption
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -844,7 +900,7 @@
 - meta:
     map: aaf_winter
     node: Seminarraum
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -873,7 +929,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: Seminarraum
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -906,7 +962,7 @@
 - meta:
     map: aaf_winter
     node: Station
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -935,7 +991,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: Station
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -968,7 +1024,7 @@
 - meta:
     map: aaf_winter
     node: Teekueche
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - walking_group_resting_point
     - recording_white_list
@@ -993,7 +1049,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: Teekueche
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.993691504002
@@ -1026,7 +1082,7 @@
 - meta:
     map: aaf_winter
     node: WalkingGruppeStart
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - walking_group_resting_point
     - Start
@@ -1049,7 +1105,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WalkingGruppeStart
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.999932587147
@@ -1081,8 +1137,581 @@
     yaw_goal_tolerance: 0.0
 - meta:
     map: aaf_winter
+    node: WayPoint100
+    pointset: aaf_WG_y4
+    tag:
+    - frisoer1
+    - recording_white_list
+    - Frisoer
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint100_WayPoint26
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint26
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint100", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint100
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.999910593033
+        x: 0.0
+        y: 0.0
+        z: -0.0133728720248
+      position:
+        x: -4.61157751083
+        y: -16.9360332489
+        z: -1.62134992931e-09
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint101
+    pointset: aaf_WG_y4
+    tag:
+    - frisoer2
+    - recording_white_list
+    - Frisoer
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint101_WayPoint26
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint26
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint101_WayPoint49
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint49
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint101", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint101
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.999678373337
+        x: 0.0
+        y: 0.0
+        z: -0.025360647589
+      position:
+        x: -4.60011196136
+        y: -17.5905990601
+        z: 7.13039446931e-10
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint102
+    pointset: aaf_WG_y4
+    tag:
+    - frisoer3
+    - recording_white_list
+    - Frisoer
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint102_WayPoint26
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint26
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint102_WayPoint49
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint49
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint102", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint102
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.999997019768
+        x: 0.0
+        y: 0.0
+        z: 0.00243337103166
+      position:
+        x: -4.58569192886
+        y: -18.109796524
+        z: 1.12341208558e-09
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint103
+    pointset: aaf_WG_y4
+    tag:
+    - frisoer4
+    - recording_white_list
+    - Frisoer
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint103_WayPoint26
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint26
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint103_WayPoint49
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint49
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint103", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint103
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.999824285507
+        x: 0.0
+        y: 0.0
+        z: -0.0187470149249
+      position:
+        x: -4.59448099136
+        y: -18.5921936035
+        z: 1.24809759749e-09
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint104
+    pointset: aaf_WG_y4
+    tag:
+    - frisoer5
+    - recording_white_list
+    - Frisoer
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint104_WayPoint26
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint26
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint104_WayPoint49
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint49
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint104", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint104
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.999583244324
+        x: 0.0
+        y: 0.0
+        z: -0.0288685075939
+      position:
+        x: -4.61562919617
+        y: -19.1158466339
+        z: 9.34525026808e-10
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint105
+    pointset: aaf_WG_y4
+    tag:
+    - kapelle1
+    - recording_white_list
+    - Kapelle
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint105_WayPoint14
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint14
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint105_WayPoint76
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint76
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint105", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint105
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.999993920326
+        x: 0.0
+        y: 0.0
+        z: 0.00349206943065
+      position:
+        x: -5.26819896698
+        y: -54.6070594788
+        z: -6.415083742e-11
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint106
+    pointset: aaf_WG_y4
+    tag:
+    - kapelle2
+    - recording_white_list
+    - Kapelle
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint106_WayPoint14
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint14
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint106_WayPoint76
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint76
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint106", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint106
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.999557077885
+        x: 0.0
+        y: 0.0
+        z: 0.0297602117062
+      position:
+        x: -5.26125669479
+        y: -55.7321014404
+        z: 1.63426244759e-10
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint107
+    pointset: aaf_WG_y4
+    tag:
+    - teekueche3
+    - recording_white_list
+    - Teekueche
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint107_WayPoint34
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint34
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint107_Lift1
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: Lift1
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint107", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint107
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.999992191792
+        x: 0.0
+        y: 0.0
+        z: 0.00395083799958
+      position:
+        x: -4.67158031464
+        y: -68.4808273315
+        z: 7.47031048132e-10
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint108
+    pointset: aaf_WG_y4
+    tag:
+    - teekueche2
+    - recording_white_list
+    - Teekueche
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint108_Lift1
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: Lift1
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint108_WayPoint34
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint34
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint108", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint108
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.999961733818
+        x: 1.52608259363e-09
+        y: 5.89130610962e-09
+        z: -0.00875139981508
+      position:
+        x: -4.66714334488
+        y: -67.9737930298
+        z: -5.20858731146e-10
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint109
+    pointset: aaf_WG_y4
+    tag:
+    - teekueche1
+    - recording_white_list
+    - Teekueche
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint109_WayPoint34
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint34
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint109_Lift1
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: Lift1
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint109", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint109
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.999435603619
+        x: 0.0
+        y: 0.0
+        z: 0.0335919708014
+      position:
+        x: -4.67396211624
+        y: -67.5310440063
+        z: -1.0113345994e-09
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
     node: WayPoint11
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -1102,7 +1731,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint11
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.724685370922
@@ -1134,8 +1763,66 @@
     yaw_goal_tolerance: 0.0
 - meta:
     map: aaf_winter
+    node: WayPoint110
+    pointset: aaf_WG_y4
+    tag:
+    - teekueche0
+    - recording_white_list
+    - Teekueche
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint110_Lift1
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: Lift1
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint110_WayPoint34
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint34
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint110", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint110
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.999995052814
+        x: 0.0
+        y: 0.0
+        z: 0.00315093016252
+      position:
+        x: -4.67321681976
+        y: -67.0228042603
+        z: 1.0118269278e-09
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
     node: WayPoint111
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - InfoTerminal
   node:
@@ -1157,7 +1844,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint111
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.721935212612
@@ -1188,6 +1875,120 @@
     xy_goal_tolerance: 0.3
     yaw_goal_tolerance: 0.1
 - meta:
+    map: aaf_winter
+    node: WayPoint112
+    pointset: aaf_WG_y4
+    tag:
+    - Kapelle
+    - kapelle3
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint112_WayPoint14
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint14
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint112_WayPoint76
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint76
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint112", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint112
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 1.0
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      position:
+        x: -5.2552189827
+        y: -56.2988815308
+        z: 0.0
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint113
+    pointset: aaf_WG_y4
+    tag:
+    - Kapelle
+    - kapelle4
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint113_WayPoint14
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint14
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint113_WayPoint76
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint76
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint113", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint113
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 1.0
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      position:
+        x: -5.19499444962
+        y: -56.7017021179
+        z: 0.0
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
     contains:
     - at_node: true
       category: office
@@ -1195,7 +1996,7 @@
       name: Kapelle (P. Michael Lidy)
     map: aaf_winter
     node: WayPoint12
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
     - InfoTerminal
@@ -1218,7 +2019,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint12
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.155743047595
@@ -1251,7 +2052,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint13
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -1278,7 +2079,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint13
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.0273829996586
@@ -1311,7 +2112,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint14
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -1337,10 +2138,38 @@
       node: Kapelle
       recovery_behaviours_config: ''
       top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint14_WayPoint105
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint105
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint14_WayPoint106
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint106
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint14_WayPoint112
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint112
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint14_WayPoint113
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint113
+      recovery_behaviours_config: ''
+      top_vel: 0.55
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint14
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -1373,7 +2202,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint15
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - InfoTerminal
   node:
@@ -1393,6 +2222,34 @@
       recovery_behaviours_config: ''
       top_vel: 0.55
     - action: human_aware_navigation
+      edge_id: WayPoint15_WayPoint96
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint96
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint15_WayPoint97
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint97
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint15_WayPoint98
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint98
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint15_WayPoint99
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint99
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
       edge_id: WayPoint15_WayPoint89
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -1402,7 +2259,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint15
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: -0.00607455288991
@@ -1435,7 +2292,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint16
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -1455,7 +2312,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint16
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.999437689781
@@ -1488,7 +2345,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint17
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -1524,7 +2381,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint17
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.975516438484
@@ -1557,7 +2414,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint18
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -1570,7 +2427,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint18
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -1603,7 +2460,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint19
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -1625,7 +2482,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint19
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -1658,7 +2515,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint2
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -1694,7 +2551,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint2
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.965134501457
@@ -1727,7 +2584,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint20
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -1747,7 +2604,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint20
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.706932246685
@@ -1780,7 +2637,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint21
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -1802,7 +2659,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint21
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -1835,7 +2692,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint25
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -1855,7 +2712,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint25
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.0125089967623
@@ -1897,7 +2754,7 @@
       name: EG-0-009
     map: aaf_winter
     node: WayPoint26
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -1930,10 +2787,45 @@
       node: WayPoint90
       recovery_behaviours_config: ''
       top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint26_WayPoint100
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint100
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint26_WayPoint101
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint101
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint26_WayPoint102
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint102
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint26_WayPoint103
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint103
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint26_WayPoint104
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint104
+      recovery_behaviours_config: ''
+      top_vel: 0.55
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint26
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.999847590923
@@ -1966,7 +2858,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint28
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -1988,7 +2880,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint28
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -2021,7 +2913,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint3
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -2048,7 +2940,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint3
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.706399917603
@@ -2081,7 +2973,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint31
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -2101,7 +2993,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint31
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -2147,7 +3039,7 @@
       name: 'Infrastruktur: Informations- und Kommunikationstechnologie (IKT)'
     map: aaf_winter
     node: WayPoint32
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -2176,7 +3068,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint32
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -2234,7 +3126,7 @@
       name: Institutsdirektion
     map: aaf_winter
     node: WayPoint34
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -2267,10 +3159,38 @@
       node: Lift1
       recovery_behaviours_config: ''
       top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint34_WayPoint107
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint107
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint34_WayPoint108
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint108
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint34_WayPoint109
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint109
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint34_WayPoint110
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint110
+      recovery_behaviours_config: ''
+      top_vel: 0.55
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint34
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: -0.0124353663996
@@ -2303,7 +3223,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint35
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
     - InfoTerminal
@@ -2333,7 +3253,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint35
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.019125001505
@@ -2375,7 +3295,7 @@
       name: Seminarraum 2
     map: aaf_winter
     node: WayPoint39
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -2397,7 +3317,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint39
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.999883294106
@@ -2430,7 +3350,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint4
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - InfoTerminal
   node:
@@ -2470,10 +3390,24 @@
       node: WayPoint80
       recovery_behaviours_config: ''
       top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint4_WayPoint95
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint95
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint4_WayPoint94
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint94
+      recovery_behaviours_config: ''
+      top_vel: 0.55
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint4
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.380805552006
@@ -2506,7 +3440,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint42
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -2533,7 +3467,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint42
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.00327499886043
@@ -2579,7 +3513,7 @@
       name: Infrastruktur
     map: aaf_winter
     node: WayPoint43
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -2608,7 +3542,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint43
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -2662,7 +3596,7 @@
       name: EG-0-078
     map: aaf_winter
     node: WayPoint44
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -2675,7 +3609,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint44
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: -0.0259004142135
@@ -2733,7 +3667,7 @@
       name: Akademie fuer Altersforschung
     map: aaf_winter
     node: WayPoint45
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -2755,7 +3689,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint45
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: -0.700730443001
@@ -2788,7 +3722,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint46
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -2815,7 +3749,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint46
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -2877,7 +3811,7 @@
       name: Kommunikation
     map: aaf_winter
     node: WayPoint47
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - Safety_Point
     - recording_white_list
@@ -2907,7 +3841,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint47
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -2953,7 +3887,7 @@
       name: Geschaeftsfuehrung Pflegeheime
     map: aaf_winter
     node: WayPoint48
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -2975,7 +3909,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint48
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.71877092123
@@ -3021,7 +3955,7 @@
       name: Sozialarbeit
     map: aaf_winter
     node: WayPoint49
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -3040,10 +3974,38 @@
       node: Cafeteria
       recovery_behaviours_config: ''
       top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint49_WayPoint104
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint104
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint49_WayPoint103
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint103
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint49_WayPoint102
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint102
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint49_WayPoint101
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint101
+      recovery_behaviours_config: ''
+      top_vel: 0.55
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint49
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.999899566174
@@ -3089,7 +4051,7 @@
       name: Aufnahme
     map: aaf_winter
     node: WayPoint50
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -3111,7 +4073,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint50
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.999969065189
@@ -3173,7 +4135,7 @@
       name: Pflegedirektion
     map: aaf_winter
     node: WayPoint51
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
     - walking_group_pause
@@ -3196,7 +4158,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint51
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.999999582767
@@ -3242,7 +4204,7 @@
       name: Geschaeftsfuehrung Pflegeheime
     map: aaf_winter
     node: WayPoint52
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -3257,7 +4219,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint52
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.0610299967229
@@ -3303,7 +4265,7 @@
       name: Verwaltungsdirektion
     map: aaf_winter
     node: WayPoint53
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -3325,7 +4287,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint53
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.705435812473
@@ -3371,7 +4333,7 @@
       name: Lehre und Forschung, Institut
     map: aaf_winter
     node: WayPoint54
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -3393,7 +4355,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint54
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.689705789089
@@ -3443,7 +4405,7 @@
       name: Qualitaets- und Umweltmanagement
     map: aaf_winter
     node: WayPoint55
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -3465,7 +4427,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint55
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.725379705429
@@ -3511,7 +4473,7 @@
       name: Qualitaets- und Umweltmanagement
     map: aaf_winter
     node: WayPoint56
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -3533,7 +4495,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint56
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.730494081974
@@ -3583,7 +4545,7 @@
       name: Organisationskommunikation und Strategie
     map: aaf_winter
     node: WayPoint57
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
     - InfoTerminal
@@ -3599,7 +4561,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint57
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: -0.383322685957
@@ -3649,7 +4611,7 @@
       name: 'Infrastruktur: Kuechenbetrieb'
     map: aaf_winter
     node: WayPoint58
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -3671,7 +4633,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint58
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.70009458065
@@ -3725,7 +4687,7 @@
       name: 'Infrastruktur: Informations- und Kommunikationstechnologie (IKT)'
     map: aaf_winter
     node: WayPoint59
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -3747,7 +4709,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint59
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.665272593498
@@ -3780,7 +4742,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint60
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -3802,7 +4764,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint60
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.0252820085734
@@ -3852,7 +4814,7 @@
       name: Reinigungs- und Serviceteam
     map: aaf_winter
     node: WayPoint61
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
     - walking_group_pause
@@ -3875,7 +4837,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint61
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: -0.0271399896592
@@ -3908,7 +4870,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint62
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -3930,7 +4892,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint62
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.0173690021038
@@ -3963,7 +4925,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint63
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -3985,7 +4947,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint63
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.0109839960933
@@ -4018,7 +4980,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint64
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -4038,7 +5000,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint64
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.970688760281
@@ -4071,7 +5033,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint65
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - walking_group_pause
   node:
@@ -4093,7 +5055,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint65
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.0392709858716
@@ -4139,7 +5101,7 @@
       name: Konferenzraum 3
     map: aaf_winter
     node: WayPoint66
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
     - walking_group_pause
@@ -4169,7 +5131,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint66
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.999999284744
@@ -4211,7 +5173,7 @@
       name: EG-W-108
     map: aaf_winter
     node: WayPoint67
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -4245,7 +5207,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint67
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: -0.726702988148
@@ -4295,7 +5257,7 @@
       name: Lift zu Station St. Christoph, Stiege 1
     map: aaf_winter
     node: WayPoint68
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - InfoTerminal
   node:
@@ -4317,7 +5279,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint68
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.692879676819
@@ -4350,7 +5312,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint69
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - no_go
   node:
@@ -4358,7 +5320,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint69
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.719152867794
@@ -4391,7 +5353,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint7
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -4427,7 +5389,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint7
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -4460,7 +5422,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint70
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - no_go
   node:
@@ -4468,7 +5430,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint70
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.692434132099
@@ -4501,7 +5463,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint71
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - no_go
     - recording_white_list
@@ -4510,7 +5472,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint71
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.691410958767
@@ -4543,7 +5505,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint72
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - no_go
     - recording_white_list
@@ -4552,7 +5514,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint72
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: -0.0454279817641
@@ -4585,7 +5547,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint73
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - no_go
     - recording_white_list
@@ -4594,7 +5556,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint73
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.00631100032479
@@ -4627,7 +5589,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint74
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - no_go
     - recording_white_list
@@ -4636,7 +5598,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint74
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: -0.0339779853821
@@ -4669,7 +5631,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint76
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -4695,10 +5657,38 @@
       node: Kapelle
       recovery_behaviours_config: ''
       top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint76_WayPoint105
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint105
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint76_WayPoint106
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint106
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint76_WayPoint112
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint112
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint76_WayPoint113
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint113
+      recovery_behaviours_config: ''
+      top_vel: 0.55
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint76
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.720797002316
@@ -4731,7 +5721,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint8
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - InfoTerminal
     - recording_white_list
@@ -4754,7 +5744,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint8
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.0386148840189
@@ -4787,7 +5777,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint80
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -4821,7 +5811,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint80
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.702377080917
@@ -4854,7 +5844,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint81
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -4876,7 +5866,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint81
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.917530417442
@@ -4909,7 +5899,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint82
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -4938,7 +5928,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint82
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.00837347377092
@@ -4971,7 +5961,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint83
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -4993,7 +5983,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint83
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.0117424326017
@@ -5026,7 +6016,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint84
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -5048,7 +6038,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint84
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.706784844398
@@ -5081,7 +6071,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint85
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -5110,7 +6100,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint85
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.709060966969
@@ -5143,7 +6133,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint86
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
     - walking_group_pause
@@ -5194,7 +6184,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint86
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.724034965038
@@ -5227,7 +6217,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint87
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -5256,7 +6246,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint87
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.719633758068
@@ -5289,7 +6279,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint88
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -5323,7 +6313,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint88
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.631760001183
@@ -5356,7 +6346,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint89
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag: []
   node:
     edges:
@@ -5398,7 +6388,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint89
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.719307422638
@@ -5431,7 +6421,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint9
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
   node:
     edges:
     - action: human_aware_navigation
@@ -5465,7 +6455,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint9
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: -0.0146797690541
@@ -5498,7 +6488,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint90
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -5548,7 +6538,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint90
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 0.70440351963
@@ -5581,7 +6571,7 @@
 - meta:
     map: aaf_winter
     node: WayPoint91
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     tag:
     - recording_white_list
   node:
@@ -5631,7 +6621,7 @@
     localise_by_topic: ''
     map: aaf_winter
     name: WayPoint91
-    pointset: aaf_y4
+    pointset: aaf_WG_y4
     pose:
       orientation:
         w: 1.0
@@ -5659,5 +6649,419 @@
       y: -1.38796806335
     - x: 1.29298686981
       y: -0.761065125465
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint92
+    pointset: aaf_WG_y4
+    tag:
+    - ambulanz0
+    - Ambulanz
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint92_Ambulanz
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: Ambulanz
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint92", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint92
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.713040292263
+        x: 0.0
+        y: 0.0
+        z: 0.701123058796
+      position:
+        x: -11.0378351212
+        y: 13.271440506
+        z: 1.65188879242e-09
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint93
+    pointset: aaf_WG_y4
+    tag:
+    - ambulanz1
+    - Ambulanz
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint93_Ambulanz
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: Ambulanz
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint93", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint93
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.691053152084
+        x: -2.87543167055e-09
+        y: -4.67077221344e-09
+        z: 0.72280395031
+      position:
+        x: -9.96193027496
+        y: 13.2606496811
+        z: 4.40052314032e-10
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint94
+    pointset: aaf_WG_y4
+    tag:
+    - ambulanz2
+    - Ambulanz
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint94_Ambulanz
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: Ambulanz
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint94_WayPoint4
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint4
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint94", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint94
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.733312368393
+        x: 4.00310895543e-11
+        y: -1.98346850055e-09
+        z: 0.679891884327
+      position:
+        x: -8.6574678421
+        y: 13.2743549347
+        z: -1.2849382669e-10
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint95
+    pointset: aaf_WG_y4
+    tag:
+    - ambulanz3
+    - Ambulanz
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint95_Ambulanz
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: Ambulanz
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    - action: human_aware_navigation
+      edge_id: WayPoint95_WayPoint4
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint4
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint95", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint95
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.67407733202
+        x: -4.56331417098e-09
+        y: -2.05784900231e-09
+        z: 0.738660812378
+      position:
+        x: -7.62763261795
+        y: 13.246380806
+        z: 2.49754050774e-10
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint96
+    pointset: aaf_WG_y4
+    tag:
+    - ambulanz4
+    - Ambulanz
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint96_WayPoint15
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint15
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint96", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint96
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.719667315483
+        x: -4.11928979815e-09
+        y: 4.446559565e-09
+        z: -0.694319009781
+      position:
+        x: -7.48913574219
+        y: 10.5333156586
+        z: 8.99412905264e-10
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint97
+    pointset: aaf_WG_y4
+    tag:
+    - ambulanz5
+    - Ambulanz
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint97_WayPoint15
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint15
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint97", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint97
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.72142291069
+        x: -4.64324312333e-09
+        y: 4.39527747531e-09
+        z: -0.692494809628
+      position:
+        x: -8.70342540741
+        y: 10.5384159088
+        z: 2.00376068515e-09
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint98
+    pointset: aaf_WG_y4
+    tag:
+    - ambulanz6
+    - Ambulanz
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint98_WayPoint15
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint15
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint98", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint98
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.727533698082
+        x: -5.43350087145e-10
+        y: 8.18804046787e-09
+        z: -0.68607211113
+      position:
+        x: -9.98353672028
+        y: 10.5214328766
+        z: 7.63980489982e-10
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
+    xy_goal_tolerance: 0.3
+    yaw_goal_tolerance: 0.1
+- meta:
+    map: aaf_winter
+    node: WayPoint99
+    pointset: aaf_WG_y4
+    tag:
+    - ambulanz7
+    - Ambulanz
+  node:
+    edges:
+    - action: human_aware_navigation
+      edge_id: WayPoint99_WayPoint15
+      inflation_radius: 0.0
+      map_2d: aaf_winter
+      node: WayPoint15
+      recovery_behaviours_config: ''
+      top_vel: 0.55
+    localise_by_topic: '{"topic": "/aaf_walking_group/resting_node", "field": "data",
+      "val": "WayPoint99", "localise_anywhere": false}'
+    map: aaf_winter
+    name: WayPoint99
+    pointset: aaf_WG_y4
+    pose:
+      orientation:
+        w: 0.66384011507
+        x: 0.0
+        y: 0.0
+        z: -0.747874498367
+      position:
+        x: -11.1900720596
+        y: 10.5562171936
+        z: 4.9718959505e-10
+    verts:
+    - x: 0.689999997616
+      y: 0.287000000477
+    - x: 0.287000000477
+      y: 0.689999997616
+    - x: -0.287000000477
+      y: 0.689999997616
+    - x: -0.689999997616
+      y: 0.287000000477
+    - x: -0.689999997616
+      y: -0.287000000477
+    - x: -0.287000000477
+      y: -0.689999997616
+    - x: 0.287000000477
+      y: -0.689999997616
+    - x: 0.689999997616
+      y: -0.287000000477
     xy_goal_tolerance: 0.3
     yaw_goal_tolerance: 0.1
