@@ -1,5 +1,10 @@
 $def with (strings)
+
+$var title:info
+
 <!-- Optimized for a resolution of 1024x720-->
+
+
 
 <script>
     $$(window).load(function(){ 
@@ -13,16 +18,21 @@ $def with (strings)
     });
 </script>
 
-<center><h1>Was kann Henry?</h1></center>
-<div class="row text-center">
+<!-- <center><h1>Was kann Henry?</h1></center>
+ -->
+<div class="row">
 <div class="panel">
-<h3>Ein 3 Minuten-Video mit Information zu Henry, Ihrem Service-Roboter im Haus der Barmherzigkeit.</h3>
-</div>
-        <div class="col-md-1"></div>
-        <div class="col-md-10">
+
+        <div class="col-md-4">
+          <div class="row" style="margin: 5px;">
+            <h1>Was kann Henry?</h1>
+            <h3>Ein 3 Minuten-Video mit Information zu Henry, Ihrem Service-Roboter im Haus der Barmherzigkeit. Für weitere Auskünfte steht das AAF-Team für Sie bereit.</h3>
+          </div>
+        </div>
+        <div class="col-md-8">
             <div style="padding: 2px;" class="row text-center">
             <div align="center" class="embed-responsive embed-responsive-16by9">
-              <video autoplay width="100%" class="embed-responsive-item">
+              <video autoplay width="90%" class="embed-responsive-item">
                 <source src="static/strands-aaf-video.webm">
                 <source src="static/strands-aaf-video.mp4">
                 <source src="static/strands-aaf-video.ogv">
@@ -31,7 +41,6 @@ $def with (strings)
             </div>
             </div>
         </div>
-        <div class="col-md-1"></div>
 	</div>
 </div>
 

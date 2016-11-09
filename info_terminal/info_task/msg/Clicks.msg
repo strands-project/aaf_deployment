@@ -1,2 +1,2 @@
 time[] time_array
-int32[] page_array
+string[] page_array

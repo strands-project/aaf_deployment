@@ -1,4 +1,6 @@
-$def with (language, strings, datetime)
+$def with (language, strings, datetime, item)
+
+$var title:time
 
  <script type="text/javascript">
     function startTime()
@@ -9,9 +11,9 @@ $def with (language, strings, datetime)
     var s=today.getSeconds();
      
     // add a zero in front of numbers<10
-    // m=checkTime(m);
-    // s=checkTime(s);
-    // document.getElementById('clock').innerHTML=h+":"+m+" " + "Uhr";
+    m=checkTime(m);
+    s=checkTime(s);
+    document.getElementById('clock').innerHTML=h+":"+m+" " + "Uhr";
 
     t=setTimeout('startTime()',500);
     }
@@ -27,39 +29,61 @@ $def with (language, strings, datetime)
 </script>
 
 
-<div class="container-fluid">
+<div class="container-fluid navbar-btn" href="/$item">
 
 <div class="row">
-  <!-- first row -->
-  <div class="col-md-4">
-    <div class="row text-center">
-      <a href="weather">
-        <img src="static/weather-icon.png" class="img-thumbnail img-responsive" style="background-color: #eeeeff; border:5px solid black;max-height:300px"><br>
-        <h1>$strings["weather information"]</h1>
-      </a>
-    </div>
+
   </div>
-  <div class="col-md-4 text-center vcenter">
-    <canvas id="clockid" class="CoolClock:classic:150"></canvas>  
+    <div class="col-md-5 text-center vcenter">
+    <canvas style="background-color: #ffffff;" id="clockid" class="CoolClock:swissRail:170:noSeconds"></canvas>  
     
-    <script type="text/javascript">startTime();</script>
     <br><br>
-    <h1><b>$datetime.date.strftime(datetime.date.today(),"%A")
+    <h1 id="clock">clock</h1>
+    <h1>
+    <b>$datetime.date.strftime(datetime.date.today(),"%A")<br/>
     $if language in ["DE", "DE_de", "de", "DE_at"]:
         $datetime.date.strftime(datetime.date.today(),"%d. %B")</b></h1>
     $else:
         $datetime.date.strftime(datetime.date.today(),"%d %B")</b></h1>
     <!-- <h1><b>$datetime.date.strftime(datetime.date.today(),"%Y")</b></h1> -->
   </div>
-  <div class="col-md-4">
+
+
+  <div class="col-md-7 text-center vcenter">
+    <H1>Henry im <img style="height:0.8em;" 
+      src="static/HdB.png">
+    </H1>
+    <p/>
+    <hr/>
+    <div class="row vcenter text-center">
+      $if item is not "":
+          <h2 style="line-height:1.5;white-space:normal">
+              $(translated_strings["touch " +item])
+          </h2>
+          <img src="/static/$item-icon.png"
+               class="img-thumbnail img-responsive"
+               style="background-color: #ffffff; border:5px solid black;max-height:200px">
+          <h2 style="line-height:1.5;white-space:normal">
+              $(translated_strings["touchalt"])
+          </h2>
+          <!--               <p style="line-height:1.5;font-size:18pt;white-space:normal">$(translated_strings[item])</p> -->
+      $else:
+          <h1 style="line-height:1.5;white-space:normal">
+              $(translated_strings["touch"])
+          </h1>
+    </div>
+    <hr/>
+    <p/>
+<!--   <div class="col-md-4">
     <div class="row text-center">
-       <a href="events">
-        <img src="static/events-icon.png" class="img-thumbnail img-responsive" style="background-color: #eeeeff; border:5px solid black;max-height:300px"><br>
+       <a href="news">
+        <img src="static/news-icon.png" class="img-thumbnail img-responsive" style="background-color: #eeeeff; border:5px solid black;max-height:300px"><br>
         <h1>$strings["coming events"] </h1>
       </a>
     </div>
   </div>
-</div>
+ -->
+   </div>
  
   <!--<div class="row">&nbsp;</div>-->
     <!--<div class="row text-center">-->
@@ -79,11 +103,11 @@ $def with (language, strings, datetime)
     <!--</div>-->
   <!--</div>-->
   
-<div class="row">
+<!-- <div class="row">
   <div class="col-md-4">
     <div class="row text-center">
       <a href="menu">
-        <img src="static/food-icon.png" class="img-thumbnail img-responsive" style="background-color: #eeeeff; border:5px solid black;max-height:300px"><br>
+        <img src="static/menu-icon.png" class="img-thumbnail img-responsive" style="background-color: #eeeeff; border:5px solid black;max-height:300px"><br>
         <h1>$strings["Caffateria Menu"]</h1>
       </a>
     </div>
@@ -91,8 +115,8 @@ $def with (language, strings, datetime)
 
   <div class="col-md-4">
     <div class="row text-center">
-      <a href="video">
-        <img src="static/info.png" class="img-thumbnail img-responsive" style="background-color: #eeeeff; border:5px solid black;max-height:300px"><br>
+      <a href="info">
+        <img src="static/info-icon.png" class="img-thumbnail img-responsive" style="background-color: #eeeeff; border:5px solid black;max-height:300px"><br>
         <h1>$strings["Info Video"]</h1>
       </a>
     </div>
@@ -100,13 +124,19 @@ $def with (language, strings, datetime)
 
   <div class="col-md-4">
     <div class="row text-center">
-       <a href="/photo_album/">
+       <a href="/photos/">
         <img src="static/photos-icon.jpeg" class="img-thumbnail img-responsive" style="background-color: #eeeeff; border:5px solid black;max-height:300px"><br>
         <h1>$strings["view photo album"]</h1>
       </a>
     </div>
   </div>  
 </div>
-
+ -->
 
 </div>
+
+<script type="text/javascript">
+    $$(document).ready(function() {
+        startTime();
+    });
+</script>
