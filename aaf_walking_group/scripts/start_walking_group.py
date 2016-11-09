@@ -70,18 +70,8 @@ class StartWalkingGroup(AbstractTaskServer):
         lg.monitored_topics.append("/walking_group_smach/status")
         
         topological_map_name=rospy.get_param('/walking_group_topological_map','aaf_WG_y4')
-        try:
-            rospy.wait_for_service('/topological_map_manager/switch_topological_map', timeout=10)
-            cont = rospy.ServiceProxy('/topological_map_manager/switch_topological_map', strands_navigation_msgs.srv.GetTopologicalMap)
-            resp1 = cont(topological_map_name)
-            if resp1.map:
-                rospy.loginfo("Switched Topological maps to: %s" %topological_map_name)
-            else:
-                rospy.logwarn("Couldn't Switch Topological maps to: %s" %topological_map_name)
-        except rospy.ServiceException, e:
-            rospy.logerr("Service call failed: %s"%e)
+        self.switch_map(topological_map_name)
 
-        
         self.launch_client.send_goal(lg, feedback_cb=self.feedback_cb)
         rospy.loginfo("Wait for launch file to start ...")
         while not self.started and not self.server.is_preempt_requested() and not rospy.is_shutdown():
@@ -110,16 +100,7 @@ class StartWalkingGroup(AbstractTaskServer):
         rospy.loginfo("Walking group finished")
         
         topological_map_name=rospy.get_param('/day_topological_map','aaf_y4')
-        try:
-            rospy.wait_for_service('/topological_map_manager/switch_topological_map', timeout=10)
-            cont = rospy.ServiceProxy('/topological_map_manager/switch_topological_map', strands_navigation_msgs.srv.GetTopologicalMap)
-            resp1 = cont(topological_map_name)
-            if resp1.map:
-                rospy.loginfo("Switched Topological maps to: %s" %topological_map_name)
-            else:
-                rospy.logwarn("Couldn't Switch Topological maps to: %s" %topological_map_name)
-        except rospy.ServiceException, e:
-            rospy.logerr("Service call failed: %s"%e)        
+        self.switch_map(topological_map_name)
         
         self.pub.publish(False)
         if state == GoalStatus.SUCCEEDED:
@@ -130,6 +111,22 @@ class StartWalkingGroup(AbstractTaskServer):
         else:
             self.launch_client.cancel_goal()
             self.server.set_aborted()
+
+
+    def switch_map(self, topological_map_name):
+        while not rospy.is_shutdown() and not self.server.is_preempt_requested():
+            try:
+                rospy.wait_for_service('/topological_map_manager/switch_topological_map', timeout=10)
+                cont = rospy.ServiceProxy('/topological_map_manager/switch_topological_map', strands_navigation_msgs.srv.GetTopologicalMap)
+                resp1 = cont(topological_map_name)
+                if resp1.map:
+                    rospy.loginfo("Switched Topological maps to: %s" %topological_map_name)
+                    break
+                else:
+                    rospy.logwarn("Couldn't Switch Topological maps to: %s, retrying." %topological_map_name)
+            except rospy.ServiceException, e:
+                rospy.logerr("Service call failed, retrying: %s"%e)
+            rospy.sleep(1.)
 
     def preempt_cb(self):
         rospy.loginfo("Walking group preemption requested")
