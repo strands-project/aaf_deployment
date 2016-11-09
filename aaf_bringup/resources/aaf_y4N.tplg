@@ -195,13 +195,6 @@
   node:
     edges:
     - action: human_aware_navigation
-      edge_id: Feuerloescher_WayPoint28
-      inflation_radius: 0.0
-      map_2d: aaf_winter
-      node: WayPoint28
-      recovery_behaviours_config: ''
-      top_vel: 0.55
-    - action: human_aware_navigation
       edge_id: Feuerloescher_WayPoint85
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -221,27 +214,27 @@
     pointset: aaf_y4N
     pose:
       orientation:
-        w: 1.0
-        x: 0.0
-        y: 0.0
-        z: 0.0
+        w: 0.957051992416
+        x: 1.70674478994e-08
+        y: 3.61420698924e-10
+        z: -0.289916306734
       position:
-        x: -24.4536209106
-        y: -28.9840812683
+        x: -25.1319141388
+        y: -30.4202384949
         z: 0.0
     verts:
     - x: 0.689999997616
       y: 0.287000000477
     - x: 0.287000000477
       y: 1.0
-    - x: -1.20793533325
-      y: 0.994871139526
-    - x: -1.63641929626
-      y: 0.343675613403
-    - x: -1.64218521118
-      y: -0.33579826355
-    - x: -1.27022361755
-      y: -1.02252960205
+    - x: -0.563743591309
+      y: 0.944334030151
+    - x: -0.944917678833
+      y: 0.364986419678
+    - x: -0.91428565979
+      y: -0.300367355347
+    - x: -0.439224243164
+      y: -0.910833358765
     - x: 0.287000000477
       y: -1.0
     - x: 0.689999997616
@@ -1527,8 +1520,8 @@
         y: 3.76886845288e-07
         z: 0.691960632801
       position:
-        x: -3.44234108925
-        y: -31.9764347076
+        x: -3.54743361473
+        y: -31.9719772339
         z: 3.46944695195e-18
     verts:
     - x: 0.689999997616
@@ -2198,13 +2191,6 @@
       recovery_behaviours_config: ''
       top_vel: 0.55
     - action: human_aware_navigation
-      edge_id: WayPoint28_Feuerloescher
-      inflation_radius: 0.0
-      map_2d: aaf_winter
-      node: Feuerloescher
-      recovery_behaviours_config: ''
-      top_vel: 0.55
-    - action: human_aware_navigation
       edge_id: WayPoint28_WayPoint85
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -2222,8 +2208,8 @@
         y: 0.0
         z: 0.0
       position:
-        x: -24.5758266449
-        y: -34.3348007202
+        x: -23.8281841278
+        y: -34.431602478
         z: 0.0
     verts:
     - x: 1.35922813416
@@ -4736,8 +4722,8 @@
         y: 0.0
         z: -0.705147147179
       position:
-        x: -25.9352455139
-        y: -31.7023506165
+        x: -26.2948627472
+        y: -33.2218971252
         z: 0.0
     verts:
     - x: 1.16666662693
