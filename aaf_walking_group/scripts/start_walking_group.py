@@ -9,6 +9,7 @@ from aaf_walking_group.msg import EmptyAction, StateMachineAction, StateMachineG
 from roslaunch_axserver.msg import launchAction, launchGoal
 from strands_executive_msgs.abstract_task_server import AbstractTaskServer
 from std_msgs.msg import Bool
+import strands_navigation_msgs.srv
 
 class StartWalkingGroup(AbstractTaskServer):
     TOPIC = "/walking_group_action_status"
@@ -67,6 +68,20 @@ class StartWalkingGroup(AbstractTaskServer):
         lg.parameters = self.params
         lg.values = self.values
         lg.monitored_topics.append("/walking_group_smach/status")
+        
+        topological_map_name=rospy.get_param('/walking_group_topological_map','aaf_WG_y4')
+        try:
+            rospy.wait_for_service('/topological_map_manager/switch_topological_map', timeout=10)
+            cont = rospy.ServiceProxy('/topological_map_manager/switch_topological_map', strands_navigation_msgs.srv.GetTopologicalMap)
+            resp1 = cont(topological_map_name)
+            if resp1.map:
+                rospy.loginfo("Switched Topological maps to: %s" %topological_map_name)
+            else:
+                rospy.logwarn("Couldn't Switch Topological maps to: %s" %topological_map_name)
+        except rospy.ServiceException, e:
+            rospy.logerr("Service call failed: %s"%e)
+
+        
         self.launch_client.send_goal(lg, feedback_cb=self.feedback_cb)
         rospy.loginfo("Wait for launch file to start ...")
         while not self.started and not self.server.is_preempt_requested() and not rospy.is_shutdown():
@@ -93,6 +108,19 @@ class StartWalkingGroup(AbstractTaskServer):
             state = self.smach_client.get_state()
 
         rospy.loginfo("Walking group finished")
+        
+        topological_map_name=rospy.get_param('/day_topological_map','aaf_y4')
+        try:
+            rospy.wait_for_service('/topological_map_manager/switch_topological_map', timeout=10)
+            cont = rospy.ServiceProxy('/topological_map_manager/switch_topological_map', strands_navigation_msgs.srv.GetTopologicalMap)
+            resp1 = cont(topological_map_name)
+            if resp1.map:
+                rospy.loginfo("Switched Topological maps to: %s" %topological_map_name)
+            else:
+                rospy.logwarn("Couldn't Switch Topological maps to: %s" %topological_map_name)
+        except rospy.ServiceException, e:
+            rospy.logerr("Service call failed: %s"%e)        
+        
         self.pub.publish(False)
         if state == GoalStatus.SUCCEEDED:
             self.launch_client.cancel_goal()
