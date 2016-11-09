@@ -292,13 +292,6 @@
   node:
     edges:
     - action: human_aware_navigation
-      edge_id: Feuerloescher_WayPoint28
-      inflation_radius: 0.0
-      map_2d: aaf_winter
-      node: WayPoint28
-      recovery_behaviours_config: ''
-      top_vel: 0.55
-    - action: human_aware_navigation
       edge_id: Feuerloescher_WayPoint85
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -318,27 +311,27 @@
     pointset: aaf_y4
     pose:
       orientation:
-        w: 1.0
-        x: 0.0
-        y: 0.0
-        z: 0.0
+        w: 0.958506166935
+        x: 1.77501462417e-08
+        y: -1.5019843147e-09
+        z: -0.285072028637
       position:
-        x: -24.4536209106
-        y: -28.9840812683
+        x: -25.176990509
+        y: -30.4581413269
         z: 0.0
     verts:
     - x: 0.689999997616
       y: 0.287000000477
     - x: 0.287000000477
       y: 1.0
-    - x: -1.20793533325
-      y: 0.994871139526
-    - x: -1.63641929626
-      y: 0.343675613403
-    - x: -1.64218521118
-      y: -0.33579826355
-    - x: -1.27022361755
-      y: -1.02252960205
+    - x: -0.584428787231
+      y: 0.873273849487
+    - x: -0.945541381836
+      y: 0.443534851074
+    - x: -0.852548599243
+      y: -0.250186920166
+    - x: -0.481731414795
+      y: -0.801063537598
     - x: 0.287000000477
       y: -1.0
     - x: 0.689999997616
@@ -500,8 +493,8 @@
         y: 7.8955331162e-09
         z: 0.569400250912
       position:
-        x: -2.85582613945
-        y: 52.4765319824
+        x: -2.45788621902
+        y: 52.5569229126
         z: 0.0
     verts:
     - x: 0.689999997616
@@ -1859,8 +1852,8 @@
         y: 3.76886845288e-07
         z: 0.691960632801
       position:
-        x: -3.44234108925
-        y: -31.9764347076
+        x: -3.54630851746
+        y: -31.9720249176
         z: 3.46944695195e-18
     verts:
     - x: 0.689999997616
@@ -2885,13 +2878,6 @@
       recovery_behaviours_config: ''
       top_vel: 0.55
     - action: human_aware_navigation
-      edge_id: WayPoint28_Feuerloescher
-      inflation_radius: 0.0
-      map_2d: aaf_winter
-      node: Feuerloescher
-      recovery_behaviours_config: ''
-      top_vel: 0.55
-    - action: human_aware_navigation
       edge_id: WayPoint28_WayPoint85
       inflation_radius: 0.0
       map_2d: aaf_winter
@@ -2909,8 +2895,8 @@
         y: 0.0
         z: 0.0
       position:
-        x: -24.5758266449
-        y: -34.3348007202
+        x: -23.8317165375
+        y: -34.4866065979
         z: 0.0
     verts:
     - x: 1.35922813416
@@ -6136,8 +6122,8 @@
         y: 0.0
         z: -0.705147147179
       position:
-        x: -25.9352455139
-        y: -31.7023506165
+        x: -26.315366745
+        y: -33.1867141724
         z: 0.0
     verts:
     - x: 1.16666662693
