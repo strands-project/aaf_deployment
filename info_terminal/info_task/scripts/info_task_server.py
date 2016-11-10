@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import rospy
-from std_msgs.msg import Int32
+from std_msgs.msg import String
 from info_task.msg import EmptyAction, Clicks
 from info_task.utils import Gaze, Head, PTU
 from strands_executive_msgs.abstract_task_server import AbstractTaskServer
@@ -10,12 +10,14 @@ import strands_webserver.client_utils
 
 
 class InfoTaskServer(AbstractTaskServer):
-    def __init__(self, name):
-        rospy.loginfo("Starting node: %s" % name)
+    def __init__(self, name, url_suffix=None):
+        rospy.loginfo("Starting InfoTaskServer: %s" % name)
         # Creating action clients
         self.gaze = Gaze()
         self.head = Head()
         self.ptu = PTU()
+
+        self.url_suffix = url_suffix
 
         # interaction storage
         self.interaction_times = []
@@ -25,7 +27,6 @@ class InfoTaskServer(AbstractTaskServer):
         self.reset_time = 0.0
 
         # Creating activity subscriber and publisher
-        rospy.Subscriber("info_terminal/active_screen", Int32, self.button_pressed_callback)
         self.pub = rospy.Publisher("/info_terminal/task_outcome", Clicks, queue_size=10, latch=True)
 
         rospy.loginfo(" ... starting " + name)
@@ -34,6 +35,7 @@ class InfoTaskServer(AbstractTaskServer):
             action_type=EmptyAction,
             interruptible=True
         )
+        rospy.Subscriber("/info_terminal/active_screen", String, self.button_pressed_callback)
         rospy.loginfo(" ... started " + name)
 
     def execute(self, goal):
@@ -42,7 +44,12 @@ class InfoTaskServer(AbstractTaskServer):
         self.gaze.people()         # Looking at upper bodies
 
         # Showing info terminal webserver
-        strands_webserver.client_utils.display_url(0, 'http://localhost:8080')
+        if self.url_suffix is not None:
+            strands_webserver.client_utils.display_url(0,
+                'http://localhost:8080/?page=' + self.url_suffix)
+        else:
+            strands_webserver.client_utils.display_url(0,
+                'http://localhost:8080/')
 
         rate = rospy.Rate(1)
         # preempt will not be requested while activity is happening
@@ -73,11 +80,11 @@ class InfoTaskServer(AbstractTaskServer):
 
     def button_pressed_callback(self, active_screen):
         # reset timeout
-        rospy.loginfo('button_pressed_callback')
-        self.interaction_times.append(rospy.Time.now())
-        self.pages.append(active_screen.data)
-        self.reset_time = rospy.Time.now().to_sec() + self.extension_time
         if self.server.is_active():
+            rospy.loginfo('button_pressed_callback')
+            self.interaction_times.append(rospy.Time.now())
+            self.pages.append(active_screen.data)
+            self.reset_time = rospy.Time.now().to_sec() + self.extension_time
             self.interruptible = False
 
     def preempt_cb(self):
@@ -92,6 +99,16 @@ class InfoTaskServer(AbstractTaskServer):
 
 if __name__ == "__main__":
     rospy.init_node("info_task_server")
-    i = InfoTaskServer(rospy.get_name())
-    rospy.spin()
+    urls = ['news',
+            'menu', 'menures',
+            'info', 'weather', 'photos']
+    servers = {}
+    for u in urls:
+        servers[u] = InfoTaskServer(
+            '%s/%s' % (rospy.get_name(), u)
+            )
+    servers['default'] = InfoTaskServer(
+        rospy.get_name()
+        )
 
+    rospy.spin()

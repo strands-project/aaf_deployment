@@ -1,4 +1,4 @@
-$def with (page)
+$def with (page, vars=None)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,7 +6,7 @@ $def with (page)
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>INFO-TERMINAL</title>
+    <title>$page.title</title>
 
     <!-- Bootstrap -->
     <!-- Latest compiled and minified CSS -->
@@ -28,10 +28,94 @@ $def with (page)
     <script type="text/javascript" src="/static/coolclock.js"></script> 
     <script type="text/javascript" src="/static/moreskins.js"></script>
     <script type="text/javascript" src="/static/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap.min.js"></script>
     
   </head>
-  <body onload="CoolClock.findAndCreateClocks()">
-    
-    $:page
+  <body onload="CoolClock.findAndCreateClocks()" style="max-width:1024px;">
+  <div id="page">
+  	$:page
+  </div>
+
+<nav class="navbar navbar-inverse navbar-fixed-bottom"
+		 style="max-height:25vh;">
+<!-- navbar-inverse -->
+  <div class="container">
+<!--     <div class="navbar-header">
+      <a class="navbar-brand" href="#"></a>
+    </div>
+ -->    
+ 		<ul class="nav navbar-nav">
+ 		  $for item in ["menu", "menures", "weather", "news", "info", "photos"]:
+		      <li>
+		      		<a style="
+		      						max-height:48px;
+		      						max-width:140px;
+		      						max-height:200px;
+		      				    padding-bottom: 0px;
+									    padding-top: 0px;
+									    margin-top: 0px;
+									    margin-bottom: 0px;
+		      						" id="nav-$item" ontouch role="button" class="btn navbar-btn" 
+		      						href="/$item">
+				      	<div >
+									<img src="/static/$item-icon.png" class="img-thumbnail img-responsive"
+								 		 style="max-height:72px">
+								 		 	<p style="line-height:1.5;font-size:18pt;white-space:normal">$(translated_strings[item])</p>
+								</div>
+					 		</a>
+		      </li>
+<!-- 
+      <li>
+      		<a id="nav-weather" ontouch role="button" class="btn navbar-btn" href="/weather">
+		      	<div class="text-center">
+							<img src="static/weather-icon.png" class="img-thumbnail img-responsive"
+						 		 style="max-height:150px"><h2>Weather</h2>
+						</div>
+			 		</a>
+      </li>
+
+      <li>
+      		<a id="nav-news" ontouch role="button" class="btn navbar-btn" href="/events">
+		      	<div class="text-center">
+							<img src="static/events-icon.png" class="img-thumbnail img-responsive"
+						 		 style="max-height:150px"><h2>News</h2>
+						</div>
+			 		</a>
+      </li>
+ -->
+    </ul>
+  </div>
+</nav>
+
+
+<div class="modal" id="loading" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <H1>$(translated_strings["loading"])</H1>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script  type="text/javascript">
+$$(document).ready(function() {
+	console.log('onload');
+	$$('.navbar-btn').mousedown(function() {
+			$$(this).css('color', 'black');
+			$$(this).css('background-color', '#5cb85c');
+			$$("#page").html("");
+			$$("div#loading").modal("show");
+			//$$(this).click();
+			window.location.assign($$(this).attr('href'));
+	});
+	$$('a#nav-$page.title').addClass("btn-success");
+})
+
+
+
+
+</script>
+
   </body>
 </html>

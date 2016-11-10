@@ -1,6 +1,6 @@
 <launch>
     <arg name="schedule_directory" default="/home/strands/infremen"/>
-    <arg name="collection_name" default="AAFBetaTests"/>
+    <arg name="collection_name" default="AAFGammaTests"/>
     <arg name="language" default="DE"/>
     <arg name="tasks_config_file" default="$(find info_task)/cfg/tasks.yaml" />
 

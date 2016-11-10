@@ -44,10 +44,10 @@ tmux select-window -t $SESSION:4
 tmux send-keys "rosparam set /deployment_language german && HOST_IP=192.168.0.100 DISPLAY=:0 roslaunch aaf_bringup aaf_ui.launch mary_machine:=werner-right-cortex mary_machine_user:=strands"
 
 tmux select-window -t $SESSION:5
-tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_navigation.launch map:=/opt/strands/map/aaf_deployment16-cropped.yaml topological_map:=aaf_deployment16"
+tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_navigation.launch map:=/opt/strands/map/y4_aaf-cropped.yaml topological_map:=aaf_y4"
 
 tmux select-window -t $SESSION:6
-tmux send-keys "DISPLAY=:0 roslaunch perception_people_launch people_tracker_robot.launch machine:=werner-left-cortex user:=strands"
+tmux send-keys "DISPLAY=:0 roslaunch perception_people_launch people_tracker_robot.launch machine:=werner-left-cortex user:=strands with_wheelchair_detector:=true wheelchair_machine:=werner-left-cortex wheelchair_user=strands"
 
 tmux select-window -t $SESSION:7
 tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_media_server.launch"
@@ -69,7 +69,7 @@ tmux send-keys "DISPLAY=:0 roslaunch aaf_walking_group task_servers.launch"
 
 tmux select-window -t $SESSION:13
 tmux send-keys "ssh werner-right-cortex" C-m
-tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_routine.launch calendar:=henry.strands%40hanheide.net"
+tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_routine.launch new_scheduler:=true calendar:=henry.strands%40hanheide.net"
 
 tmux select-window -t $SESSION:14
 tmux send-keys "DISPLAY=:0 roslaunch aaf_bringup aaf_deployment_control.launch"
