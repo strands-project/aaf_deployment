@@ -13,9 +13,9 @@ class InfoTaskServer(AbstractTaskServer):
     def __init__(self, name, url_suffix=None):
         rospy.loginfo("Starting InfoTaskServer: %s" % name)
         # Creating action clients
-        #self.gaze = Gaze()
-        #self.head = Head()
-        #self.ptu = PTU()
+        self.gaze = Gaze()
+        self.head = Head()
+        self.ptu = PTU()
 
         self.url_suffix = url_suffix
 

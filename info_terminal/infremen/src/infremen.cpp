@@ -487,6 +487,7 @@ void printAllInteractions(uint32_t lastTime)
 {
 	char testTime[1000];
 	vector< boost::shared_ptr<infremen::InfremenResult> > results;
+	ROS_INFO("Query start: %s",collectionName.c_str());
 	messageStore->queryNamed<infremen::InfremenResult>(collectionName,results,false);
 	BOOST_FOREACH( boost::shared_ptr<infremen::InfremenResult> p,  results)
 	{
@@ -494,6 +495,7 @@ void printAllInteractions(uint32_t lastTime)
 		strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
 		ROS_INFO("There were %d interaction at %s at waypoint %s.",p->number,testTime,p->waypoint.c_str());
 	}
+	ROS_INFO("Query end");
 
 	vector< boost::shared_ptr<infremen::AtomicInteraction> > atoms;
 	string id;
