@@ -11,6 +11,7 @@ from aaf_control_ui.srv import DemandTask
 from aaf_control_ui.srv import DemandTaskResponse
 
 from strands_executive_msgs.srv import CreateTask
+from strands_executive_msgs.srv import DemandTask as ExecDemandTask
 from strands_executive_msgs.msg import Task
 
 from strands_executive_msgs.srv import AddTasks
@@ -57,7 +58,7 @@ class ControlServer(web.application):
         self.stop()
         print "aaf_control_server stopped."
 
-    def demand_task(self, req):
+    def create_task(self, req):
         factory_name = '/' + req.action + "_create"
         start_after = rospy.Time.now()+rospy.Duration(secs=30)
         rospy.loginfo(req)
@@ -68,7 +69,7 @@ class ControlServer(web.application):
                  (end_before.secs, end_before.nsecs)
         sn = "start_node_id: '%s'" % req.waypoint
         en = "end_node_id: '%s'" % req.waypoint
-        yaml = "{%s, %s, %s, %s}" % (sa, eb, sn, en) 
+        yaml = "{%s, %s, %s, %s}" % (sa, eb, sn, en)
         rospy.loginfo("calling with pre-populated yaml: %s" % yaml)
 
         try:
@@ -76,25 +77,37 @@ class ControlServer(web.application):
             t = factory.call(yaml).task
             rospy.loginfo("got the task back: %s" % str(t))
         except Exception as e:
-            rospy.logerr("Couldn't instantiate task from factory %s."
+            rospy.logwarn("Couldn't instantiate task from factory %s."
                           "error: %s."
                           "This is an error." %
                           (factory_name, str(e)))
-            raise
+            t = Task()
+            t.start_node_id = req.waypoint
+            t.end_node_id = req.waypoint
+            t.end_before = end_before
+            t.start_after = start_after
+            t.action = req.action
         # use maximum duration of the one given here and the one returned from the constructor
         t.max_duration.secs = max(t.max_duration.secs, req.duration)
         t.max_duration.nsecs = 0
-	t.start_node_id = req.waypoint
-	t.end_node_id = req.waypoint
-        # allow to end this 60 seconds after the duration 
+        t.start_node_id = req.waypoint
+        t.end_node_id = req.waypoint
+        # allow to end this 60 seconds after the duration
         # to give some slack for scheduling
         #t.end_before = t.end_before + rospy.Duration(secs=60)
 
         t.priority = self.demand_priority
+
+        return t
+
+    def add_task(self, req):
+        t = self.create_task(req)
         tasks = [t]
         rospy.loginfo('add task %s to schedule now' % t)
-        dt = rospy.ServiceProxy('/task_executor/add_tasks', AddTasks)
+        service_name = '/task_executor/add_tasks'
         try:
+            rospy.wait_for_service(service_name, timeout=10)
+            dt = rospy.ServiceProxy(service_name, AddTasks)
             rospy.loginfo(dt(tasks))
         except Exception as e:
             rospy.logerr("Couldn't add task to scheduler. "
@@ -103,6 +116,22 @@ class ControlServer(web.application):
             t.action = req.action
         return DemandTaskResponse()
 
+    def demand_task(self, req):
+        t = self.create_task(req)
+        rospy.loginfo('demand task %s' % t)
+        service_name = '/task_executor/demand_task'
+        try:
+            rospy.wait_for_service(service_name, timeout=10)
+            dt = rospy.ServiceProxy(service_name, ExecDemandTask)
+            rospy.loginfo(dt(t))
+        except Exception as e:
+            rospy.logerr("Couldn't demand task on scheduler. "
+                         "error: %s." % str(e))
+            t = Task()
+            t.action = req.action
+        return DemandTaskResponse()
+
+
 def set_ws_protocol():
     forward =  web.ctx.env.get('HTTP_X_FORWARDED_HOST','')
     if 'lcas.lincoln.ac.uk' in forward:
@@ -110,7 +139,6 @@ def set_ws_protocol():
     else:
         html_config['rosws_protocol'] = 'ws'
     print html_config['rosws_protocol']
-
 
 
 class DashboardPage(object):
