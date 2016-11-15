@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="global_frame_id" default="amap" />
+    <!-- gmapping parameters -->
+    <arg name="delta" default="0.05"/>
+
+    <!-- B&L Sim 
+    <arg name="xmin" default="-30.0"/>
+    <arg name="ymin" default="-15.0"/>
+    <arg name="xmax" default="6.0"/>
+    <arg name="ymax" default="13.0"/> -->
+    <arg name="minimumScore" default="50.0"/>
+    <arg name="maxUrange" default="10.0"/>
+    <arg name="srr" default="0.05"/>
+    <arg name="srt" default="0.1"/>
+    <arg name="str" default="0.05"/>
+    <arg name="stt" default="0.1"/>
+    
+
+    
+    <arg name="odom_frame" default="$(arg global_frame_id)"/>
+    <arg name="map_frame" default="map" />
+    
+
+   
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" respawn="true">
+	<param name="xmin" value="$(arg xmin)"/>
+	<param name="ymin" value="$(arg ymin)"/>
+	<param name="xmax" value="$(arg xmax)"/>
+	<param name="ymax" value="$(arg ymax)"/>
+	<param name="delta" value="$(arg delta)"/>
+	<param name="maxUrange" value="$(arg maxUrange)"/>
+
+	<param name="srr" value="$(arg srr)"/>
+	<param name="srt" value="$(arg srt)"/>	
+	<param name="str" value="$(arg str)"/>
+	<param name="stt" value="$(arg stt)"/>
+	<param name="minimumScore" value="$(arg minimumScore)"/>
+	
+	<param name="odom_frame" value="$(arg odom_frame)"/>
+	<param name="map_frame" value="$(arg map_frame)" />
+	<remap from="/map" to="/gmap"/>
+
+    </node>
+    
+</launch>
