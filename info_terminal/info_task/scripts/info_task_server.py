@@ -19,6 +19,8 @@ class InfoTaskServer(AbstractTaskServer):
 
         self.url_suffix = url_suffix
 
+        self.url_suffix = url_suffix
+
         # interaction storage
         self.interaction_times = []
         self.pages = []

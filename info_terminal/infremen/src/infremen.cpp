@@ -132,7 +132,7 @@ void poseCallback(const geometry_msgs::Pose::ConstPtr& msg)
 }
 
 /*detailed info on interation*/
-void interacted(const std_msgs::Int32::ConstPtr& msg)
+void interacted(const std_msgs::String::ConstPtr& msg)
 {
 	char testTime[1000];
 	ros::Time currentTime = ros::Time::now();
@@ -140,7 +140,7 @@ void interacted(const std_msgs::Int32::ConstPtr& msg)
 
 	time_t timeInfo = currentTime.sec;
 	strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
-	if (debug) ROS_INFO("Infremen: Screen %i clicked at %s close to %s on %s.",msg->data,nodeName.c_str(),closestNode.c_str(),testTime);
+	if (debug) ROS_INFO("Infremen: Screen %s clicked at %s close to %s on %s.",msg->data.c_str(),nodeName.c_str(),closestNode.c_str(),testTime);
 
 	infremen::AtomicInteraction lastInteraction;
 
@@ -487,6 +487,7 @@ void printAllInteractions(uint32_t lastTime)
 {
 	char testTime[1000];
 	vector< boost::shared_ptr<infremen::InfremenResult> > results;
+	ROS_INFO("Query start: %s",collectionName.c_str());
 	messageStore->queryNamed<infremen::InfremenResult>(collectionName,results,false);
 	BOOST_FOREACH( boost::shared_ptr<infremen::InfremenResult> p,  results)
 	{
@@ -494,6 +495,7 @@ void printAllInteractions(uint32_t lastTime)
 		strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
 		ROS_INFO("There were %d interaction at %s at waypoint %s.",p->number,testTime,p->waypoint.c_str());
 	}
+	ROS_INFO("Query end");
 
 	vector< boost::shared_ptr<infremen::AtomicInteraction> > atoms;
 	string id;
@@ -502,7 +504,7 @@ void printAllInteractions(uint32_t lastTime)
 	{
 		time_t timeInfo = a->time;
 		strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
-		ROS_INFO("Screen switched to %d interaction at %s at waypoint %s(%s) - robot pose %f %f %f.",a->screen,testTime,a->infoWaypoint.c_str(),a->waypoint.c_str(),a->robotPoseX,a->robotPoseY,a->robotPosePhi);
+		ROS_INFO("Screen switched to %s interaction at %s at waypoint %s(%s) - robot pose %f %f %f.",a->screen.c_str(),testTime,a->infoWaypoint.c_str(),a->waypoint.c_str(),a->robotPoseX,a->robotPoseY,a->robotPosePhi);
 	}
 }
 
