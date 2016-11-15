@@ -1,29 +1,36 @@
 $def with (strings, current_image, next_image, prev_image)
+
+$var title:photos
+
 <!-- Optimized for a resolution of 1024x720-->
 <center><h1>Photoalbum</h1></center>
 <div class="row text-center">
         <div class="col-md-2">
-            <a href="/photo_album/$prev_image">
-                    <img src="/static/prev-icon.png" class="img-thumbnail img-responsive"
-                        style="border:5px solid black"><br>
-                    <h3>$strings["previous photo"]</h3>
+            <a href="/photos/$prev_image">
+                <img src="/static/prev-icon.png" class="img-thumbnail img-responsive"
+                    style="border:5px solid black"><br>
+                <h3>$strings["previous photo"]</h3>
             </a>
         </div>
         <div class="col-md-8">
-            <img src="http://localhost:8027/get_media_by_name/$current_image" class="img-thumbnail img-responsive">
+            $if current_image is not None:
+                <img src="http://localhost:8027/get_media_by_name/$current_image" class="img-thumbnail img-responsive">
+            $if current_image is None:
+                <H1>$strings["noimage"]</H1>
+
         </div>
-		<div class="col-md-2">
-			<a href="/photo_album/$next_image">
-				<img src="/static/next-icon.png" class="img-thumbnail img-responsive" 
-					style="border:5px solid black"><br>
-				<h3>$strings["next photo"]</h3>
-			</a>
-		</div>
-	</div>
+    <div class="col-md-2">
+      <a href="/photos/$next_image">
+        <img src="/static/next-icon.png" class="img-thumbnail img-responsive" 
+          style="border:5px solid black"><br>
+        <h3>$strings["next photo"]</h3>
+      </a>
+    </div>
+  </div>
 </div>
 
 
-<footer class="footer"  style="height:120px;position:absolute;bottom: 0;width: 100%">
+<!-- <footer class="footer"  style="height:120px;position:absolute;bottom: 0;width: 100%">
   <div class="container" style="font-size:20pt">
       <a href="/">
             <img src="/static/back-icon.png" class="img-thumbnail img-responsive"
@@ -31,4 +38,4 @@ $def with (strings, current_image, next_image, prev_image)
         </a>
   </div>
 </footer>
-
+ -->
