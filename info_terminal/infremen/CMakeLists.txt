@@ -20,7 +20,7 @@ generate_dynamic_reconfigure_options(
   cfg/infremen.cfg
 )
 
-set ( CMAKE_CXX_FLAGS "-Ofast -march=native -mno-avx -ggdb")
+set ( CMAKE_CXX_FLAGS "-Ofast -march=native -mno-avx -ggdb -std=c++11")
 
 catkin_package(CATKIN_DEPENDS roscpp strands_executive_msgs message_generation std_msgs std_srvs strands_navigation_msgs mongodb_store_msgs geometry_msgs mongodb_store info_task)
 
@@ -33,6 +33,7 @@ add_dependencies(infremen ${catkin_EXPORTED_TARGETS} mongodb_store ${PROJECT_NAM
 add_library(infremen_frelement src/CFrelement.cpp)
 add_library(infremen_timer src/CTimer.cpp)
 add_library(infremen_frelementset src/CFrelementSet.cpp)
+add_library(infremen_graphlib src/CGraph.cpp)
 
 target_link_libraries(infremen_frelement infremen_timer)
 target_link_libraries(infremen_frelementset infremen_frelement)
@@ -40,6 +41,7 @@ target_link_libraries(infremen_frelementset infremen_frelement)
 target_link_libraries (infremen
 		${catkin_LIBRARIES}
 		infremen_frelementset
+		infremen_graphlib
 )
 
 
