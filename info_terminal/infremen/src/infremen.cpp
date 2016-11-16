@@ -410,7 +410,7 @@ int generateSchedule(uint32_t givenTime)
 		checkReturn = fscanf(file," %s",dummy);
 		int a = graph.addNode(dummy);
 		mapProb[i] = a;
-		std::cout << "Node: " << graph.nodes[a].name << ":" << a << std::endl;
+		//std::cout << "Node: " << graph.nodes[a].name << ":" << a << std::endl;
 	}
 	checkReturn = fscanf(file,"\n");
 
@@ -479,9 +479,9 @@ int createTask(int slot)
 		{
 			imr::Graph::PathSolution path = graph.getPath(currentNodeID);
 			if (path.path.size() > 0){
-				for (int i =0;i<path.path.size();i++) ROS_INFO("Path %i: %s",i,graph.nodes[path.path[i]].name.c_str());
+				for (int i =0;i<path.path.size();i++) ROS_INFO("Planned path %i: %s",i,graph.nodes[path.path[i]].name.c_str());
 			       	nodes[slot] = frelementSet.find(graph.nodes[path.path[0]].name.c_str());
-				ROS_WARN("Goto %i %s.",nodes[slot],frelementSet.frelements[nodes[slot]]->id);
+				ROS_WARN("Immediate goal %i %s.",nodes[slot],frelementSet.frelements[nodes[slot]]->id);
 			}else{
 				ROS_WARN("No path generated! Going to charging station.");
 				nodes[slot]=chargeNodeID;
