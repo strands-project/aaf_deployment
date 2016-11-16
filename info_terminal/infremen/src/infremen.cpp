@@ -654,7 +654,7 @@ int main(int argc,char* argv[])
 	//generate schedule
 	ros::Time currentTime = ros::Time::now();
 	//buildModels(currentTime.sec);
-	generateSchedule(currentTime.sec);
+	//generateSchedule(currentTime.sec);
 
 	//to start scheduler - for standalone testing 
 	/*ros::ServiceClient taskStart;
