@@ -280,12 +280,10 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFre
 		<< "node[shape=\"circle\" , width=1.6, fontsize=21, fillcolor=\"white\", style=filled]\n";
 
 	boost::graph_traits < BoostGraph >::edge_iterator ei, ei_end;
-	for (unsigned int i = 0; i < nodes.size(); ++i) {
-		if (nodes[i].infoTerminal) fout << nodes[i].name << "[shape=\"square\"]\n";
-	}
 	for (boost::tie(ei, ei_end) = boost::edges(g); ei != ei_end; ++ei){
 			fout << nodes[boost::source(*ei, g)].name << " -- " << nodes[boost::target(*ei, g)].name << "[label=" << boost::get(boost::edge_weight, g)[*ei] << "] \n";
 	}
+	for (unsigned int i = 0; i < nodes.size(); ++i) if (nodes[i].infoTerminal) fout << nodes[i].name << "[shape=\"square\"]\n";
 	fout << "}\n";
 	fout.close();
 	int errsys = 0;
