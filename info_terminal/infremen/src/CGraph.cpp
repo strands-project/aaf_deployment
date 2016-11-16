@@ -164,9 +164,13 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFre
 		for(auto e:n.edges) {
 			idTo = addNode(e.node);
 			if (idFrom > idTo) {
-				addUndirectedLink(idFrom, idTo, e.top_vel);
+				ROS_INFO("  Edge %s ", n.name.c_str());
+				float dx = x[idFrom]-x[idTo];
+				float dy = y[idFrom]-y[idTo];
+				float timeTrav = sqrt(dx*dx+dy*dy)/0.3;
+				addUndirectedLink(idFrom, idTo, timeTrav);
+				ROS_INFO("    -> %s takes %.3f", e.node.c_str(),timeTrav);
 			}
-			ROS_INFO("    -> %s", e.node.c_str());
 		}
 	}
 	display();
@@ -283,7 +287,8 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFre
 
 	fout << "}\n";
 	fout.close();
-	system("dot -Tpdf  -n  fig.dot > fig.pdf");
+	int errsys = 0;
+	errsys = system("dot -Tpdf  -n  fig.dot > fig.pdf");
 
 }
 	/// - public method --------------------------------------------------------------
@@ -424,7 +429,8 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg) {
 
   fout << "}\n";
   fout.close();
-  system("dot -Tpdf  -n  fig.dot > fig.pdf");
+  int errsys = 0;
+  errsys = system("dot -Tpdf  -n  fig.dot > fig.pdf");
 }
 
 void Graph::generateMessage(std::string name, strands_navigation_msgs::TopologicalMap &map) {
