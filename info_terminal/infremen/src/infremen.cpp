@@ -337,9 +337,10 @@ int generateNewSchedule(uint32_t givenTime)
 		fprintf(file,"%ld %s %s\n",timeInfo,dummy,frelementSet.frelements[nodes[s]]->id);
 	}
 	for (int s=0;s<numSlots;s++){
+		times[0] =  timeInfo = timeSlots[s];
+		strftime(dummy, sizeof(dummy), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
 		fprintf(file,"%ld %s",timeInfo,dummy);
 		for (int i=0;i<numNodes;i++){
-			times[0] = timeSlots[s]; 
 			frelementSet.frelements[i]->estimate(times,probability,1,1);
 			fprintf(file," %lf",probability[0]);
 		}
