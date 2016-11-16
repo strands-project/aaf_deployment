@@ -458,17 +458,25 @@ int createTask(int slot)
 	strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
 
 	float probability[1];
+	int chargeNodeID = frelementSet.find("ChargingPoint");
+
 	if (advancedPlanning){
 		int currentNodeID = frelementSet.find(nodeName.c_str());
 		if (currentNodeID >= 0)
 		{
 			imr::Graph::PathSolution path = graph.getPath(currentNodeID);
-			//TODO nodes[slot] =  path.path[0];
+			if (path.path.size() > 0){
+			       	nodes[slot] =  path.path[0];
+				for (int i =0;i<path.path.size();i++) ROS_INFO("Path %i: %s",i,frelementSet.frelements[path.path[i]]->id);
+			}else{
+				ROS_WARN("No path generated! Going to charging station.");
+				nodes[slot]=chargeNodeID;
+			}
 		}else{
-			ROS_WARN("Cannot determine the current Infoterminal node");
+			ROS_WARN("Cannot determine the current Infoterminal node, going to charge");
+			nodes[slot]=chargeNodeID;
 		}
 	}
-	int chargeNodeID = frelementSet.find("ChargingPoint");
 	/*charge when low on battery*/
 	if (chargeNodeID != -1 && forceCharging){
 		nodes[slot]=chargeNodeID;
