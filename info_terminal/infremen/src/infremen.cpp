@@ -342,7 +342,7 @@ int generateNewSchedule(uint32_t givenTime)
 		strftime(dummy, sizeof(dummy), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
 		fprintf(file,"%ld %s %s\n",timeInfo,dummy,frelementSet.frelements[nodes[s]]->id);
 	}
-	fprintf(file,"Nodes: ");
+	fprintf(file,"Nodes:");
 	for (int i=0;i<numNodes;i++)fprintf(file," %s",frelementSet.frelements[i]->id);
 	fprintf(file,"\n");
 	for (int s=0;s<numSlots;s++){
@@ -404,6 +404,14 @@ int generateSchedule(uint32_t givenTime)
 	}
 	float probability;
 	/*read probablilities*/
+	checkReturn = fscanf(file,"Nodes:");
+	for (int i=0;i<numNodes;i++){
+		checkReturn = fscanf(file," %s",dummy);
+		int a = graph.addNode(dummy);
+		std::cout << graph.nodes[a].name << std::endl;
+	}
+	checkReturn = fscanf(file,"\n");
+
 	for (int s=0;s<numSlots;s++){
 		checkReturn = fscanf(file,"%ld %s",&slot,dummy);
 		timeInfo = slot;
