@@ -28,6 +28,7 @@ using namespace imr;
 Node::Node(int id, std::string name) :
   id(id),
   name(name) {
+	  infoTerminal = false;
   };
 
 /// - destructor --------------------------------------------------------------

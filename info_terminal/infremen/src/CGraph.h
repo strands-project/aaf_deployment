@@ -97,6 +97,7 @@ private:
 class Node {
 public:
   int id;
+  bool infoTerminal;
   std::string name;
   std::vector<Graph::Link> links;
   std::vector<double> probs; // probabilities for given times (stored somewhere else)
