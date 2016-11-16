@@ -143,143 +143,143 @@ std::ifstream fin;
 
 void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFrelementSet *set) 
 {
-  std::ifstream fin;
-  std::string type, node, from, to;
-  int weight;
-  int idFrom, idTo;
-  nodes.clear();
-  nodeMap.clear();
-  for(auto n:msg->nodes) {
-	  if (set->find(n.name.c_str()) >=0) addNode(n.name);
-  }
-  for(auto n:msg->nodes) 
-  {
-	  if (set->find(n.name.c_str()) >=0){
-		  for(auto m:msg->nodes){
-			  if (set->find(m.name.c_str()) >=0)
-			  {
-				  idFrom = addNode(n.name);
-				  idTo = addNode(m.name);
-				  addUndirectedLink(idFrom, idTo, 1);
-			  }
-		  }
-	  } 
-  }
-  display();
+	std::ifstream fin;
+	std::string type, node, from, to;
+	int weight;
+	int idFrom, idTo;
+
+	nodes.clear();
+	nodeMap.clear();
+	for(auto n:msg->nodes) {
+		addNode(n.name);
+	}
+
+	for(auto n:msg->nodes) {
+		ROS_INFO("  Node: %s", n.name.c_str());
+		idFrom = addNode(n.name);
+		for(auto e:n.edges) {
+			idTo = addNode(e.node);
+			if (idFrom > idTo) {
+				addUndirectedLink(idFrom, idTo, e.top_vel);
+			}
+			ROS_INFO("    -> %s", e.node.c_str());
+		}
+	}
+	display();
+
+
+	std::vector <int> d(100, (std::numeric_limits <int>::max)());
+	boost::johnson_all_pairs_shortest_paths(g, dist, boost::distance_map(&d[0]));
+
+	int minDist;
+	int dd;
+	for (unsigned int i = 0; i < nodes.size(); ++i) {
+		if (set->find(nodes[i].name.c_str()) >=0) nodes[i].infoTerminal = true; else nodes[i].infoTerminal = false;
+		for (unsigned int j = 0; j < nodes.size(); ++j) {
+			if (i!=j) {
+				minDist = std::numeric_limits <int>::max();
+				for(auto link:nodes[i].links) {
+					dd = link.second + dist[link.first][j];
+					if (dd < minDist) {
+						minDist = dd;
+						next[i][j] = link.first;
+					}
+				}
+			} else {
+				next[i][j] = i;
+			}
+		}
+	}
+
+	int rest;
+	for (unsigned int i = 0; i < nodes.size(); ++i) {
+		for (unsigned int j = 0; j < nodes.size(); ++j) {
+			if (i==j) {
+				discredisedDist[i][j] = 2*planningHorizon;
+			} else {
+				rest = timeSlotDuration - ((dist[i][j]+interactionSlotDuration) % timeSlotDuration);
+				discredisedDist[i][j] = dist[i][j] + interactionSlotDuration + rest;
+			}
+		}
+	}
+
+	std::cout << "Distances" << std::endl << "       ";
+	for (unsigned int k = 0; k < nodes.size(); ++k) {
+		std::cout << std::setw(8) << k;
+	}
+	std::cout << std::endl;
+
+	for (unsigned int i = 0; i < nodes.size(); ++i) {
+		std::cout << std::setw(3) << i << " -> ";
+		for (unsigned int j = 0; j < nodes.size(); ++j) {
+			if (dist[i][j] == (std::numeric_limits<int>::max)())
+				std::cout << std::setw(8) << "inf";
+			else
+				std::cout << std::setw(8) << dist[i][j];
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
+
+
+	std::cout << "Discretized distances" << std::endl << "       ";
+	for (unsigned int k = 0; k < nodes.size(); ++k) {
+		std::cout << std::setw(8) << k;
+	}
+	std::cout << std::endl;
+
+	for (unsigned int i = 0; i < nodes.size(); ++i) {
+		std::cout << std::setw(3) << i << " -> ";
+		for (unsigned int j = 0; j < nodes.size(); ++j) {
+			if (discredisedDist[i][j] == (std::numeric_limits<int>::max)())
+				std::cout << std::setw(8) << "inf";
+			else
+				std::cout << std::setw(8) << discredisedDist[i][j];
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
 
 
 
-  std::vector <int> d(100, (std::numeric_limits <int>::max)());
-  boost::johnson_all_pairs_shortest_paths(g, dist, boost::distance_map(&d[0]));
 
-  int minDist;
-  int dd;
-  for (unsigned int i = 0; i < nodes.size(); ++i) {
-    for (unsigned int j = 0; j < nodes.size(); ++j) {
-      if (i!=j) {
-        minDist = std::numeric_limits <int>::max();
-        for(auto link:nodes[i].links) {
-          dd = link.second + dist[link.first][j];
-          if (dd < minDist) {
-            minDist = dd;
-            next[i][j] = link.first;
-          }
-        }
-      } else {
-        next[i][j] = i;
-      }
-    }
-  }
+	std::cout << "Nexts"<< std::endl << "       ";
+	for (unsigned int k = 0; k < nodes.size(); ++k) {
+		std::cout << std::setw(5) << k;
+	}
+	std::cout << std::endl;
 
-  int rest;
-  for (unsigned int i = 0; i < nodes.size(); ++i) {
-    for (unsigned int j = 0; j < nodes.size(); ++j) {
-      if (i==j) {
-        discredisedDist[i][j] = 2*planningHorizon;
-      } else {
-        rest = timeSlotDuration - ((dist[i][j]+interactionSlotDuration) % timeSlotDuration);
-        discredisedDist[i][j] = dist[i][j] + interactionSlotDuration + rest;
-      }
-    }
-  }
-
-  std::cout << "Distances" << std::endl << "       ";
-  for (unsigned int k = 0; k < nodes.size(); ++k) {
-    std::cout << std::setw(8) << k;
-  }
-  std::cout << std::endl;
-
-  for (unsigned int i = 0; i < nodes.size(); ++i) {
-    std::cout << std::setw(3) << i << " -> ";
-    for (unsigned int j = 0; j < nodes.size(); ++j) {
-      if (dist[i][j] == (std::numeric_limits<int>::max)())
-        std::cout << std::setw(8) << "inf";
-      else
-        std::cout << std::setw(8) << dist[i][j];
-    }
-    std::cout << std::endl;
-  }
-  std::cout << std::endl;
-
-
-  std::cout << "Discretized distances" << std::endl << "       ";
-  for (unsigned int k = 0; k < nodes.size(); ++k) {
-    std::cout << std::setw(8) << k;
-  }
-  std::cout << std::endl;
-
-  for (unsigned int i = 0; i < nodes.size(); ++i) {
-    std::cout << std::setw(3) << i << " -> ";
-    for (unsigned int j = 0; j < nodes.size(); ++j) {
-      if (discredisedDist[i][j] == (std::numeric_limits<int>::max)())
-        std::cout << std::setw(8) << "inf";
-      else
-        std::cout << std::setw(8) << discredisedDist[i][j];
-    }
-    std::cout << std::endl;
-  }
-  std::cout << std::endl;
+	for (unsigned int i = 0; i < nodes.size(); ++i) {
+		std::cout << std::setw(3) << i << " -> ";
+		for (unsigned int j = 0; j < nodes.size(); ++j) {
+			if (dist[i][j] == (std::numeric_limits<int>::max)())
+				std::cout << std::setw(5) << "inf";
+			else
+				std::cout << std::setw(5) << next[i][j];
+		}
+		std::cout << std::endl;
+	}
 
 
 
+	// print boost graph structure
+	std::ofstream fout("fig.dot");
+	fout << "graph A {\n"
+		<< "  rankdir=LR\n"
+		<< "size=\"5,3\"\n"
+		<< "ratio=\"fill\"\n"
+		<< "edge[style=\"bold\" fontsize=21, fontcolor=\"blue\",fontname=\"Times-Roman bold\"]\n"
+		<< "node[shape=\"circle\" , width=1.6, fontsize=21, fillcolor=\"yellow\", style=filled]\n";
 
-  std::cout << "Nexts"<< std::endl << "       ";
-  for (unsigned int k = 0; k < nodes.size(); ++k) {
-    std::cout << std::setw(5) << k;
-  }
-  std::cout << std::endl;
+	boost::graph_traits < BoostGraph >::edge_iterator ei, ei_end;
+	for (boost::tie(ei, ei_end) = boost::edges(g); ei != ei_end; ++ei)
+		fout << nodes[boost::source(*ei, g)].name << " -- " << nodes[boost::target(*ei, g)].name
+			//    fout << boost::source(*ei, g) << " -> " << boost::target(*ei, g)
+			<< "[label=" << boost::get(boost::edge_weight, g)[*ei] << "]\n";
 
-  for (unsigned int i = 0; i < nodes.size(); ++i) {
-    std::cout << std::setw(3) << i << " -> ";
-    for (unsigned int j = 0; j < nodes.size(); ++j) {
-      if (dist[i][j] == (std::numeric_limits<int>::max)())
-        std::cout << std::setw(5) << "inf";
-      else
-        std::cout << std::setw(5) << next[i][j];
-    }
-    std::cout << std::endl;
-  }
-
-
-
-  // print boost graph structure
-  std::ofstream fout("fig.dot");
-  fout << "graph A {\n"
-  << "  rankdir=LR\n"
-  << "size=\"5,3\"\n"
-  << "ratio=\"fill\"\n"
-  << "edge[style=\"bold\" fontsize=21, fontcolor=\"blue\",fontname=\"Times-Roman bold\"]\n"
-  << "node[shape=\"circle\" , width=1.6, fontsize=21, fillcolor=\"yellow\", style=filled]\n";
-
-  boost::graph_traits < BoostGraph >::edge_iterator ei, ei_end;
-  for (boost::tie(ei, ei_end) = boost::edges(g); ei != ei_end; ++ei)
-    fout << nodes[boost::source(*ei, g)].name << " -- " << nodes[boost::target(*ei, g)].name
-//    fout << boost::source(*ei, g) << " -> " << boost::target(*ei, g)
-    << "[label=" << boost::get(boost::edge_weight, g)[*ei] << "]\n";
-
-  fout << "}\n";
-  fout.close();
-  system("dot -Tpdf  -n  fig.dot > fig.pdf");
+	fout << "}\n";
+	fout.close();
+	system("dot -Tpdf  -n  fig.dot > fig.pdf");
 
 }
 	/// - public method --------------------------------------------------------------
@@ -506,24 +506,26 @@ void Graph::permuteNodes(int id) {
 	}
 	int *dd =  discredisedDist[id];
 	for(auto n: nodes) {
-		pathTime += dd[n.id];
-		if (pathTime <= planningHorizon) {
-			double p = n.probs[pathTime/timeSlotDuration - 1] + rand()/ (100000.0*RAND_MAX); //TODO: wouldn't be better to use shuffle?
-			double benefit = getBenefit(p);
-			//       double benefit = 200/(1-p) + 1./(1+100*(0.5-p)*(0.5-p));
-			//       double benefit = 0.5*p - (1-0.5)*(p*log2(p) + (1-p)*log2(1-p));
-			//      double benefit = -(p*log2(p) + (1-p)*log2(1-p));
-			//        std::cout << (pathTime/60 - interactionSlotDurationInMinutes) << " " << benefit << " " << n.probs.size()  << std::endl;
-			//        std::cout << " " << n.probs[(int) benefit]<< std::endl;
-			pathBenefit+=benefit;
-			path.push_back(n.id);
-			pathTimes.push_back(pathTime);
-			permuteNodes(n.id);
-			path.pop_back();
-			pathTimes.pop_back();
-			pathBenefit-=benefit;
+		if (n.infoTerminal){
+			pathTime += dd[n.id];
+			if (pathTime <= planningHorizon) {
+				double p = n.probs[pathTime/timeSlotDuration - 1] + rand()/ (100000.0*RAND_MAX); //TODO: wouldn't be better to use shuffle?
+				double benefit = getBenefit(p);
+				//       double benefit = 200/(1-p) + 1./(1+100*(0.5-p)*(0.5-p));
+				//       double benefit = 0.5*p - (1-0.5)*(p*log2(p) + (1-p)*log2(1-p));
+				//      double benefit = -(p*log2(p) + (1-p)*log2(1-p));
+				//        std::cout << (pathTime/60 - interactionSlotDurationInMinutes) << " " << benefit << " " << n.probs.size()  << std::endl;
+				//        std::cout << " " << n.probs[(int) benefit]<< std::endl;
+				pathBenefit+=benefit;
+				path.push_back(n.id);
+				pathTimes.push_back(pathTime);
+				permuteNodes(n.id);
+				path.pop_back();
+				pathTimes.pop_back();
+				pathBenefit-=benefit;
+			}
+			pathTime -= dd[n.id];
 		}
-		pathTime -= dd[n.id];
 	}
 }
 
