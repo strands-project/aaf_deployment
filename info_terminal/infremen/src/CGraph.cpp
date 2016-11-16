@@ -282,7 +282,7 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFre
 	boost::graph_traits < BoostGraph >::edge_iterator ei, ei_end;
 	for (boost::tie(ei, ei_end) = boost::edges(g); ei != ei_end; ++ei){
 		if (nodes[boost::source(*ei, g)].infoTerminal){
-			fout << nodes[boost::source(*ei, g)].name << " -- " << nodes[boost::target(*ei, g)].name << "[label=" << boost::get(boost::edge_weight, g)[*ei] << ", fillcolor =\"red\"] \n";
+			fout << nodes[boost::source(*ei, g)].name << " -- " << nodes[boost::target(*ei, g)].name << "[label=" << boost::get(boost::edge_weight, g)[*ei] << ", fillcolor=\"red\"] \n";
 		}else{
 			fout << nodes[boost::source(*ei, g)].name << " -- " << nodes[boost::target(*ei, g)].name << "[label=" << boost::get(boost::edge_weight, g)[*ei] << "] \n";
 		}
