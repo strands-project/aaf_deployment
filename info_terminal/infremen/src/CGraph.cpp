@@ -140,7 +140,32 @@ std::ifstream fin;
   display();
 }
 
-/// - public method --------------------------------------------------------------
+void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFrelementSet *set) 
+{
+  std::ifstream fin;
+  std::string type, node, from, to;
+  int weight;
+  int idFrom, idTo;
+  nodes.clear();
+  nodeMap.clear();
+  for(auto n:msg->nodes) {
+	  if (set->find(n.name.c_str()) >=0) addNode(n.name);
+  }
+  for(auto n:msg->nodes) 
+  {
+	  if (set->find(n.name.c_str()) >=0){
+		  for(auto m:msg->nodes){
+			  if (set->find(m.name.c_str()) >=0)
+			  {
+				  idFrom = addNode(n.name);
+				  idTo = addNode(m.name);
+				  addUndirectedLink(idFrom, idTo, 1);
+			  }
+		  }
+	  } 
+  }
+}
+	/// - public method --------------------------------------------------------------
 void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg) {
   std::ifstream fin;
   std::string type, node, from, to;

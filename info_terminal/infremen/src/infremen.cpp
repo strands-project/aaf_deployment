@@ -115,7 +115,11 @@ void mapCallback(const strands_navigation_msgs::TopologicalMapConstPtr& msg)
 	ROS_INFO("  Last updated: %s", msg->last_updated.c_str());
 	ROS_INFO("  Num nodes: %ld", msg->nodes.size());
 
-	graph.load(msg);
+	for (int i=0;i<numNodes;i++){
+	       	ROS_INFO("Infoterminal waypoint %i: %s.",i,frelementSet.frelements[i]->id);
+	}
+
+	graph.load(msg,&frelementSet);
 	graph.setPlanningHorizon(planningHorizon);
 	mapReceived = true;
 	//simulator.initFremen();

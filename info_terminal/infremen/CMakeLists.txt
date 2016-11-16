@@ -37,6 +37,7 @@ add_library(infremen_graphlib src/CGraph.cpp)
 
 target_link_libraries(infremen_frelement infremen_timer)
 target_link_libraries(infremen_frelementset infremen_frelement)
+target_link_libraries(infremen_graphlib infremen_frelementset)
 
 target_link_libraries (infremen
 		${catkin_LIBRARIES}

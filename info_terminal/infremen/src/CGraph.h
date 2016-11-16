@@ -13,6 +13,7 @@
 #include <boost/property_map/property_map.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include "strands_navigation_msgs/TopologicalMap.h"
+#include "CFrelementSet.h"
 
 #define MAX_GRAPH_SIZE 200
 namespace imr {
@@ -63,6 +64,7 @@ public:
 
 
   void display();
+  void load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFrelementSet *set); 
   void load(const strands_navigation_msgs::TopologicalMapConstPtr &msg);
   void loadFile(std::string name);
   void permuteNodes(int id);
