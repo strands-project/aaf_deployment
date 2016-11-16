@@ -411,6 +411,7 @@ int generateSchedule(uint32_t givenTime)
 		else {
 			for (int i=0;i<numNodes;i++){
 				checkReturn = fscanf(file," %f",&probability);
+				graph.nodes[i].probs.push_back(probability);
 				//TODO add probability to the nodes here
 				if (checkReturn != 1)	ROS_ERROR("Infoterminal schedule file %s is corrupt at line %i (wrong number of entries)!",dummy,s);
 			}
