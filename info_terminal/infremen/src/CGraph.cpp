@@ -277,7 +277,7 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFre
 		<< "size=\"5,3\"\n"
 		<< "ratio=\"fill\"\n"
 		<< "edge[style=\"bold\" fontsize=21, fontcolor=\"blue\",fontname=\"Times-Roman bold\"]\n"
-		<< "node[shape=\"circle\" , width=1.6, fontsize=21, color=\"white\", style=filled]\n";
+		<< "node[shape=\"circle\" , width=1.6, fontsize=21, fillcolor=\"white\", style=filled]\n";
 
 	boost::graph_traits < BoostGraph >::edge_iterator ei, ei_end;
 	for (unsigned int i = 0; i < nodes.size(); ++i) {
