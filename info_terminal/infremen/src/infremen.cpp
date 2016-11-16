@@ -481,7 +481,7 @@ int createTask(int slot)
 			if (path.path.size() > 0){
 				for (int i =0;i<path.path.size();i++) ROS_INFO("Path %i: %s",i,graph.nodes[path.path[i]].name.c_str());
 			       	nodes[slot] = frelementSet.find(graph.nodes[path.path[0]].name.c_str());
-				ROS_WARN("Goto %i.",nodes[slot]);
+				ROS_WARN("Goto %i %s.",nodes[slot],frelementSet.frelements[nodes[slot]]->id);
 			}else{
 				ROS_WARN("No path generated! Going to charging station.");
 				nodes[slot]=chargeNodeID;
