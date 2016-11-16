@@ -277,14 +277,14 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFre
 		<< "size=\"5,3\"\n"
 		<< "ratio=\"fill\"\n"
 		<< "edge[style=\"bold\" fontsize=21, fontcolor=\"blue\",fontname=\"Times-Roman bold\"]\n"
-		<< "node[shape=\"circle\" , width=1.6, fontsize=21, fillcolor=\"yellow\", style=filled]\n";
+		<< "node[shape=\"circle\" , width=1.6, fontsize=21, style=filled]\n";
 
 	boost::graph_traits < BoostGraph >::edge_iterator ei, ei_end;
 	for (boost::tie(ei, ei_end) = boost::edges(g); ei != ei_end; ++ei){
 		if (nodes[boost::source(*ei, g)].infoTerminal){
-			fout << nodes[boost::source(*ei, g)].name << " -- " << nodes[boost::target(*ei, g)].name << "[label=" << boost::get(boost::edge_weight, g)[*ei] << ", fillcolor=\"red\"] \n";
+			fout << nodes[boost::source(*ei, g)].name << " -- " << nodes[boost::target(*ei, g)].name << "[label=" << boost::get(boost::edge_weight, g)[*ei] << ", fillcolor=\"yellow\"] \n";
 		}else{
-			fout << nodes[boost::source(*ei, g)].name << " -- " << nodes[boost::target(*ei, g)].name << "[label=" << boost::get(boost::edge_weight, g)[*ei] << "] \n";
+			fout << nodes[boost::source(*ei, g)].name << " -- " << nodes[boost::target(*ei, g)].name << "[label=" << boost::get(boost::edge_weight, g)[*ei] << ", fillcolor=\"white\"] \n";
 		}
 	}
 	fout << "}\n";
