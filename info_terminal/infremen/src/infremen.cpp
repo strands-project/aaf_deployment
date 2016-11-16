@@ -410,7 +410,7 @@ int generateSchedule(uint32_t givenTime)
 		checkReturn = fscanf(file," %s",dummy);
 		int a = graph.addNode(dummy);
 		mapProb[i] = a;
-		std::cout << graph.nodes[a].name << std::endl;
+		std::cout << "Node: " << graph.nodes[a].name << ":" << a << std::endl;
 	}
 	checkReturn = fscanf(file,"\n");
 
