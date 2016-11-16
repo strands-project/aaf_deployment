@@ -150,12 +150,16 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFre
 
 	nodes.clear();
 	nodeMap.clear();
+	float x[msg->nodes.size()];
+	float y[msg->nodes.size()];
 	for(auto n:msg->nodes) {
-		addNode(n.name);
+		int a = addNode(n.name);
+		ROS_INFO("  Node %i: %s %f %f",a, n.name.c_str(),n.pose.position.x,n.pose.position.y);
+		x[a] = n.pose.position.x;
+		y[a] = n.pose.position.y;
 	}
 
 	for(auto n:msg->nodes) {
-		ROS_INFO("  Node: %s", n.name.c_str());
 		idFrom = addNode(n.name);
 		for(auto e:n.edges) {
 			idTo = addNode(e.node);
