@@ -164,6 +164,122 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFre
 		  }
 	  } 
   }
+  display();
+
+
+
+  std::vector <int> d(100, (std::numeric_limits <int>::max)());
+  boost::johnson_all_pairs_shortest_paths(g, dist, boost::distance_map(&d[0]));
+
+  int minDist;
+  int dd;
+  for (unsigned int i = 0; i < nodes.size(); ++i) {
+    for (unsigned int j = 0; j < nodes.size(); ++j) {
+      if (i!=j) {
+        minDist = std::numeric_limits <int>::max();
+        for(auto link:nodes[i].links) {
+          dd = link.second + dist[link.first][j];
+          if (dd < minDist) {
+            minDist = dd;
+            next[i][j] = link.first;
+          }
+        }
+      } else {
+        next[i][j] = i;
+      }
+    }
+  }
+
+  int rest;
+  for (unsigned int i = 0; i < nodes.size(); ++i) {
+    for (unsigned int j = 0; j < nodes.size(); ++j) {
+      if (i==j) {
+        discredisedDist[i][j] = 2*planningHorizon;
+      } else {
+        rest = timeSlotDuration - ((dist[i][j]+interactionSlotDuration) % timeSlotDuration);
+        discredisedDist[i][j] = dist[i][j] + interactionSlotDuration + rest;
+      }
+    }
+  }
+
+  std::cout << "Distances" << std::endl << "       ";
+  for (unsigned int k = 0; k < nodes.size(); ++k) {
+    std::cout << std::setw(8) << k;
+  }
+  std::cout << std::endl;
+
+  for (unsigned int i = 0; i < nodes.size(); ++i) {
+    std::cout << std::setw(3) << i << " -> ";
+    for (unsigned int j = 0; j < nodes.size(); ++j) {
+      if (dist[i][j] == (std::numeric_limits<int>::max)())
+        std::cout << std::setw(8) << "inf";
+      else
+        std::cout << std::setw(8) << dist[i][j];
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
+
+
+  std::cout << "Discretized distances" << std::endl << "       ";
+  for (unsigned int k = 0; k < nodes.size(); ++k) {
+    std::cout << std::setw(8) << k;
+  }
+  std::cout << std::endl;
+
+  for (unsigned int i = 0; i < nodes.size(); ++i) {
+    std::cout << std::setw(3) << i << " -> ";
+    for (unsigned int j = 0; j < nodes.size(); ++j) {
+      if (discredisedDist[i][j] == (std::numeric_limits<int>::max)())
+        std::cout << std::setw(8) << "inf";
+      else
+        std::cout << std::setw(8) << discredisedDist[i][j];
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
+
+
+
+
+  std::cout << "Nexts"<< std::endl << "       ";
+  for (unsigned int k = 0; k < nodes.size(); ++k) {
+    std::cout << std::setw(5) << k;
+  }
+  std::cout << std::endl;
+
+  for (unsigned int i = 0; i < nodes.size(); ++i) {
+    std::cout << std::setw(3) << i << " -> ";
+    for (unsigned int j = 0; j < nodes.size(); ++j) {
+      if (dist[i][j] == (std::numeric_limits<int>::max)())
+        std::cout << std::setw(5) << "inf";
+      else
+        std::cout << std::setw(5) << next[i][j];
+    }
+    std::cout << std::endl;
+  }
+
+
+
+  // print boost graph structure
+  std::ofstream fout("fig.dot");
+  fout << "graph A {\n"
+  << "  rankdir=LR\n"
+  << "size=\"5,3\"\n"
+  << "ratio=\"fill\"\n"
+  << "edge[style=\"bold\" fontsize=21, fontcolor=\"blue\",fontname=\"Times-Roman bold\"]\n"
+  << "node[shape=\"circle\" , width=1.6, fontsize=21, fillcolor=\"yellow\", style=filled]\n";
+
+  boost::graph_traits < BoostGraph >::edge_iterator ei, ei_end;
+  for (boost::tie(ei, ei_end) = boost::edges(g); ei != ei_end; ++ei)
+    fout << nodes[boost::source(*ei, g)].name << " -- " << nodes[boost::target(*ei, g)].name
+//    fout << boost::source(*ei, g) << " -> " << boost::target(*ei, g)
+    << "[label=" << boost::get(boost::edge_weight, g)[*ei] << "]\n";
+
+  fout << "}\n";
+  fout.close();
+  system("dot -Tpdf  -n  fig.dot > fig.pdf");
+
 }
 	/// - public method --------------------------------------------------------------
 void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg) {
