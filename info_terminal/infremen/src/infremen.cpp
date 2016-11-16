@@ -405,9 +405,11 @@ int generateSchedule(uint32_t givenTime)
 	float probability;
 	/*read probablilities*/
 	checkReturn = fscanf(file,"Nodes:");
+	int mapProb[numNodes];
 	for (int i=0;i<numNodes;i++){
 		checkReturn = fscanf(file," %s",dummy);
 		int a = graph.addNode(dummy);
+		mapProb[i] = a;
 		std::cout << graph.nodes[a].name << std::endl;
 	}
 	checkReturn = fscanf(file,"\n");
@@ -422,7 +424,7 @@ int generateSchedule(uint32_t givenTime)
 		else {
 			for (int i=0;i<numNodes;i++){
 				checkReturn = fscanf(file," %f",&probability);
-				graph.nodes[i].probs.push_back(probability);
+				graph.nodes[mapProb[i]].probs.push_back(probability);
 				//TODO add probability to the nodes here
 				if (checkReturn != 1)	ROS_ERROR("Infoterminal schedule file %s is corrupt at line %i (wrong number of entries)!",dummy,s);
 			}
