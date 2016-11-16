@@ -103,6 +103,7 @@ uint32_t timeSlots[10000];
 int nodes[10000];
 int taskIDs[10000];
 int numNodes = 0;
+bool mapReceived = false;
 
 //this should be received whenever a map is switched
 void mapCallback(const strands_navigation_msgs::TopologicalMapConstPtr& msg) 
@@ -116,6 +117,7 @@ void mapCallback(const strands_navigation_msgs::TopologicalMapConstPtr& msg)
 
 	graph.load(msg);
 	graph.setPlanningHorizon(planningHorizon);
+	mapReceived = true;
 	//simulator.initFremen();
 }
 
@@ -456,7 +458,7 @@ int createTask(int slot)
 		if (currentNodeID >= 0)
 		{
 			imr::Graph::PathSolution path = graph.getPath(currentNodeID);
-			nodes[slot] =  path.path[0];
+			//TODO nodes[slot] =  path.path[0];
 		}else{
 			ROS_WARN("Cannot determine the current Infoterminal node");
 		}
@@ -658,22 +660,26 @@ int main(int argc,char* argv[])
 	while (ros::ok())
 	{
 		ros::spinOnce();
-		sleep(1);
-		if (debug) ROS_INFO("Infremen tasks: %i %i",numCurrentTasks,maxTaskNumber);
-		currentTimeSlot = getNextTimeSlot(0);
-		if (currentTimeSlot!=lastTimeSlot){
-			//			modifyNextTask(currentTimeSlot);
-			numCurrentTasks--;
-			if (numCurrentTasks < 0) numCurrentTasks = 0;
-		}
-		if (numCurrentTasks < maxTaskNumber)
-		{
-			lastTimeSlot=currentTimeSlot;
-			int a=getNextTimeSlot(numCurrentTasks);
-			if ( a >= 0){
-				createTask(a);
-				numCurrentTasks++;
+		if (mapReceived){
+			sleep(1);
+			if (debug) ROS_INFO("Infremen tasks: %i %i",numCurrentTasks,maxTaskNumber);
+			currentTimeSlot = getNextTimeSlot(0);
+			if (currentTimeSlot!=lastTimeSlot){
+				//			modifyNextTask(currentTimeSlot);
+				numCurrentTasks--;
+				if (numCurrentTasks < 0) numCurrentTasks = 0;
 			}
+			if (numCurrentTasks < maxTaskNumber)
+			{
+				lastTimeSlot=currentTimeSlot;
+				int a=getNextTimeSlot(numCurrentTasks);
+				if ( a >= 0){
+					createTask(a);
+					numCurrentTasks++;
+				}
+			}
+		}else{
+			usleep(100000);
 		}
 	}
 	return 0;
