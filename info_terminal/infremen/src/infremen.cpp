@@ -676,8 +676,8 @@ int main(int argc,char* argv[])
 
 	//generate schedule
 	ros::Time currentTime = ros::Time::now();
-	ros::Publisher terminateTask = n.advertise<std_msgs::Int8>("/info_terminal/terminate", 1);
-	std_msgs::Int8 cmd;
+	ros::Publisher terminateTask = n->advertise<std_msgs::Int32>("/info_terminal/terminate", 1);
+	std_msgs::Int32 cmd;
 	//buildModels(currentTime.sec);
 	//generateSchedule(currentTime.sec);
 
