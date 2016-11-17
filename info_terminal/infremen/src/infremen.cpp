@@ -491,6 +491,7 @@ int createTask(int slot)
 			nodes[slot]=chargeNodeID;
 		}
 	}
+
 	/*charge when low on battery*/
 	if (chargeNodeID != -1 && forceCharging){
 		nodes[slot]=chargeNodeID;
@@ -675,6 +676,8 @@ int main(int argc,char* argv[])
 
 	//generate schedule
 	ros::Time currentTime = ros::Time::now();
+	ros::Publisher terminateTask = n.advertise<std_msgs::Int8>("/info_terminal/terminate", 1);
+	std_msgs::Int8 cmd;
 	//buildModels(currentTime.sec);
 	//generateSchedule(currentTime.sec);
 
@@ -701,6 +704,12 @@ int main(int argc,char* argv[])
 				lastTimeSlot=currentTimeSlot;
 				int a=getNextTimeSlot(numCurrentTasks);
 				if ( a >= 0){
+					//terminate the previous infoterminal task
+					terminateTask.publish(cmd);
+					for (int i = 0;i<5;i++){	
+						usleep(100000);
+						ros::spinOnce();
+					}
 					createTask(a);
 					numCurrentTasks++;
 				}
