@@ -102,6 +102,7 @@ int timeOffset = 0;
 uint32_t timeSlots[10000];
 int nodes[10000];
 int taskIDs[10000];
+int lastTask = -1;
 int numNodes = 0;
 bool mapReceived = false;
 
@@ -138,12 +139,15 @@ void reconfigureCallback(infremen::infremenConfig &config, uint32_t level)
 	minimalBatteryLevel = config.minimalBatteryLevel;
 	batteryUndockLevel = config.batteryUndockLevel;
 	interactionTimeout = config.interactionTimeout;
-	maxTaskNumber = config.maxTaskNumber;
 	taskDuration = config.taskDuration;
 	taskPriority = config.taskPriority;
 	debug = config.verbose;
 	taskStartDelay = config.taskStartDelay;
 	rescheduleCheckTime = config.rescheduleCheckTime;
+
+	/*TODO I tested only with one task, this is to be sure that it's not reconfigured*/ 
+	//maxTaskNumber = config.maxTaskNumber;
+	maxTaskNumber = 1;
 }
 
 //listen to battery and set forced charging if necessary
@@ -516,7 +520,7 @@ int createTask(int slot)
 		{
 			sprintf(dummy,"%s for timeslot %i on %s, between %i and %i.",frelementSet.frelements[nodes[slot]]->id,slot,testTime,task.start_after.sec,task.end_before.sec);
 			ROS_INFO("Task %ld created at %s ", taskAdd.response.task_id,dummy);
-			taskIDs[slot] = taskAdd.response.task_id;
+			lastTask = taskIDs[slot] = taskAdd.response.task_id;
 		}
 	}else{
 		sprintf(dummy,"Could not create task for timeslot %i: At %s go to %s.",slot,testTime,frelementSet.frelements[nodes[slot]]->id);
@@ -703,7 +707,17 @@ int main(int argc,char* argv[])
 			{
 				lastTimeSlot=currentTimeSlot;
 				int a=getNextTimeSlot(numCurrentTasks);
-				if ( a >= 0){
+				if ( a >= 0)
+				{
+					strands_executive_msgs::CancelTask taskCanc;
+					taskCanc.request.task_id = lastTask;
+					taskCancel.call(taskCanc);
+					ROS_INFO("Cancelling task %i",lastTask);
+					for (int i = 0;i<5;i++){
+						usleep(100000);
+						ros::spinOnce();
+					}
+					ROS_INFO("Terminating current infoterminal task");
 					//terminate the previous infoterminal task
 					terminateTask.publish(cmd);
 					for (int i = 0;i<5;i++){	
