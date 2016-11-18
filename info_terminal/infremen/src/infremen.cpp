@@ -480,6 +480,7 @@ int createTask(int slot)
 
 	if (advancedPlanning){
 		int currentNodeID = frelementSet.find(closestInfoTerminalNode.c_str());
+		ROS_WARN("Current node is %s",closestInfoTerminalNode.c_str());
 		if (currentNodeID >= 0)
 		{
 			imr::Graph::PathSolution path = graph.getPath(currentNodeID);
