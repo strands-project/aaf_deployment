@@ -93,6 +93,7 @@ int currentTimeSlot = -1;
 int numCurrentTasks = 0; 
 string nodeName = "ChargingPoint";
 string closestNode = "ChargingPoint";
+string closestInfoTerminalNode = "ChargingPoint";
 int32_t lastInteractionTime = -1;
 geometry_msgs::Pose lastPose;
 bool forceCharging = false;
@@ -201,7 +202,7 @@ void getCurrentNode(const std_msgs::String::ConstPtr& msg)
 {
 	closestNode = msg->data;
 	if (frelementSet.find(msg->data.c_str())>-1){
-		nodeName = msg->data;
+		closestInfoTerminalNode = nodeName = msg->data;
 		if (debug) ROS_INFO("Closest InfoTerminal node switched to %s.",nodeName.c_str());
 	}else{
 		if (debug) ROS_INFO("Closest node %s - however, it's not an Infoterminal node.",msg->data.c_str());
@@ -478,14 +479,15 @@ int createTask(int slot)
 	int chargeNodeID = frelementSet.find("ChargingPoint");
 
 	if (advancedPlanning){
-		int currentNodeID = frelementSet.find(nodeName.c_str());
+		int currentNodeID = frelementSet.find(closestInfoTerminalNode.c_str());
 		if (currentNodeID >= 0)
 		{
 			imr::Graph::PathSolution path = graph.getPath(currentNodeID);
 			if (path.path.size() > 0){
 				for (int i =0;i<path.path.size();i++) ROS_INFO("Planned path %i: %s",i,graph.nodes[path.path[i]].name.c_str());
 			       	nodes[slot] = frelementSet.find(graph.nodes[path.path[0]].name.c_str());
-				ROS_WARN("Immediate goal %i %s.",nodes[slot],frelementSet.frelements[nodes[slot]]->id);
+				if (strcmp(graph.nodes[path.path[0]].name.c_str(),closestInfoTerminalNode.c_str())==0 && path.path.size() > 1) nodes[slot] = frelementSet.find(graph.nodes[path.path[1]].name.c_str());
+				ROS_WARN("Immediate goal %i %s from %s.",nodes[slot],frelementSet.frelements[nodes[slot]]->id,closestInfoTerminalNode.c_str());
 			}else{
 				ROS_WARN("No path generated! Going to charging station.");
 				nodes[slot]=chargeNodeID;
