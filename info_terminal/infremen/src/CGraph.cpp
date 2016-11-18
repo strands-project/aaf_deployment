@@ -563,6 +563,7 @@ Graph::PathSolution Graph::getPath(int start) {
 
 
   boost::posix_time::ptime startT(boost::posix_time::microsec_clock::local_time());
+  std::cout << "START pico " << nodes[start].name << std::endl; 
   permuteNodes(start);
   boost::posix_time::ptime finishT(boost::posix_time::microsec_clock::local_time());
 
