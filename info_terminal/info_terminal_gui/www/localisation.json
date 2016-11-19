@@ -1,12 +1,15 @@
 {
 "Hello": {"DE": "Hallo", "EN": "Hello"},
-"Caffateria Menu": {"DE":"Tagesmenüs","EN":"Caffateria Menu"},
+"Caffateria Menu": {"DE":"Tagesmenü","EN":"SANA Menu"},
 "hrs": {"DE":"Uhr","EN":"hrs"},
 "back to menu": {"DE": "Zurück", "EN":"Back to Menu"},
 "coming events": {"DE": "Neuigkeiten", "EN": "News"},
-"view photo album": {"DE": "Photos", "EN":"View Photo Album"},
+"photos": {"DE": "Fotoalbum", "EN":"View Photos"},
 "weather information" : {"DE":"Wetter", "EN":"Weather Information"},
 "news" : {"DE":"Aktuelles", "EN":"News"},
+"weather" : {"DE":"Wetter", "EN":"Weather"},
+"menu" : {"DE":"SANA Menü", "EN":"SANA Menu"},
+"menures" : {"DE":"Bewohner Menü", "EN":"Residents Menu"},
 "current weather" : {"DE":"Aktuelles Wetter", "EN":"Current Weather"},
 "today" : {"DE":"Heute", "EN":"Today"},
 "tomorrow" : {"DE":"Morgen", "EN":"Tomorrow"},
@@ -18,5 +21,43 @@
 "next photo" : {"DE": "Nächstes Photo", "EN": "Next Photo"},
 "to SANA Menu": {"DE": "Zum SANA Tages-Menü"},
 "to Residents Menu": {"DE": "Zum Bewohner Tages-Menü"},
-"Info Video": {"DE": "Informationen zu Henry"}
+"Info Video": {"DE": "Informationen zu Henry"},
+"noweather": {"DE": "Wetter-Information leider aktuell nicht verfuegbar. Kommen Sie doch später nochmal vorbei.", "EN": "No Weather at the moment"},
+"nonews": {"DE": "Nachrichten sind aktuell leider nicht verfügbar. Kommen Sie doch später noch einmal vorbei.", "EN": "No News at the moment"},
+"noimage": {"DE": "Aktuell sind kein Bilder verfügbar. Kommen Sie doch später noch einmal vorbei.", "EN": "No Photos at the moment"},
+"loading": {"DE": "Information wird geladen. Einen Moment bitte...", "EN": "Loading..."},
+"info": {"EN": "about Henry", "DE": "Über Henry"},
+"touch weather": {
+	"EN": "Please touch the screen here to display the weather.",
+	"DE": "Bitte berühren Sie einfach den Bildschirm, um sich das lokale Wetter anzeigen zu lassen."
+	},
+"touch news": {
+	"EN": "Please touch the screen here to display the news.",
+	"DE": "Bitte berühren Sie einfach den Bildschirm, um sich die neuesten Nachrichten anzeigen zu lassen."
+	},
+"touch menu": {
+	"EN": "Please touch the screen here to display the SANA menu.",
+	"DE": "Bitte berühren Sie einfach den Bildschirm, um sich das Tagesmenü im SANA Restaurant anzeigen zu lassen."
+	},
+"touch menures": {
+	"EN": "Please touch the screen here to display the residents menu.",
+	"DE": "Bitte berühren Sie einfach den Bildschirm, um sich das Tagesmenü für Bewohner anzeigen."
+	},
+"touch info": {
+	"EN": "Please touch the screen here to display the info.",
+	"DE": "Bitte berühren Sie einfach den Bildschirm, um sich ein Video über den Roboter 'Henry' im Haus der Barmherzigkeit anzuschauen."
+	},
+"touch photos": {
+	"EN": "Please touch the screen here to display the photos.",
+	"DE": "Bitte berühren Sie einfach den Bildschirm, um eine Foto-Gallerie anzuschauen."
+	},
+"touchalt": {
+	"EN": "Or choose a menu item below.",
+	"DE": "Oder wählen Sie alternativ eine Information-Seite aus dem Menü am unteren Bildschirmrand."
+	},
+"touch": {
+	"EN": "Please choose a menu item at the bottom of the screen.",
+	"DE": "Bitte wählen Sie eine Information-Seite aus dem Menü am unteren Bildschirmrand."
+	}
+
 }

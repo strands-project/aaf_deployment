@@ -1,0 +1,56 @@
+$def with (strings)
+
+$var title:info
+
+<!-- Optimized for a resolution of 1024x720-->
+
+
+
+<script>
+    $$(window).load(function(){ 
+        console.log('add video handler.') 
+        $$('video').on('ended', function () {
+          //this.load();
+          //console.log('restart video')
+          //this.play();
+          location.replace("/")
+        });
+    });
+</script>
+
+<!-- <center><h1>Was kann Henry?</h1></center>
+ -->
+<div class="row">
+<div class="panel">
+
+        <div class="col-md-4">
+          <div class="row" style="margin: 5px;">
+            <h1>Was kann Henry?</h1>
+            <h3>Ein 3 Minuten-Video mit Information zu Henry, Ihrem Service-Roboter im Haus der Barmherzigkeit. Für weitere Auskünfte steht das AAF-Team für Sie bereit.</h3>
+          </div>
+        </div>
+        <div class="col-md-8">
+            <div style="padding: 2px;" class="row text-center">
+            <div align="center" class="embed-responsive embed-responsive-16by9">
+              <video autoplay width="90%" class="embed-responsive-item">
+                <source src="static/strands-aaf-video.webm">
+                <source src="static/strands-aaf-video.mp4">
+                <source src="static/strands-aaf-video.ogv">
+                <track label="German" kind="subtitles" srclang="de" src="static/video.vtt" default>
+              </video>
+            </div>
+            </div>
+        </div>
+	</div>
+</div>
+
+
+<footer class="footer"  style="height:120px;position:absolute;bottom: 0;width: 100%">
+  <div class="container" style="font-size:20pt">
+      <a href="/">
+            <img src="/static/back-icon.png" class="img-thumbnail img-responsive"
+        style="border:5px solid black;max-height:100px; margin-right:20px"><b>$strings["back to menu"]</b>
+        </a>
+  </div>
+</footer>
+

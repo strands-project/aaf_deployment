@@ -1,5 +1,5 @@
 uint32 time
-uint32 screen 
+string screen 
 string infoWaypoint
 string waypoint
 float32 robotPoseX

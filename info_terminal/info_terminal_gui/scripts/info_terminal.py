@@ -7,7 +7,7 @@ import os
 import json
 import requests
 import datetime
-from std_msgs.msg import Int32
+from std_msgs.msg import String
 import xmltodict
 import signal
 import locale
@@ -25,7 +25,7 @@ NEWS_URL = "http://rss.orf.at/wien.xml"
 
 ### Templates
 TEMPLATE_DIR = roslib.packages.get_pkg_dir('info_terminal_gui') + '/www'
-render = web.template.render(TEMPLATE_DIR, base='base', globals={})
+render = web.template.render(TEMPLATE_DIR, base='base', globals=globals())
 os.chdir(TEMPLATE_DIR) # so that the static content can be served from here.
 
 
@@ -42,36 +42,44 @@ class TranslatedStrings(object):
             except:
                 self.translations[s] = s
 
+    def tr(self, string):
+        return self[string]
+
     def __getitem__(self, string):
-        if not string in self.translations:
+        if string not in self.translations:
             rospy.logwarn("String '%s' not translatable" % string)
             return string
         return self.translations[string]
 
 
 class InfoTerminalGUI(web.application):
-    def __init__(self):
+    global translated_strings
+
+    def __init__(self, language):
         self.urls = (
             '/', 'MasterPage',
-            '/menu',  'Menu',
-            '/video',  'Video',
-            '/menu-res',  'MenuRes',
+            '/menu', 'Menu',
+            '/info', 'Video',
+            '/menures', 'MenuRes',
             '/weather', 'Weather',
-            '/events', 'Events',
+            '/news', 'Events',
             '/go_away', 'GoAway',
-            '/photo_album/(.*)',  'PhotoAlbum',
+            '/photos/(.*)', 'PhotoAlbum',
+            '/photos', 'PhotoAlbum'
         )
+        self.strings = TranslatedStrings(language)
         web.application.__init__(self, self.urls, globals())
+        print globals()
         signal.signal(signal.SIGINT, self._signal_handler)
 
         # A ROS publisher for click-feedback
-        self._active_screen_pub = rospy.Publisher("/info_terminal/active_screen",
-                                                  Int32, queue_size=1)
+        self._active_screen_pub = rospy.Publisher(
+            "/info_terminal/active_screen", String,
+            latch=True, queue_size=1)
         self.string = None
         self.port = 8080
 
-    def run(self, port, language, *middleware):
-        self.strings = TranslatedStrings(language)
+    def run(self, port, *middleware):
         self.port = port
 
         func = self.wsgifunc(*middleware)
@@ -84,41 +92,46 @@ class InfoTerminalGUI(web.application):
     def publish_feedback(self, page_id):
         self._active_screen_pub.publish(page_id)
 
-app =  InfoTerminalGUI()
-
 
 class MasterPage(object):
     def GET(self):
-        app.publish_feedback(MasterPage.id)
-        return render.index(language, app.strings, datetime)
+        app.publish_feedback("")
+        user_data = web.input(page="")
+        print user_data
+        return render.index(language,
+                            app.strings,
+                            datetime,
+                            user_data.page)
 
 
 class Menu(object):
     def GET(self):
-        app.publish_feedback(Menu.id)
+        app.publish_feedback("menu")
         return render.menu({}, app.strings)
+
 
 class MenuRes(object):
     def GET(self):
-        app.publish_feedback(Menu.id)
-        return render.menu_res({}, app.strings)
+        app.publish_feedback("menures")
+        return render.menures({}, app.strings)
+
 
 class Video(object):
     def GET(self):
-        app.publish_feedback(Menu.id)
-        return render.video(app.strings)
+        app.publish_feedback("info")
+        return render.info(app.strings)
 
 
 class Weather(object):
     def GET(self):
-        app.publish_feedback(Weather.id)
+        app.publish_feedback("weather")
         try:
             if language in ["DE", "DE_de", "de", "DE_at"]:
                 weather = json.loads(requests.get(WEATHER_URL_DE).text)
             else:
-	        weather = json.loads(requests.get(WEATHER_URL).text)
-	except:
-            return render.index(app.strings, datetime)
+                weather = json.loads(requests.get(WEATHER_URL).text)
+        except:
+            weather = None
         return render.weather(weather, app.strings)
 
 
@@ -130,13 +143,13 @@ class Events(object):
 
     def __init__(self):
         self.fb = None
-        
+
     def get_blog_news(self):
         blog = xmltodict.parse(requests.get(HENRY_BLOG_URL).text)
         blog_events = []
         items = blog['rss']['channel']['item']
         if not type(items) is list:
-            items = [items]		
+            items = [items]
         for n in items:
             # big *HACK* to remove HTML tags
             d = n["content:encoded"]
@@ -160,9 +173,9 @@ class Events(object):
             self.fb.login()
 
         news = self.fb.get()
-        #print news
+        print news
         events = []
-	try:
+        try:
             items = news['data']
         except KeyError as e:
             rospy.logerr(e)
@@ -176,54 +189,57 @@ class Events(object):
             return events
 
     def GET(self):
-        app.publish_feedback(Events.id)
+        app.publish_feedback("news")
 
-        blog_events = self.get_blog_news()
-        
-        orf_news = self.get_orf_news()
+        ##blog_events = self.get_blog_news()
 
-        facebook_news = self.get_facebook_news()
+        try:
+            orf_news = self.get_orf_news()
+            facebook_news = self.get_facebook_news()
+            return render.events(facebook_news[:1], app.strings, orf_news[:1])
+        except:
+            return render.events([], app.strings, [])
 
-        return render.events(facebook_news[:3], app.strings, orf_news[:3])
 
 
 class GoAway(object):
     def GET(self):
-        app.publish_feedback(GoAway.id)
+        app.publish_feedback("go_away")
         return "ok"
 
 
 class PhotoAlbum(object):
     photos = None
 
-    def GET(self, image_id):
+    def GET(self, image_id=""):
         if PhotoAlbum.photos is None or image_id == "":
             # Rescan the info-terminal photo album in the media server.
             print "Rescanning info-terminal photo set."
-            mc = MediaClient(rospy.get_param('mongodb_host'),
-                             rospy.get_param('mongodb_port'))
-            PhotoAlbum.photos = mc.get_set(set_type_name="Photo/info-terminal")
-        app.publish_feedback(PhotoAlbum.id)
-        if image_id == "":
-            image_id = 0
-        image_id = int(image_id)
-        current_image = image_id
-        count = len(PhotoAlbum.photos)
-        next_image = image_id + 1
-        if next_image == count:
-            next_image = 0
-        prev_image = image_id - 1
-        if prev_image < 0:
-            prev_image = count - 1
-        return render.photos(app.strings, PhotoAlbum.photos[current_image][0],
-                             next_image, prev_image)
+            try:
+                mc = MediaClient(rospy.get_param('mongodb_host'),
+                                 rospy.get_param('mongodb_port'))
+                PhotoAlbum.photos = mc.get_set(set_type_name="Photo/info-terminal")
+            except:
+                PhotoAlbum.photos = None
+        app.publish_feedback("photos")
+        if PhotoAlbum.photos is not None:
+            if image_id == "":
+                image_id = 0
+            image_id = int(image_id)
+            current_image = image_id
+            count = len(PhotoAlbum.photos)
+            next_image = image_id + 1
+            if next_image == count:
+                next_image = 0
+            prev_image = image_id - 1
+            if prev_image < 0:
+                prev_image = count - 1
+            return render.photos(app.strings, PhotoAlbum.photos[current_image][0], next_image, prev_image)
+        else:
+            return render.photos(app.strings, None, 0, 0)
 
 # Give each URL a unique number so that we can feedback which screen is active
 # as a ROS message
-for i, u in enumerate(app.urls):
-    if u.startswith("/"):
-        continue
-    globals()[u].id = i
 
 if __name__ == "__main__":
     print "Init ROS node."
@@ -233,6 +249,15 @@ if __name__ == "__main__":
     language = rospy.get_param("~language", "EN")
     print 'LANGUAGE = ' + language
     if language in ["DE", "DE_de", "de", "DE_at"]:
-         locale.setlocale(locale.LC_ALL, 'de_AT.utf8')    
+        locale.setlocale(locale.LC_ALL, 'de_AT.utf8')
         #locale.setlocale(locale.LC_TIME, "de_DE") 
-    app.run(port, language)
+    translated_strings = TranslatedStrings(language)
+
+    app = InfoTerminalGUI(language)
+    for i, u in enumerate(app.urls):
+        print i
+        if u.startswith("/"):
+            continue
+        globals()[u].id = i
+
+    app.run(port)

@@ -259,6 +259,8 @@ class WalkingGroupStateMachine(object):
         self.preempt_srv.shutdown()
         self.ptu.turnPTU(0, 0)
         self.recovery.reconfigure(RecoveryReconfigure.RESET)
+        pub = rospy.Publisher("/aaf_walking_group/resting_node", std_msgs.msg.String, queue_size=1, latch=True)
+        pub.publish("none") # Prevent localise by topic after walking group is done.
         utils.set_master_volume(self.volume)
         try:
             self.han_dyn_client.update_configuration(self.han_param)
