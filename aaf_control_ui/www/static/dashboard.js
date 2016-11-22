@@ -171,6 +171,7 @@
       rootObject : viewer.scene
     });
     gridClient.on('change', function() {
+      console.log("updated map");
       // scale the viewer to fit the map
       viewer.scaleToDimensions(gridClient.currentGrid.width, 
         gridClient.currentGrid.height);
@@ -219,6 +220,34 @@
     });
   }
 
+  function init_costmap(hostname) {
+    // Create the main viewer.
+    var viewer = new ROS2D.Viewer({
+      divID : 'costmap',
+      width : 200,
+      height : 200
+    });
+
+    // Subscribes to the robot's OccupancyGrid, which is ROS representation of
+    // the map, and renders the map in the scene.
+    var gridClient = new ROS2D.OccupancyGridClient({
+      ros : ros,
+      topic: "/move_base/local_costmap/costmap",
+      continuous: true,
+      rootObject : viewer.scene
+    });
+
+    gridClient.on('change', function() {
+      // scale the viewer to fit the map
+      console.log("updated costmap");
+      viewer.scaleToDimensions(gridClient.currentGrid.width, 
+        gridClient.currentGrid.height);
+      viewer.shift(gridClient.currentGrid.x, gridClient.currentGrid.y);
+    });
+
+  }
+
+
 
 
   function init() {
@@ -228,4 +257,5 @@
     init_node();
     init_rosout();
     init_map();
+    init_costmap();
   }
