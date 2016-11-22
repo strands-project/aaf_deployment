@@ -478,6 +478,7 @@ int createTask(int slot)
 
 	float probability[1];
 	int chargeNodeID = frelementSet.find("ChargingPoint");
+<<<<<<< HEAD
 
 	if (advancedPlanning){
 		int currentNodeID = graph.addNode(closestInfoTerminalNode);
@@ -501,6 +502,31 @@ int createTask(int slot)
 		}
 	}
 
+=======
+
+	if (advancedPlanning){
+		int currentNodeID = graph.addNode(closestInfoTerminalNode);
+			//frelementSet.find(closestInfoTerminalNode.c_str());
+		ROS_WARN("Current node is %s",closestInfoTerminalNode.c_str());
+		if (currentNodeID >= 0)
+		{
+			imr::Graph::PathSolution path = graph.getPath(currentNodeID);
+			if (path.path.size() > 0){
+				for (int i =0;i<path.path.size();i++) ROS_INFO("Planned path %i: %s",i,graph.nodes[path.path[i]].name.c_str());
+			       	nodes[slot] = frelementSet.find(graph.nodes[path.path[0]].name.c_str());
+				if (strcmp(graph.nodes[path.path[0]].name.c_str(),closestInfoTerminalNode.c_str())==0 && path.path.size() > 1) nodes[slot] = frelementSet.find(graph.nodes[path.path[1]].name.c_str());
+				ROS_WARN("Immediate goal %i %s from %s.",nodes[slot],frelementSet.frelements[nodes[slot]]->id,closestInfoTerminalNode.c_str());
+			}else{
+				ROS_WARN("No path generated! Going to charging station.");
+				nodes[slot]=chargeNodeID;
+			}
+		}else{
+			ROS_WARN("Cannot determine the current Infoterminal node, going to charge");
+			nodes[slot]=chargeNodeID;
+		}
+	}
+
+>>>>>>> indigo-devel
 	/*charge when low on battery*/
 	if (chargeNodeID != -1 && forceCharging){
 		nodes[slot]=chargeNodeID;
@@ -640,7 +666,11 @@ int main(int argc,char* argv[])
 	n->param<std::string>("subname", subName, "exploitation");
 	n->param<double>("paramA", A, 0.5);
 	n->param<double>("paramB", B, 100.0);
+<<<<<<< HEAD
 	n->param<int>("planningHorizon", planningHorizon, 15.0);
+=======
+	n->param<int>("planningHorizon", planningHorizon, 10.0);
+>>>>>>> indigo-devel
 	n->param<int>("fremenOrder", order, 1);
 
 	//initialize dynamic reconfiguration feedback

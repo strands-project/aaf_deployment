@@ -1,7 +1,8 @@
 <launch>
-
+	<arg name="rosws_suffix" default="/rosws" />
 	<node pkg="aaf_control_ui" type="server.py" name="aaf_control_ui_server" output="screen" respawn="true">
 		<param name="lang" value="de" />
+		<param name="rosws_suffix" value="$(arg rosws_suffix)" />
 	</node>
 
 	<include ns="control_pc" file="$(find strands_webtools)/launch/webtools.launch" />
