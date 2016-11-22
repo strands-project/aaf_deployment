@@ -9,12 +9,12 @@
     <arg name="ymin" default="-15.0"/>
     <arg name="xmax" default="6.0"/>
     <arg name="ymax" default="13.0"/> -->
-    <arg name="minimumScore" default="50.0"/>
-    <arg name="maxUrange" default="10.0"/>
+    <arg name="minimumScore" default="550.0"/>
+    <arg name="maxUrange" default="20.0"/>
     <arg name="srr" default="0.05"/>
-    <arg name="srt" default="0.1"/>
+    <arg name="srt" default="0.05"/>
     <arg name="str" default="0.05"/>
-    <arg name="stt" default="0.1"/>
+    <arg name="stt" default="0.05"/>
     
 
     
@@ -24,10 +24,10 @@
 
    
     <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" respawn="true">
-	<param name="xmin" value="$(arg xmin)"/>
+<!--	<param name="xmin" value="$(arg xmin)"/>
 	<param name="ymin" value="$(arg ymin)"/>
 	<param name="xmax" value="$(arg xmax)"/>
-	<param name="ymax" value="$(arg ymax)"/>
+	<param name="ymax" value="$(arg ymax)"/-->
 	<param name="delta" value="$(arg delta)"/>
 	<param name="maxUrange" value="$(arg maxUrange)"/>
 

@@ -61,6 +61,9 @@ export AAF_TOPICS="
     /strands_webserver/display_7/page
     /strands_webserver/display_8/page
     /strands_webserver/display_9/page
+    /mobility_aid_detections
+    /wheelchair_detections
+    /walker_detections
 "
 
 
