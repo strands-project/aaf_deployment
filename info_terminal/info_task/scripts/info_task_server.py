@@ -3,6 +3,7 @@
 
 import rospy
 from std_msgs.msg import String
+from std_msgs.msg import Int64
 from info_task.msg import EmptyAction, Clicks
 from info_task.utils import Gaze, Head, PTU
 from strands_executive_msgs.abstract_task_server import AbstractTaskServer
@@ -13,9 +14,13 @@ class InfoTaskServer(AbstractTaskServer):
     def __init__(self, name, url_suffix=None):
         rospy.loginfo("Starting InfoTaskServer: %s" % name)
         # Creating action clients
-        self.gaze = Gaze()
-        self.head = Head()
-        self.ptu = PTU()
+        #self.gaze = Gaze()
+        #self.head = Head()
+        #self.ptu = PTU()
+
+        self.url_suffix = url_suffix
+
+        self.url_suffix = url_suffix
 
         self.url_suffix = url_suffix
 
@@ -36,6 +41,7 @@ class InfoTaskServer(AbstractTaskServer):
             interruptible=True
         )
         rospy.Subscriber("/info_terminal/active_screen", String, self.button_pressed_callback)
+        rospy.Subscriber("/info_terminal/cancel_info_task", Int64 , self.cancel_info_task_callback)
         rospy.loginfo(" ... started " + name)
 
     def execute(self, goal):
@@ -86,6 +92,12 @@ class InfoTaskServer(AbstractTaskServer):
             self.pages.append(active_screen.data)
             self.reset_time = rospy.Time.now().to_sec() + self.extension_time
             self.interruptible = False
+
+
+    def cancel_info_task_callback(self, msg):
+        if msg.data >= 0:
+            self.preempt_cb()
+
 
     def preempt_cb(self):
         clicks = Clicks()
