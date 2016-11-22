@@ -148,7 +148,7 @@ void reconfigureCallback(infremen::infremenConfig &config, uint32_t level)
 
 	/*TODO I tested only with one task, this is to be sure that it's not reconfigured*/ 
 	//maxTaskNumber = config.maxTaskNumber;
-	maxTaskNumber = 1;
+	if (maxTaskNumber > 1) maxTaskNumber = 1;
 }
 
 //listen to battery and set forced charging if necessary
@@ -270,7 +270,8 @@ void retrieveInteractions(uint32_t lastTime)
 {
 	char testTime[1000];
 	vector< boost::shared_ptr<infremen::InfremenResult> > results;
-	messageStore->query<infremen::InfremenResult>(results);
+	//messageStore->query<infremen::InfremenResult>(results);
+	messageStore->queryNamed<infremen::InfremenResult>(collectionName,results,false);
 	BOOST_FOREACH( boost::shared_ptr<infremen::InfremenResult> p,  results)
 	{
 		time_t timeInfo = p->time;
@@ -626,7 +627,7 @@ int main(int argc,char* argv[])
 	n = new ros::NodeHandle();
         messageStore = new MessageStoreProxy(*n,"message_store");
 	//load parameters
-	n->param<std::string>("/infremen/collectionName", collectionName, "WharfTest2");
+	n->param<std::string>("/infremen/collectionName", collectionName, "AAFY4");
 	n->param<std::string>("/infremen/scheduleDirectory", scheduleDirectory, "/localhome/strands/schedules");
 	n->param("/infremen/taskPriority", taskPriority,1);
 	n->param("/infremen/verbose", debug,false);
@@ -639,7 +640,7 @@ int main(int argc,char* argv[])
 	n->param<std::string>("subname", subName, "exploitation");
 	n->param<double>("paramA", A, 0.5);
 	n->param<double>("paramB", B, 100.0);
-	n->param<int>("planningHorizon", planningHorizon, 10.0);
+	n->param<int>("planningHorizon", planningHorizon, 15.0);
 	n->param<int>("fremenOrder", order, 1);
 
 	//initialize dynamic reconfiguration feedback
