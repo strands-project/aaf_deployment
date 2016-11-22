@@ -57,6 +57,7 @@ document.onready = function() {
 									<div class="panel-heading">Bellbot</div>
 									<div class="panel-body">
 								    	<a type="button" class="btn btn-sm btn-default" onclick="demand_task('bellbot', 'Rezeption', 1800);">Start von Rezeption (0.5h)</a>
+								    	<a type="button" class="btn btn-sm btn-default" onclick="demand_task('bellbot', 'Station', 1800);">Start von Station (0.5h)</a>
 								  	</div>
 								</div>
 
@@ -73,8 +74,8 @@ document.onready = function() {
                                 <div class="panel panel-default">
 									<div class="panel-heading">Nordic Walking Gruppe</div>
 									<div class="panel-body">
-								    	<a type="button" class="btn btn-sm btn-default" onclick="demand_task('walking_group_slow', 'Kindergarten', 3600);">langsame Gruppe (1h)</a>
-								    	<a type="button" class="btn btn-sm btn-default" onclick="demand_task('walking_group_fast', 'Kindergarten', 3600);">schnelle Gruppe (1h)</a>
+								    	<a type="button" class="btn btn-sm btn-default" onclick="demand_task('walking_group_slow', 'Kindergarten', 3600);">Nordic Walking ab Kindergarten (1h)</a>
+								    	
 								  	</div>
 								</div>
 
@@ -83,6 +84,7 @@ document.onready = function() {
 									<div class="panel-body">
 								    	<a type="button" class="btn btn-sm btn-default" onclick="demand_task('info_task_server', 'WayPoint45', 3600);">Wartung (1h, AAF)</a>
 								    	<div class="btn-group btn-group-horizontal">
+								    		<a type="button" class="btn btn-sm btn-default" onclick="demand_task('info_task_server', 'ChargingPoint', 600);">10min Laden</a>
 								    		<a type="button" class="btn btn-sm btn-default" onclick="demand_task('info_task_server', 'ChargingPoint', 3600);">1h Laden</a>
 								    		<a type="button" class="btn btn-sm btn-default" onclick="demand_task('info_task_server', 'ChargingPoint', 7200);">2h Laden</a>
 								    		<a type="button" class="btn btn-sm btn-default" onclick="demand_task('info_task_server', 'ChargingPoint', 14400);">4h Laden</a>
