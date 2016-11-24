@@ -15,7 +15,7 @@
 		<param name="collectionName" value="$(arg collection_name)" />
     </node>
     <node pkg="info_terminal_gui" type="info_terminal.py" name="info_terminal_gui" output="screen" respawn="true">
-        param name="language" value="$(arg language)" type="string" />
+        <param name="language" value="$(arg language)" type="string" />
     </node>
 
 </launch>
