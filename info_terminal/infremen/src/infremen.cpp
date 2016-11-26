@@ -150,7 +150,7 @@ void reconfigureCallback(infremen::infremenConfig &config, uint32_t level)
 	rescheduleCheckTime = config.rescheduleCheckTime;
 
 	/*TODO I tested only with one task, this is to be sure that it's not reconfigured*/ 
-	//maxTaskNumber = config.maxTaskNumber;
+	maxTaskNumber = config.maxTaskNumber;
 	if (maxTaskNumber > 1) maxTaskNumber = 1;
 }
 
