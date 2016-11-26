@@ -57,7 +57,7 @@ interactionSlotDurationInMinutes(3),
 planningHorizonInMinutes(30),
 timeSlotDuration(timeSlotDurationInMinutes*60),
 interactionSlotDuration(interactionSlotDurationInMinutes*60),
-planningHorizon(planningHorizonInMinutes*60) {
+planningHorizon(planningHorizonInMinutes*60),debug(false) {
 }
 
 /// - destructor --------------------------------------------------------------
@@ -138,7 +138,7 @@ std::ifstream fin;
     fin >> type;
   }
   
-  display();
+  if (debug) display();
 }
 
 void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFrelementSet *set) 
@@ -154,7 +154,7 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFre
 	float y[msg->nodes.size()];
 	for(auto n:msg->nodes) {
 		int a = addNode(n.name);
-		ROS_INFO("  Node %i: %s %f %f",a, n.name.c_str(),n.pose.position.x,n.pose.position.y);
+		if (debug) ROS_INFO("  Node %i: %s %f %f",a, n.name.c_str(),n.pose.position.x,n.pose.position.y);
 		x[a] = n.pose.position.x;
 		y[a] = n.pose.position.y;
 	}
@@ -164,16 +164,16 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFre
 		for(auto e:n.edges) {
 			idTo = addNode(e.node);
 			if (idFrom > idTo) {
-				ROS_INFO("  Edge %s ", n.name.c_str());
+				if (debug) ROS_INFO("  Edge %s ", n.name.c_str());
 				float dx = x[idFrom]-x[idTo];
 				float dy = y[idFrom]-y[idTo];
 				float timeTrav = sqrt(dx*dx+dy*dy)/0.3;
 				addUndirectedLink(idFrom, idTo, timeTrav);
-				ROS_INFO("    -> %s takes %.3f", e.node.c_str(),timeTrav);
+				if (debug) ROS_INFO("    -> %s takes %.3f", e.node.c_str(),timeTrav);
 			}
 		}
 	}
-	display();
+	if (debug) display();
 
 
 	std::vector <int> d(100, (std::numeric_limits <int>::max)());
@@ -210,64 +210,64 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg,CFre
 			}
 		}
 	}
-
-	std::cout << "Distances" << std::endl << "       ";
-	for (unsigned int k = 0; k < nodes.size(); ++k) {
-		std::cout << std::setw(8) << k;
-	}
-	std::cout << std::endl;
-
-	for (unsigned int i = 0; i < nodes.size(); ++i) {
-		std::cout << std::setw(3) << i << " -> ";
-		for (unsigned int j = 0; j < nodes.size(); ++j) {
-			if (dist[i][j] == (std::numeric_limits<int>::max)())
-				std::cout << std::setw(8) << "inf";
-			else
-				std::cout << std::setw(8) << dist[i][j];
+	if (debug){
+		std::cout << "Distances" << std::endl << "       ";
+		for (unsigned int k = 0; k < nodes.size(); ++k) {
+			std::cout << std::setw(8) << k;
 		}
 		std::cout << std::endl;
-	}
-	std::cout << std::endl;
 
-
-	std::cout << "Discretized distances" << std::endl << "       ";
-	for (unsigned int k = 0; k < nodes.size(); ++k) {
-		std::cout << std::setw(8) << k;
-	}
-	std::cout << std::endl;
-
-	for (unsigned int i = 0; i < nodes.size(); ++i) {
-		std::cout << std::setw(3) << i << " -> ";
-		for (unsigned int j = 0; j < nodes.size(); ++j) {
-			if (discredisedDist[i][j] == (std::numeric_limits<int>::max)())
-				std::cout << std::setw(8) << "inf";
-			else
-				std::cout << std::setw(8) << discredisedDist[i][j];
+		for (unsigned int i = 0; i < nodes.size(); ++i) {
+			std::cout << std::setw(3) << i << " -> ";
+			for (unsigned int j = 0; j < nodes.size(); ++j) {
+				if (dist[i][j] == (std::numeric_limits<int>::max)())
+					std::cout << std::setw(8) << "inf";
+				else
+					std::cout << std::setw(8) << dist[i][j];
+			}
+			std::cout << std::endl;
 		}
 		std::cout << std::endl;
-	}
-	std::cout << std::endl;
 
 
-
-
-	std::cout << "Nexts"<< std::endl << "       ";
-	for (unsigned int k = 0; k < nodes.size(); ++k) {
-		std::cout << std::setw(5) << k;
-	}
-	std::cout << std::endl;
-
-	for (unsigned int i = 0; i < nodes.size(); ++i) {
-		std::cout << std::setw(3) << i << " -> ";
-		for (unsigned int j = 0; j < nodes.size(); ++j) {
-			if (dist[i][j] == (std::numeric_limits<int>::max)())
-				std::cout << std::setw(5) << "inf";
-			else
-				std::cout << std::setw(5) << next[i][j];
+		std::cout << "Discretized distances" << std::endl << "       ";
+		for (unsigned int k = 0; k < nodes.size(); ++k) {
+			std::cout << std::setw(8) << k;
 		}
 		std::cout << std::endl;
-	}
 
+		for (unsigned int i = 0; i < nodes.size(); ++i) {
+			std::cout << std::setw(3) << i << " -> ";
+			for (unsigned int j = 0; j < nodes.size(); ++j) {
+				if (discredisedDist[i][j] == (std::numeric_limits<int>::max)())
+					std::cout << std::setw(8) << "inf";
+				else
+					std::cout << std::setw(8) << discredisedDist[i][j];
+			}
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+
+
+
+
+		std::cout << "Nexts"<< std::endl << "       ";
+		for (unsigned int k = 0; k < nodes.size(); ++k) {
+			std::cout << std::setw(5) << k;
+		}
+		std::cout << std::endl;
+
+		for (unsigned int i = 0; i < nodes.size(); ++i) {
+			std::cout << std::setw(3) << i << " -> ";
+			for (unsigned int j = 0; j < nodes.size(); ++j) {
+				if (dist[i][j] == (std::numeric_limits<int>::max)())
+					std::cout << std::setw(5) << "inf";
+				else
+					std::cout << std::setw(5) << next[i][j];
+			}
+			std::cout << std::endl;
+		}
+	}
 
 
 	// print boost graph structure
@@ -304,17 +304,17 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg) {
   }
 
   for(auto n:msg->nodes) {
-    ROS_INFO("  Node: %s", n.name.c_str());
+    if (debug) ROS_INFO("  Node: %s", n.name.c_str());
     idFrom = addNode(n.name);
     for(auto e:n.edges) {
       idTo = addNode(e.node);
       if (idFrom > idTo) {
         addUndirectedLink(idFrom, idTo, e.top_vel);
       }
-      ROS_INFO("    -> %s", e.node.c_str());
+       if (debug)ROS_INFO("    -> %s", e.node.c_str());
     }
   }
-  display();
+  if (debug) display();
 
 
 
@@ -352,64 +352,64 @@ void Graph::load(const strands_navigation_msgs::TopologicalMapConstPtr &msg) {
     }
   }
 
-  std::cout << "Distances" << std::endl << "       ";
-  for (unsigned int k = 0; k < nodes.size(); ++k) {
-    std::cout << std::setw(8) << k;
+  if (debug){
+	  std::cout << "Distances" << std::endl << "       ";
+	  for (unsigned int k = 0; k < nodes.size(); ++k) {
+		  std::cout << std::setw(8) << k;
+	  }
+	  std::cout << std::endl;
+
+	  for (unsigned int i = 0; i < nodes.size(); ++i) {
+		  std::cout << std::setw(3) << i << " -> ";
+		  for (unsigned int j = 0; j < nodes.size(); ++j) {
+			  if (dist[i][j] == (std::numeric_limits<int>::max)())
+				  std::cout << std::setw(8) << "inf";
+			  else
+				  std::cout << std::setw(8) << dist[i][j];
+		  }
+		  std::cout << std::endl;
+	  }
+	  std::cout << std::endl;
+
+
+	  std::cout << "Discretized distances" << std::endl << "       ";
+	  for (unsigned int k = 0; k < nodes.size(); ++k) {
+		  std::cout << std::setw(8) << k;
+	  }
+	  std::cout << std::endl;
+
+	  for (unsigned int i = 0; i < nodes.size(); ++i) {
+		  std::cout << std::setw(3) << i << " -> ";
+		  for (unsigned int j = 0; j < nodes.size(); ++j) {
+			  if (discredisedDist[i][j] == (std::numeric_limits<int>::max)())
+				  std::cout << std::setw(8) << "inf";
+			  else
+				  std::cout << std::setw(8) << discredisedDist[i][j];
+		  }
+		  std::cout << std::endl;
+	  }
+	  std::cout << std::endl;
+
+
+
+
+	  std::cout << "Nexts"<< std::endl << "       ";
+	  for (unsigned int k = 0; k < nodes.size(); ++k) {
+		  std::cout << std::setw(5) << k;
+	  }
+	  std::cout << std::endl;
+
+	  for (unsigned int i = 0; i < nodes.size(); ++i) {
+		  std::cout << std::setw(3) << i << " -> ";
+		  for (unsigned int j = 0; j < nodes.size(); ++j) {
+			  if (dist[i][j] == (std::numeric_limits<int>::max)())
+				  std::cout << std::setw(5) << "inf";
+			  else
+				  std::cout << std::setw(5) << next[i][j];
+		  }
+		  std::cout << std::endl;
+	  }
   }
-  std::cout << std::endl;
-
-  for (unsigned int i = 0; i < nodes.size(); ++i) {
-    std::cout << std::setw(3) << i << " -> ";
-    for (unsigned int j = 0; j < nodes.size(); ++j) {
-      if (dist[i][j] == (std::numeric_limits<int>::max)())
-        std::cout << std::setw(8) << "inf";
-      else
-        std::cout << std::setw(8) << dist[i][j];
-    }
-    std::cout << std::endl;
-  }
-  std::cout << std::endl;
-
-
-  std::cout << "Discretized distances" << std::endl << "       ";
-  for (unsigned int k = 0; k < nodes.size(); ++k) {
-    std::cout << std::setw(8) << k;
-  }
-  std::cout << std::endl;
-
-  for (unsigned int i = 0; i < nodes.size(); ++i) {
-    std::cout << std::setw(3) << i << " -> ";
-    for (unsigned int j = 0; j < nodes.size(); ++j) {
-      if (discredisedDist[i][j] == (std::numeric_limits<int>::max)())
-        std::cout << std::setw(8) << "inf";
-      else
-        std::cout << std::setw(8) << discredisedDist[i][j];
-    }
-    std::cout << std::endl;
-  }
-  std::cout << std::endl;
-
-
-
-
-  std::cout << "Nexts"<< std::endl << "       ";
-  for (unsigned int k = 0; k < nodes.size(); ++k) {
-    std::cout << std::setw(5) << k;
-  }
-  std::cout << std::endl;
-
-  for (unsigned int i = 0; i < nodes.size(); ++i) {
-    std::cout << std::setw(3) << i << " -> ";
-    for (unsigned int j = 0; j < nodes.size(); ++j) {
-      if (dist[i][j] == (std::numeric_limits<int>::max)())
-        std::cout << std::setw(5) << "inf";
-      else
-        std::cout << std::setw(5) << next[i][j];
-    }
-    std::cout << std::endl;
-  }
-
-
 
   // print boost graph structure
   std::ofstream fout("fig.dot");
@@ -563,7 +563,7 @@ Graph::PathSolution Graph::getPath(int start) {
 
 
   boost::posix_time::ptime startT(boost::posix_time::microsec_clock::local_time());
-  std::cout << "START pico " << nodes[start].name << std::endl; 
+  ROS_INFO("START pico %s ",nodes[start].name.c_str()); 
   permuteNodes(start);
   boost::posix_time::ptime finishT(boost::posix_time::microsec_clock::local_time());
 
@@ -575,7 +575,7 @@ Graph::PathSolution Graph::getPath(int start) {
 //   }
 //   std::cout << "   [ " << solution.benefit << " ]";
 //   std::cout << std::endl;
-  std::cout << "Time: " << (finishT - startT).total_microseconds()/1000.0 << std::endl;
+  ROS_INFO("Infoterminal planning time %.3f",(finishT - startT).total_microseconds()/1000.0);
 
   /*
   result.path.resize(bestPath.size());

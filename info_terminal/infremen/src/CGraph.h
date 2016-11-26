@@ -82,6 +82,7 @@ public:
   const int interactionSlotDuration;
   int planningHorizon;
   std::string methodName;
+  bool debug;
 private:
 
    Path path;
