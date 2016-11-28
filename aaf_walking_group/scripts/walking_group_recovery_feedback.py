@@ -52,15 +52,16 @@ class RecoveryFeedback(object):
         self.path_stamp = msg.header.stamp.secs
 
     def state_cb(self, msg):
-        if msg.status_list[-1].status == 1:
-            dif = abs(msg.header.stamp.secs - self.path_stamp)
-            if dif > 5.:
-                rospy.logwarn("Robot appears to be stuck.")
-                self.dialogue(True)
+        if msg.status_list:
+            if msg.status_list[-1].status == 1:
+                dif = abs(msg.header.stamp.secs - self.path_stamp)
+                if dif > 5.:
+                    rospy.logwarn("Robot appears to be stuck.")
+                    self.dialogue(True)
+                else:
+                    self.dialogue(False)
             else:
                 self.dialogue(False)
-        else:
-            self.dialogue(False)
 
 
 if __name__ == "__main__":
