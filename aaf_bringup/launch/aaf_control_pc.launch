@@ -4,6 +4,10 @@
 		<param name="lang" value="de" />
 		<param name="rosws_suffix" value="$(arg rosws_suffix)" />
 	</node>
+	<node ns="control_pc" pkg="info_terminal_gui" type="info_terminal.py" name="test_info_terminal_gui" output="screen" respawn="true">
+		<param name="language" value="DE" />
+		<param name="port" value="9999" />
+	</node>
 
 	<include ns="control_pc" file="$(find strands_webtools)/launch/webtools.launch" />
 
