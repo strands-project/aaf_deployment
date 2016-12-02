@@ -168,12 +168,12 @@
       y: 0.689999997616
     - x: -0.0217320006341
       y: 0.686251997948
-    - x: -0.424313008785
-      y: 0.526346981525
-    - x: -0.516050994396
-      y: -0.431477993727
-    - x: -0.0680480003357
-      y: -0.675751984119
+    - x: -0.27607023716
+      y: 0.488783180714
+    - x: -0.253048300743
+      y: -0.428524583578
+    - x: 0.0646383166313
+      y: -0.700166285038
     - x: 0.25
       y: -0.689999997616
     xy_goal_tolerance: 0.0
@@ -218,8 +218,8 @@
         y: 8.98950602846e-09
         z: 0.287254244089
       position:
-        x: -7.00288391113
-        y: -3.88069486618
+        x: -6.92556810379
+        y: -4.18085479736
         z: 0.0
     verts:
     - x: 0.689999997616
@@ -354,8 +354,8 @@
         y: -3.88494889592e-08
         z: -0.694539308548
       position:
-        x: -5.64644289017
-        y: -15.3256530762
+        x: -5.42491960526
+        y: -15.3334617615
         z: 6.93889390391e-18
     verts:
     - x: 0.689999997616
@@ -947,8 +947,8 @@
         y: 0.0
         z: 0.0
     verts:
-    - x: 0.689999997616
-      y: 0.287000000477
+    - x: 1.3427066803
+      y: 0.324494242668
     - x: 0.287000000477
       y: 0.689999997616
     - x: -0.286999940872
@@ -961,8 +961,8 @@
       y: -0.689999997616
     - x: 0.287000000477
       y: -0.689999997616
-    - x: 0.689999997616
-      y: -0.287000000477
+    - x: 1.29138338566
+      y: -0.353265345097
     xy_goal_tolerance: 0.0
     yaw_goal_tolerance: 0.0
 - meta:
@@ -2713,24 +2713,28 @@
       name: EG-0-066
     - at_node: true
       category: person
-      description: klinischer Psychologe, Projektmanager
-      name: Tobias Koertner, MMag. Dr.
+      description: Qualitaets und Umweltmanagement
+      name: Birgit Staribacher, MSc
     - at_node: true
       category: person
-      description: Projektmanagerin
-      name: Daliah Batko-Klein, Mag.
+      description: Wissenschaftliche Mitarbeiterin
+      name: Victoria Staus, Mag
     - at_node: true
       category: person
-      description: Projektmanagerin
-      name: Denise Hebesberger, MMag.
-    - at_node: true
-      category: person
-      description: Personal
-      name: Markus Weninger
+      description: Wissenschaftlicher Mitarbeiter
+      name: Matei Capatu, MSc
     - at_node: true
       category: department
       description: Akademie fuer Altersforschung
       name: Akademie fuer Altersforschung
+    - at_node: true
+      category: department
+      description: Lehre und Forschung
+      name: Lehre und Forschung
+    - at_node: true
+      category: department
+      description: Qualitaets und Umweltmanagement
+      name: Qualitaets und Umweltmanagement
     map: aaf_winter
     node: WayPoint45
     pointset: aaf_y4
@@ -2857,20 +2861,16 @@
       name: Gorica Popovic
     - at_node: true
       category: person
-      description: Leiterin Kommunikation
-      name: Eva Bauer
+      description: Kommunikation
+      name: Virgina Kerbl
     - at_node: true
       category: person
       description: Kommunikation
-      name: Scilla Steiner
-    - at_node: true
-      category: person
-      description: Leiterin Fundraising
-      name: Sabine Schmid
+      name: Juliane Guertler
     - at_node: true
       category: person
       description: Kommunikation
-      name: Karine Edhofer
+      name: Scilla Poelzl, Mag, MA
     - at_node: true
       category: department
       description: Kommunikation
@@ -2946,7 +2946,7 @@
     - at_node: true
       category: person
       description: stv. Geschaeftsfuehrerin Pflegeheime
-      name: Margit Kitzler, MBA, MAS
+      name: Elisabeth Jirsa, Mag
     - at_node: true
       category: department
       description: Geschaeftsfuehrung Pflegeheime
@@ -3084,6 +3084,10 @@
       description: Aufnahmemanagerin, Koordination Ehrenamtliche MitarbeiterInnen
       name: Maria Gebert
     - at_node: true
+      category: person
+      description: Aufnahme
+      name: Daniela Maria Digruber
+    - at_node: true
       category: department
       description: Aufnahme
       name: Aufnahme
@@ -3149,12 +3153,12 @@
       name: EG-0-034
     - at_node: true
       category: person
-      description: MA, Assistentin Pflegedirektion
-      name: Lisa Weigert, Mag.
+      description: BA, Assistentin Pflegedirektion
+      name: Sabrina Gruensteidl
     - at_node: true
       category: person
       description: DGKS (stv. der Pflegedirektorin)
-      name: Gerlinde Weigert
+      name: Marie Cris Gambal
     - at_node: true
       category: person
       description: DGKS (Assistentin Pflegedirektion)
@@ -3363,8 +3367,8 @@
       name: EG-0-067
     - at_node: true
       category: person
-      description: Leiter Lehre und Forschung
-      name: Juergen Pripfl, Mag., Dr.
+      description: Leiterin Qualitaets- und Umweltmanagement, Lehre und Forschung
+      name: Veronika Schauer, DI, MSc, MBA
     - at_node: true
       category: department
       description: Lehre und Forschung, Institut
@@ -3499,16 +3503,12 @@
     contains:
     - at_node: true
       category: office
-      description: Qualitaets- und Umweltmanagement
+      description: Projektraum
       name: EG-0-069
     - at_node: true
-      category: person
-      description: Leiterin Qualitaets- und Umweltmanagement
-      name: Veronika Schauer, DI, MSc, MBA
-    - at_node: true
       category: department
-      description: Qualitaets- und Umweltmanagement
-      name: Qualitaets- und Umweltmanagement
+      description: Akademie fuer Altersforschung
+      name: Akademie fuer Altersforschung
     map: aaf_winter
     node: WayPoint56
     pointset: aaf_y4
@@ -3573,10 +3573,6 @@
       category: person
       description: Leitung Organisationskommunikation und Strategie
       name: Christian Zwittnig, Mag.
-    - at_node: true
-      category: person
-      description: Qualitaets- und Umweltmanagement
-      name: Birgit Staribacher, MSc
     - at_node: true
       category: department
       description: Organisationskommunikation und Strategie
@@ -3718,7 +3714,7 @@
     - at_node: true
       category: person
       description: IKT Service Desk
-      name: Werner Koppensteiner
+      name: Rene Steinbach
     - at_node: true
       category: department
       description: 'Infrastruktur: Informations- und Kommunikationstechnologie (IKT)'
@@ -4884,8 +4880,8 @@
         y: 0.0
         z: -0.397665649652
       position:
-        x: -6.94133138657
-        y: -9.41677188873
+        x: -6.91276407242
+        y: -9.26966571808
         z: -6.93889390391e-18
     verts:
     - x: 0.689999997616
