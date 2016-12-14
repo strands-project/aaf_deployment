@@ -4,11 +4,6 @@
     <!-- gmapping parameters -->
     <arg name="delta" default="0.05"/>
 
-    <!-- B&L Sim 
-    <arg name="xmin" default="-30.0"/>
-    <arg name="ymin" default="-15.0"/>
-    <arg name="xmax" default="6.0"/>
-    <arg name="ymax" default="13.0"/> -->
     <arg name="minimumScore" default="550.0"/>
     <arg name="maxUrange" default="20.0"/>
     <arg name="srr" default="0.05"/>
@@ -16,10 +11,16 @@
     <arg name="str" default="0.05"/>
     <arg name="stt" default="0.05"/>
     
-
-    
     <arg name="odom_frame" default="$(arg global_frame_id)"/>
     <arg name="map_frame" default="map" />
+
+    <arg name="map_folder" default="/storage/predicted_maps/" />
+    
+    <arg name="machine" default="localhost" />
+    <arg name="user" default="" />
+
+    <!-- NOW when launching in a remote mode it will need the ROS_ENV_LOADER set if not it will leave it empty -->
+    <machine name="$(arg machine)" address="$(arg machine)" env-loader="$(optenv ROS_ENV_LOADER )" user="$(arg user)" default="true" />
     
 
    
@@ -43,4 +44,7 @@
 
     </node>
     
+    <node pkg="aaf_bringup" type="save_and_upload_maps.py" name="save_and_upload_maps" respawn="true">
+      <param name="map_folder" value="$(arg map_folder)"/>
+    </node>
 </launch>
