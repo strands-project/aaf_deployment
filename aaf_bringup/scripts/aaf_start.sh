@@ -82,7 +82,7 @@ tmux send-keys "rosrun aaf_logging start_stop_logging.py"
 tmux select-window -t $SESSION:16
 tmux send-keys "ssh werner-left-cortex" C-m
 tmux send-keys "cd /storage" C-m
-tmux send-keys "rosbag record --split --duration=1h /tf /scan /odom /odom_raw /amcl_pose /robot_pose /current_node /current_edge /map /topological_map /infoterminal/active_screen"
+tmux send-keys "rosbag record --split --duration=1h /tf /scan /odom /odom_raw /amcl_pose /robot_pose /current_node /current_edge /map /topological_map /infoterminal/active_screen /virtual_bumper"
 
 tmux select-window -t $SESSION:17
 tmux send-keys "ssh werner-left-cortex" C-m
