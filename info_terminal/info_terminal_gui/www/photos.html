@@ -14,7 +14,8 @@ $var title:photos
         </div>
         <div class="col-md-8">
             $if current_image is not None:
-                <img src="http://localhost:8027/get_media_by_name/$current_image" class="img-thumbnail img-responsive">
+	    <!-- <div class="landscape" style="position: absolute; left: 63px; top: 1px; width: 873px; height: 100%;"> -->
+                <img src="http://localhost:8027/get_media_by_name/$current_image" class="img-thumbnail img-responsive" style="max-height: 500px;">
             $if current_image is None:
                 <H1>$strings["noimage"]</H1>
 
