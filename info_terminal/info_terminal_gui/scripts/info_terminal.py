@@ -59,6 +59,7 @@ class InfoTerminalGUI(web.application):
         self.urls = (
             '/', 'MasterPage',
             '/strands', 'Strands',
+            '/draw', 'Draw',
             '/erf', 'ERF',
             '/info', 'Video',
             '/menures', 'MenuRes',
@@ -127,6 +128,11 @@ class Strands(object):
     def GET(self):
         app.publish_feedback("strands")
         return render.strands(app.strings)
+
+class Draw(object):
+    def GET(self):
+        app.publish_feedback("draw")
+        return render.draw(app.strings)
 
 
 class ERF(object):
