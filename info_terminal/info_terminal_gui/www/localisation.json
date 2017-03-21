@@ -1,4 +1,6 @@
 {
+"strands": {"DE": "STRANDS", "EN": "STRANDS"},
+"erf": {"DE": "ERF", "EN": "ERF"},
 "Hello": {"DE": "Hallo", "EN": "Hello"},
 "Caffateria Menu": {"DE":"Tagesmenü","EN":"SANA Menu"},
 "hrs": {"DE":"Uhr","EN":"hrs"},
@@ -7,7 +9,7 @@
 "photos": {"DE": "Fotoalbum", "EN":"View Photos"},
 "weather information" : {"DE":"Wetter", "EN":"Weather Information"},
 "news" : {"DE":"Aktuelles", "EN":"News"},
-"weather" : {"DE":"Wetter", "EN":"Weather"},
+"weather" : {"DE":"Wetter", "EN":"Weather in EDN"},
 "menu" : {"DE":"SANA Menü", "EN":"SANA Menu"},
 "menures" : {"DE":"Bewohner Menü", "EN":"Residents Menu"},
 "current weather" : {"DE":"Aktuelles Wetter", "EN":"Current Weather"},
@@ -26,7 +28,7 @@
 "nonews": {"DE": "Nachrichten sind aktuell leider nicht verfügbar. Kommen Sie doch später noch einmal vorbei.", "EN": "No News at the moment"},
 "noimage": {"DE": "Aktuell sind kein Bilder verfügbar. Kommen Sie doch später noch einmal vorbei.", "EN": "No Photos at the moment"},
 "loading": {"DE": "Information wird geladen. Einen Moment bitte...", "EN": "Loading..."},
-"info": {"EN": "about Henry", "DE": "Über Henry"},
+"info": {"EN": "about Linda", "DE": "Über Henry"},
 "touch weather": {
 	"EN": "Please touch the screen here to display the weather.",
 	"DE": "Bitte berühren Sie einfach den Bildschirm, um sich das lokale Wetter anzeigen zu lassen."

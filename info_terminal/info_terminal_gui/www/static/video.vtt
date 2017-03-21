@@ -1,126 +1,102 @@
 ﻿WEBVTT
 
 1
-00:00:06.100 --> 00:00:14.440
-Henry ist ein Service-Roboter, der im Rahmen des STRANDS Projektes im Haus der Barmherzigkeit auf seine Alltagstauglichkeit getestet wird.
+00:00:01.000 --> 00:00:08.340
+Henry is a service robot, currently tested for its capabilities in facilities like the HdB in the context of the STRANDS research project.
 
 2
-00:00:14.800 --> 00:00:18.960
-Er soll Ihren Alltag bereichern und aktuelle Informationen anbieten.
+00:00:08.700 --> 00:00:12.860
+Henry is there to serve you. He can display useful information.
 
 3
-00:00:18.960 --> 00:00:23.200
-Henry wird im Haus der Barmherzigkeit herumfahren und seine Dienste anbieten.
+00:00:12.860 --> 00:00:17.100
+Henry will be roaming about and offer his services.
 
 4
-00:00:23.200 --> 00:00:27.000
-Drücken Sie einfach auf die Knöpfe auf dem Bildschirm, ...
+00:00:17.100 --> 00:00:20.900
+Simply press the buttons on his screen,
 
 5
-00:00:27.000 --> 00:00:32.560
-... um sich Informationen anzeigen zu lassen.
+00:00:20.900 --> 00:00:26.460
+... to have information displayed to you.
 
 6
-00:00:32.560 --> 00:00:35.220
-Zum Beispiel zum aktuellen Wetter in Wien, ...
+00:00:26.460 --> 00:00:29.180
+For instance, view the the weather forecast for Vienna,
 
 7
-00:00:35.220 --> 00:00:38.300
-oder die neuesten Nachrichten, ...
+00:00:29.500 --> 00:00:32.300
+or read the latest news,
 
 8
-00:00:38.300 --> 00:00:41.460
-oder das aktuelle Mittagsmenü.
+00:00:32.300 --> 00:00:35.460
+or view today's lunch menu.
 
 9
-00:00:41.460 --> 00:00:49.540
-Wenn Sie genug von Henry haben, lassen Sie ihn einfach stehen, er wird sich dann wieder auf den Weg machen.
+00:00:35.460 --> 00:00:43.540
+When you are finished, simply leave Henry behind. He will soon find new tasks to engage with.
 
 10
-00:00:51.740 --> 00:00:57.340
-Henry kann auch Besuchern und Gästen den Weg im HdB weisen.
+00:00:48.180 --> 00:00:53.780
+Henry also can show visitors and guest around the HdB.
 
 11
-00:00:57.340 --> 00:01:04.940
-Geben Sie dazu einfach das Ziel, zum Beispiel das Büro einer Person oder eine Raumnummer, ein...
+00:00:53.780 --> 00:00:58.780
+Simply enter the room number or the name of the person to visit,
 
 12
-00:01:04.940 --> 00:01:10.820
-... und lassen Sie sich vom Roboter führen.
+00:00:58.780 --> 00:01:07.260
+... and be guided by Henry.
 
 13
-00:01:10.820 --> 00:01:18.420
-Diese Funktion wird durch die Forscher aktiviert, wenn Besucher Begleitung durch den Roboter wünschen.
+00:01:07.260 --> 00:01:14.860
+This functionality can be be requested by the receptionists, when guest wish to be guided by the robot.
 
 14
-00:01:18.420 --> 00:01:25.900
-Am Ziel angekommen, verabschiedet sich Henry von Ihnen und geht wieder seinen anderen Aufgaben nach.
+00:01:14.860 --> 00:01:22.340
+On arrival, henry departs and continues with his other duties.
 
 15
-00:01:26.020 --> 00:01:30.340
-Henry ist nicht ferngesteuert, sondern fährt und entscheidet selbstständig, ...
+00:01:24.660 --> 00:01:28.420
+Henry is not remote controlled, but takes its own decisions and drives autnomously.
 
 16
-00:01:30.340 --> 00:01:33.740
-auch, wann es es Zeit ist, seine Batterien wieder aufzuladen.
+00:01:28.420 --> 00:01:32.380
+Also, he decided when it is time to recharge.
 
 17
-00:01:33.740 --> 00:01:38.340
-Henry kann zu Ihnen sprechen, aber leider kann er Sie nicht verstehen.
+00:01:32.380 --> 00:01:37.580
+Henry sees his environment using cameras and special sensor.
 
 18
-00:01:38.340 --> 00:01:43.780
-Interagieren Sie mit ihm einfach mit Hilfe des Bildschirms.
+00:01:37.580 --> 00:01:41.660
+These enable him to see person and obstacles.
 
 19
-00:01:44.020 --> 00:01:49.260
-Henry fährt selbstständig im Haus umher, ...
+00:01:45.260 --> 00:01:49.660
+Using his sensors, Henry can detect and avoid obstacles.
 
 20
-00:01:49.260 --> 00:01:55.620
-und versucht dabei stets, Sie nicht zu behindern, und Hindernisse zu umfahren.
+00:02:00.900 --> 00:02:06.060
+Henry will always try to give way to humans and not to interfere with them.
 
 21
-00:01:55.620 --> 00:01:59.340
-Henry ist ein Roboter, durch den Forscher herausfinden wollen, ...
+00:02:06.060 --> 00:02:09.460
+Henry is a robot, employed by researchers to study...
 
 22
-00:01:59.340 --> 00:02:04.380
-in welchen Bereichen Roboter eine Unterstützung sein könnten.
+00:02:09.660 --> 00:02:15.100
+how robots can be used effectively and safely in real-world environments such as the HdB.
 
 23
-00:02:04.380 --> 00:02:10.060
-Henry hat mehrere Kameras und andere Sensoren, ...
+00:02:17.780 --> 00:02:22.700
+Henry continuously localises in a map he created.
 
 24
-00:02:10.060 --> 00:02:17.020
-mit denen er seine Umgebung und Menschen wahr nimmt.
+00:02:22.700 --> 00:02:26.420
+This enables him to roam freely and offer services where they are needed.
 
 25
-00:02:17.220 --> 00:02:23.220
-So kann Henry Sie "sehen", und er weiß auch jederzeit wo er ist, ...
-
-26
-00:02:23.220 --> 00:02:26.700
-da er eine Karte des Hauses erstellt hat.
-
-27
-00:02:26.700 --> 00:02:32.100
-So kann er sich frei bewegen, und Ihnen zu Diensten sein.
-
-28
-00:02:32.100 --> 00:02:39.060
-Sollte Henry Ihnen zu nahe kommen, so wird er normalerweise anhalten.
-
-29
-00:02:39.060 --> 00:02:43.580
-Sollte er doch einmal mit einem Hindernis in Kontakt kommen, ...
-
-30
-00:02:43.580 --> 00:02:48.420
-wird er durch einen Sensor in seinem Gummirahmen gestoppt.
-
-31
-00:02:48.420 --> 00:02:58.860
-Sollten Sie Fragen oder Anmerkungen zum Roboter haben, wenden Sie sich bitte an das STRANDS Team oder die Rezeption.
+00:02:28.260 --> 00:02:33.060
+If you have any concerns about the robot, please do not hesitate to contact the STRANDS team or the reception.
 

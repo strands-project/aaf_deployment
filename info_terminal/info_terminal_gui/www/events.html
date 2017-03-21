@@ -2,26 +2,21 @@ $def with (blog_events, strings, events)
 
 $var title:news
 
+
 <div class="row" style="padding:50px; text-align: justify;text-justify: inter-word;">
 
     <div class="row" style="font-weight:bold">
-	    <div class="col-md-6"><H1>NEUES AM HdB</H1></div>
-        <div class="col-md-6"><H1>WIEN AKTUELL</H1></div>
+	    <div class="col-md-6"><H1>Linda Tweets</H1></div>
+        <div class="col-md-6"><H1>BBC News</H1></div>
     </div>
     <hr/>
     <div class="row">
         <div class="col-md-6">
-        		$if not blog_events:
-        				<h3>$strings["nonews"]</h3>
-            $for event in blog_events:
-                <div class="row">
-                    <!--<div class="col-md-3">-->
-                        <!--<img src="$event[0]" style="min-height:150px">	-->
-                    <!--</div>-->
-                    <div class="col-md-12" style="line-height:1.5;white-space:normal">
-                        $:event
-                    </div>
-                </div>
+
+<!--         <iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="twitter-timeline twitter-timeline-rendered" style="position: static; visibility: visible; display: inline-block; width: 400px; height: 380px; padding: 0px; border: none; max-width: 100%; min-width: 180px; margin-top: 0px; margin-bottom: 0px;" data-widget-id="profile:LindaStrands" title="Twitter Timeline"></iframe>
+ -->
+        <a class="twitter-timeline" data-tweet-limit="1" data-chrome="nofooter noheader noscrollbor transparent" data-width="400" data-height="600" href="https://twitter.com/LindaStrands">Tweets by LindaStrands</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+   
         </div>
         <div class="col-md-6">
         		$if not events:
@@ -39,6 +34,33 @@ $var title:news
         </div>
     </div>
 </div>
+
+<!-- MAGIC to disable links on twitter feed -->
+<script>window.twttr = (function (d, s, id) {
+  var t, js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src= "https://platform.twitter.com/widgets.js";
+  fjs.parentNode.insertBefore(js, fjs);
+  return window.twttr || (t = { _e: [], ready: function (f) { t._e.push(f) } });
+}(document, "script", "twitter-wjs"));
+
+twttr.ready( function(twttr){
+    twttr.events.bind("rendered", function(ev){
+    var tw_iframe = ev.target;
+
+    //the following is custom jquery code to do various 
+    //css overrides based on selectors
+    var twitterbody = $$(tw_iframe).contents().find( 'body' );
+       twitterbody.find(".avatar").hide();
+       twitterbody.find("a").attr("href","javascript:void(0);");
+       twitterbody.find("a").attr("target","");
+       //twitterbody.find("li.tweet").css({padding: "2px"});
+    });
+}); 
+</script>
+
+
 <!-- 
 <footer class="footer"  style="height:120px;position:absolute;bottom: 0;width: 100%">
   <div class="container" style="font-size:20pt">

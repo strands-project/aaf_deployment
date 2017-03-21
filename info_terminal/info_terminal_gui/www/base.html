@@ -45,7 +45,7 @@ $def with (page, vars=None)
     </div>
  -->    
  		<ul class="nav navbar-nav">
- 		  $for item in ["menu", "menures", "weather", "news", "info", "photos"]:
+ 		  $for item in ["erf", "strands", "weather", "news", "info", "photos"]:
 		      <li>
 		      		<a style="
 		      						max-height:48px;
@@ -98,6 +98,16 @@ $def with (page, vars=None)
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<div class="modal" id="modal_page" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 <script  type="text/javascript">
 $$(document).ready(function() {
 	console.log('onload');
@@ -110,11 +120,8 @@ $$(document).ready(function() {
 			window.location.assign($$(this).attr('href'));
 	});
 	$$('a#nav-$page.title').addClass("btn-success");
+
 })
-
-
-
-
 </script>
 
   </body>

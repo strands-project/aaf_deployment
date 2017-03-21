@@ -17,7 +17,7 @@ from dateutil.parser import parse
 from mongodb_media_server import MediaClient
 
 #WEATHER_URL = "http://api.openweathermap.org/data/2.5/weather?q=Vienna,Austria"
-WEATHER_URL = "http://api.worldweatheronline.com/free/v2/weather.ashx?key=c2db94527204450837f1cf7b7772b&q=Vienna,Austria&num_of_days=3&tp=3&format=json"
+WEATHER_URL = "http://api.worldweatheronline.com/free/v2/weather.ashx?key=c2db94527204450837f1cf7b7772b&q=Edinburgh,UK&num_of_days=3&tp=3&format=json"
 WEATHER_URL_DE = WEATHER_URL + "&lang=de"
 BBC_NEWS_URL = "http://feeds.bbci.co.uk/news/world/rss.xml"
 HENRY_BLOG_URL = "https://henrystrands.wordpress.com/feed/"
@@ -58,7 +58,8 @@ class InfoTerminalGUI(web.application):
     def __init__(self, language):
         self.urls = (
             '/', 'MasterPage',
-            '/menu', 'Menu',
+            '/strands', 'Strands',
+            '/erf', 'ERF',
             '/info', 'Video',
             '/menures', 'MenuRes',
             '/weather', 'Weather',
@@ -122,6 +123,19 @@ class Video(object):
         return render.info(app.strings)
 
 
+class Strands(object):
+    def GET(self):
+        app.publish_feedback("strands")
+        return render.strands(app.strings)
+
+
+class ERF(object):
+    def GET(self):
+        app.publish_feedback("erf")
+        return render.erf(app.strings)
+
+
+
 class Weather(object):
     def GET(self):
         app.publish_feedback("weather")
@@ -157,9 +171,10 @@ class Events(object):
         return blog_events
 
     def get_orf_news(self):
-        news = xmltodict.parse(requests.get(NEWS_URL).text)
+        news = xmltodict.parse(requests.get(BBC_NEWS_URL).text)
         events = []
-        items = news['rdf:RDF']['item']
+        items = news['rss']['channel']['item']
+        print items
         if not type(items) is list:
             items = [items]
         for n in items:
@@ -196,8 +211,9 @@ class Events(object):
         try:
             orf_news = self.get_orf_news()
             facebook_news = self.get_facebook_news()
-            return render.events(facebook_news[:1], app.strings, orf_news[:1])
-        except:
+            return render.events(facebook_news[:1], app.strings, orf_news[:3])
+        except Exception as e:
+            rospy.logwarn(e)
             return render.events([], app.strings, [])
 
 
