@@ -8,6 +8,7 @@
 #include <strands_navigation_msgs/TopologicalMap.h>
 #include <strands_navigation_msgs/TopologicalNode.h>
 #include <strands_executive_msgs/AddTask.h>
+#include <strands_executive_msgs/ExecutionStatus.h>
 #include <strands_executive_msgs/CancelTask.h>
 #include <strands_executive_msgs/SetExecutionStatus.h>
 #include <strands_executive_msgs/CreateTask.h>
@@ -59,10 +60,11 @@ int8_t   minimalBatteryLevel = 50;
 int8_t   batteryUndockLevel = 55;
 int32_t   minimalBatteryLevelTime = 0;
 int interactionTimeout = 30;
+int schedulerReactionTimeout = 5;
 int maxTaskNumber = 5;
 int taskDuration = 180;	
 int taskPriority = 1;	
-bool debug = true;
+bool debug = false;
 int taskStartDelay = 5;
 int rescheduleCheckTime = 5;
 
@@ -72,6 +74,7 @@ MessageStoreProxy *messageStore;
 ros::Subscriber robotPoseSub;
 ros::Subscriber currentNodeSub;
 ros::Subscriber interfaceSub; 
+ros::Subscriber scheduleSub; 
 ros::Subscriber batterySub;
 ros::Subscriber infoTaskSub;
 ros::Subscriber guiSub; 
@@ -90,7 +93,7 @@ imr::Graph graph;
 //state variables
 int lastTimeSlot = -1;
 int currentTimeSlot = -1;
-int numCurrentTasks = 0; 
+int numCurrentTasks = 100; 
 string nodeName = "ChargingPoint";
 string closestNode = "ChargingPoint";
 string closestInfoTerminalNode = "ChargingPoint";
@@ -142,13 +145,13 @@ void reconfigureCallback(infremen::infremenConfig &config, uint32_t level)
 	interactionTimeout = config.interactionTimeout;
 	taskDuration = config.taskDuration;
 	taskPriority = config.taskPriority;
-	debug = config.verbose;
+	graph.debug = debug = config.verbose;
 	taskStartDelay = config.taskStartDelay;
 	rescheduleCheckTime = config.rescheduleCheckTime;
 
 	/*TODO I tested only with one task, this is to be sure that it's not reconfigured*/ 
-	//maxTaskNumber = config.maxTaskNumber;
-	maxTaskNumber = 1;
+	maxTaskNumber = config.maxTaskNumber;
+	if (maxTaskNumber > 1) maxTaskNumber = 1;
 }
 
 //listen to battery and set forced charging if necessary
@@ -169,6 +172,23 @@ void poseCallback(const geometry_msgs::Pose::ConstPtr& msg)
 {
 	lastPose = *msg;
 	//if (debug) ROS_INFO("Infremen: Robot at %lf %lf %lf.",lastPose.position.x,lastPose.position.y,lastPose.position.z);
+}
+
+void scheduleCallback(const strands_executive_msgs::ExecutionStatus::ConstPtr& msg)
+{
+	ROS_INFO("Schedule informing %i Tasks: %i",(int)msg->currently_executing,(int)msg->execution_queue.size());
+	if (msg->execution_queue.size() == 0){
+		numCurrentTasks = 0;
+	}else{
+		int32_t earliestTask = INT32_MAX;
+		for(int i=0;i<msg->execution_queue.size();i++)
+		{
+			if (earliestTask > msg->execution_queue[i].start_after.sec) earliestTask = msg->execution_queue[i].start_after.sec;
+		}
+		if (earliestTask - windowDuration > ros::Time::now().sec) numCurrentTasks = 0; else numCurrentTasks = 1;
+		ROS_INFO("Closest task planned for %i, now is %i, that is %i s difference: setting %i",earliestTask,ros::Time::now().sec,earliestTask-ros::Time::now().sec,numCurrentTasks);
+	}
+	ROS_INFO("Infremen tasks: %i %i",numCurrentTasks,maxTaskNumber);
 }
 
 /*detailed info on interation*/
@@ -270,7 +290,8 @@ void retrieveInteractions(uint32_t lastTime)
 {
 	char testTime[1000];
 	vector< boost::shared_ptr<infremen::InfremenResult> > results;
-	messageStore->query<infremen::InfremenResult>(results);
+	//messageStore->query<infremen::InfremenResult>(results);
+	messageStore->queryNamed<infremen::InfremenResult>(collectionName,results,false);
 	BOOST_FOREACH( boost::shared_ptr<infremen::InfremenResult> p,  results)
 	{
 		time_t timeInfo = p->time;
@@ -472,8 +493,6 @@ int createTask(int slot)
 {
 	char dummy[1000];
 	char testTime[1000];
-	time_t timeInfo = timeSlots[slot];
-	strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
 
 	float probability[1];
 	int chargeNodeID = frelementSet.find("ChargingPoint");
@@ -498,6 +517,7 @@ int createTask(int slot)
 			ROS_WARN("Cannot determine the current Infoterminal node, going to charge");
 			nodes[slot]=chargeNodeID;
 		}
+		timeSlots[slot] = ros::Time::now().sec;
 	}
 
 	/*charge when low on battery*/
@@ -505,7 +525,19 @@ int createTask(int slot)
 		nodes[slot]=chargeNodeID;
 		ROS_INFO("Task %i should be changed to charging.",taskIDs[slot]);
 	}
-	
+
+	/*do not run away when interacting*/
+ 	int windowDur = windowDuration;		
+	ROS_INFO("Checking interactions: %i s timeout.",ros::Time::now().sec-lastInteractionTime);
+	if (ros::Time::now().sec-lastInteractionTime < interactionTimeout)
+	{
+		nodes[slot]=frelementSet.find(closestInfoTerminalNode.c_str());
+		windowDur = interactionTimeout;	
+		ROS_INFO("Task %i is changed to location %s due to recent interactions.",taskIDs[slot],closestInfoTerminalNode.c_str());
+	}
+		
+	time_t timeInfo = timeSlots[slot];
+	strftime(testTime, sizeof(testTime), "%Y-%m-%d_%H:%M:%S",localtime(&timeInfo));
 	strands_executive_msgs::CreateTask srv;
 	taskCreator.waitForExistence();
 	if (taskCreator.call(srv))
@@ -516,8 +548,8 @@ int createTask(int slot)
 		task.priority = taskPriority;
 
 		task.start_after =  ros::Time(timeSlots[slot]+taskStartDelay,0);
-		task.end_before = ros::Time(timeSlots[slot]+windowDuration - 2,0);
-		task.max_duration = task.end_before - task.start_after;
+		task.end_before = ros::Time(timeSlots[slot]+2*windowDur - 2,0);
+		task.max_duration = ros::Duration(windowDur);
 		strands_executive_msgs::AddTask taskAdd;
 		taskAdd.request.task = task;
 		if (taskAdder.call(taskAdd))
@@ -525,6 +557,8 @@ int createTask(int slot)
 			sprintf(dummy,"%s for timeslot %i on %s, between %i and %i.",frelementSet.frelements[nodes[slot]]->id,slot,testTime,task.start_after.sec,task.end_before.sec);
 			ROS_INFO("Task %ld created at %s ", taskAdd.response.task_id,dummy);
 			lastTask = taskIDs[slot] = taskAdd.response.task_id;
+			numCurrentTasks++;
+			schedulerReactionTimeout = 10;
 		}
 	}else{
 		sprintf(dummy,"Could not create task for timeslot %i: At %s go to %s.",slot,testTime,frelementSet.frelements[nodes[slot]]->id);
@@ -533,59 +567,18 @@ int createTask(int slot)
 	}
 }
 
-/*drops and reschedules the following task on special conditions*/
-int modifyNextTask(int slot)
-{
-	int lastNodeID = frelementSet.find(nodeName.c_str());
-	int chargeNodeID = frelementSet.find("ChargingPoint");
-	bool changeTaskFlag = false;
-	/*charge when low on battery*/
-	if (chargeNodeID != -1 && forceCharging){
-		nodes[slot]=chargeNodeID;
-		changeTaskFlag = true;
-		ROS_INFO("Task %i should be changed to charging.",taskIDs[slot]);
-	}
-	/*do not run away during interactions*/
-	if (lastNodeID != -1 && (timeSlots[slot] - lastInteractionTime) < interactionTimeout)
-	{
-		nodes[slot]=lastNodeID;
-		changeTaskFlag = true;
-		ROS_INFO("Task %i should be changed to last waypoint.",taskIDs[slot]);
-	}
-	/*do not run away during interactions*/
-	if (changeTaskFlag)
-	{
-		strands_executive_msgs::CancelTask taskCanc;
-		taskCanc.request.task_id = taskIDs[slot];
-		if (taskCancel.call(taskCanc)){
-			if (taskCanc.response.cancelled){
-				ROS_INFO("Task %i cancelled, replanning.",taskIDs[slot]);
-				createTask(slot);
-			}else{
-				ROS_INFO("Scheduler refuses to cancel task %i.",taskIDs[slot]);
-			}
-		}
-	}
-}
-
 /*records interaction to mongodb*/
 void guiCallBack(const info_task::Clicks &msg)
 {
-	static bool firstGuiCallBack = true;
-	if (firstGuiCallBack==false)
-	{
-		ROS_INFO("Infremen: there were %ld interactions.",msg.page_array.size());
-		getClosestNode();
-		infremen::InfremenResult itr;
-		ros::Time currentTime = ros::Time::now();
-		itr.time = currentTime.sec-windowDuration/2;
-		itr.number = msg.page_array.size();
-		itr.waypoint = nodeName;
+	ROS_INFO("Infremen: there were %ld interactions.",msg.page_array.size());
+	getClosestNode();
+	infremen::InfremenResult itr;
+	ros::Time currentTime = ros::Time::now();
+	itr.time = currentTime.sec-windowDuration/2;
+	itr.number = msg.page_array.size();
+	itr.waypoint = nodeName;
 
-		messageStore->insertNamed(collectionName, itr);
-	}else{
-		firstGuiCallBack = false;
-	}
+	messageStore->insertNamed(collectionName, itr);
 }
 
 /*retrieve interactions from the database and build the FreMen model*/
@@ -626,12 +619,12 @@ int main(int argc,char* argv[])
 	n = new ros::NodeHandle();
         messageStore = new MessageStoreProxy(*n,"message_store");
 	//load parameters
-	n->param<std::string>("/infremen/collectionName", collectionName, "WharfTest2");
+	n->param<std::string>("/infremen/collectionName", collectionName, "AAFY4");
 	n->param<std::string>("/infremen/scheduleDirectory", scheduleDirectory, "/localhome/strands/schedules");
 	n->param("/infremen/taskPriority", taskPriority,1);
 	n->param("/infremen/verbose", debug,false);
 	//debug prints
-	printAllInteractions(-1);
+	if (debug) printAllInteractions(-1);
 
 
 	//load experiment parameters
@@ -639,7 +632,7 @@ int main(int argc,char* argv[])
 	n->param<std::string>("subname", subName, "exploitation");
 	n->param<double>("paramA", A, 0.5);
 	n->param<double>("paramB", B, 100.0);
-	n->param<int>("planningHorizon", planningHorizon, 10.0);
+	n->param<int>("planningHorizon", planningHorizon, 15.0);
 	n->param<int>("fremenOrder", order, 1);
 
 	//initialize dynamic reconfiguration feedback
@@ -655,8 +648,6 @@ int main(int argc,char* argv[])
 	batterySub = n->subscribe("battery_state", 1, batteryCallBack);
 	//to receive feedback from task_info
 	infoTaskSub = n->subscribe("/info_terminal/task_outcome", 1, guiCallBack);
-	//to receive feedback about the task outcome 
-//	infoTaskSub = n->subscribe("/info_terminal/task_outcome", 1, guiCallBack);
 	//to receive feedback from the gui itself 
 	guiSub = n->subscribe("/info_terminal/active_screen", 1, interacted);
 	//to get relevant nodes
@@ -665,8 +656,6 @@ int main(int argc,char* argv[])
 	taskCreator = n->serviceClient<strands_executive_msgs::CreateTask>("/info_task_server_create");
 	//to add tasks to the schedule
 	taskAdder = n->serviceClient<strands_executive_msgs::AddTask>("/task_executor/add_task");
-	//to remove tasks from the schedule
-	taskCancel = n->serviceClient<strands_executive_msgs::CancelTask>("/task_executor/cancel_task");
 	//get nodes tagged as InfoTerminal	
 	if (getRelevantNodes() < 0)
 	{
@@ -684,54 +673,16 @@ int main(int argc,char* argv[])
 
 	//generate schedule
 	ros::Time currentTime = ros::Time::now();
-	ros::Publisher terminateTask = n->advertise<actionlib_msgs::GoalID>("/info_task_server/cancel", 1);
-	actionlib_msgs::GoalID cmd;
-	//buildModels(currentTime.sec);
-	//generateSchedule(currentTime.sec);
-
-	//to start scheduler - for standalone testing 
-	/*ros::ServiceClient taskStart;
-	/taskStart = n->serviceClient<strands_executive_msgs::SetExecutionStatus>("/task_executor/set_execution_status");
-	strands_executive_msgs::SetExecutionStatus runExec;
-	runExec.request.status = true;
-	if (taskStart.call(runExec)) ROS_INFO("Task execution enabled.");*/
+	scheduleSub = n->subscribe("/current_schedule", 1, scheduleCallback);
 	while (ros::ok())
 	{
 		ros::spinOnce();
 		if (mapReceived){
 			sleep(1);
+			lastTimeSlot=currentTimeSlot;
+			int a=getNextTimeSlot(numCurrentTasks);
 			if (debug) ROS_INFO("Infremen tasks: %i %i",numCurrentTasks,maxTaskNumber);
-			currentTimeSlot = getNextTimeSlot(0);
-			if (currentTimeSlot!=lastTimeSlot){
-				//			modifyNextTask(currentTimeSlot);
-				numCurrentTasks--;
-				if (numCurrentTasks < 0) numCurrentTasks = 0;
-			}
-			if (numCurrentTasks < maxTaskNumber)
-			{
-				lastTimeSlot=currentTimeSlot;
-				int a=getNextTimeSlot(numCurrentTasks);
-				if ( a >= 0)
-				{
-					strands_executive_msgs::CancelTask taskCanc;
-					taskCanc.request.task_id = lastTask;
-					taskCancel.call(taskCanc);
-					ROS_INFO("Cancelling task %i",lastTask);
-					for (int i = 0;i<5;i++){
-						usleep(100000);
-						ros::spinOnce();
-					}
-					ROS_INFO("Terminating current infoterminal task");
-					//terminate the previous infoterminal task
-					terminateTask.publish(cmd);
-					for (int i = 0;i<5;i++){	
-						usleep(100000);
-						ros::spinOnce();
-					}
-					createTask(a);
-					numCurrentTasks++;
-				}
-			}
+			if (numCurrentTasks < maxTaskNumber && schedulerReactionTimeout-- < 0) createTask(a);
 		}else{
 			usleep(100000);
 		}

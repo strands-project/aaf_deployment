@@ -14,6 +14,7 @@
     <include unless="$(arg new_scheduler)" file="$(find task_executor)/launch/task-scheduler-mdp.launch">
     </include>
     <include if="$(arg new_scheduler)" file="$(find task_executor)/launch/mdp-executor.launch">
+	<arg name="close_windows" value="true" />
     </include>
 
     <node pkg="gcal_routine" type="gcal_routine_node.py" name="gcal_routine" output="screen" respawn="true">
