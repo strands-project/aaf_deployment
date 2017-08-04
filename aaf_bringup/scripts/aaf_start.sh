@@ -22,7 +22,8 @@ tmux new-window -t $SESSION:14 -n 'control'
 tmux new-window -t $SESSION:15 -n 'logging_server'
 tmux new-window -t $SESSION:16 -n 'pred_map_bags'
 tmux new-window -t $SESSION:17 -n 'pred_map_save'
-tmux new-window -t $SESSION:18 -n 'screen_broadcast'
+tmux new-window -t $SESSION:18 -n 'virtual_bumper'
+tmux new-window -t $SESSION:19 -n 'screen_broadcast'
 
 tmux select-window -t $SESSION:0
 tmux split-window -v
@@ -82,13 +83,22 @@ tmux send-keys "rosrun aaf_logging start_stop_logging.py"
 tmux select-window -t $SESSION:16
 tmux send-keys "ssh werner-left-cortex" C-m
 tmux send-keys "cd /storage" C-m
-tmux send-keys "rosbag record --split --duration=1h /tf /scan /odom /amcl_pose /robot_pose /current_node /current_edge /map /topological_map /infoterminal/active_screen"
+tmux send-keys "rosbag record --split --duration=1h /tf /scan /odom /odom_raw /amcl_pose /robot_pose /current_node /current_edge /map /topological_map /infoterminal/active_screen /virtual_bumper /virtual_bumper_event /virtual_bumper_report /bumper"
 
 tmux select-window -t $SESSION:17
+tmux split-window -v
+tmux select-pane -t 0
+tmux send-keys "ssh werner-right-cortex" C-m
+tmux send-keys "roslaunch aaf_bringup aaf_remap.launch"
+tmux resize-pane -U 30
+tmux select-pane -t 1
 tmux send-keys "ssh werner-left-cortex" C-m
-tmux send-keys "roslaunch aaf_bringup aaf_remap.launch machine:=werner-right-cortex user:=strands map_folder:=/storage/predicted_maps/"
+tmux send-keys "rosrun aaf_bringup save_and_upload"
 
 tmux select-window -t $SESSION:18
+tmux send-keys "roslaunch scitos_virtual_bumper virtual_bumper.launch camera_topic:=/interaction_camera/throttled/image"
+
+tmux select-window -t $SESSION:19
 tmux send-keys "DISPLAY=:0 cvlc -vvv --no-audio screen:// --screen-fps 1 --sout '#transcode{vcodec=MJPG,vb=800}:standard{access=http,mux=mpjpeg,dst=:18223/}' --sout-http-mime='multipart/x-mixed-replace;boundary=--7b3cc56e5f51db803f790dad720ed50a'"
 
 # Set default window
