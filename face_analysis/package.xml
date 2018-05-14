@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>users_analysis</name>
+  <name>face_analysis</name>
   <version>0.0.0</version>
-  <description>The users_analysis package</description>
+  <description>The face_analysis package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->
