@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(users_analysis)
+project(face_analysis)
 
 find_package(catkin REQUIRED COMPONENTS
   rospy
